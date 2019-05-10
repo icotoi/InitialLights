@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>P1MainForm.ui.qml</file>
+        <file>P2RoomForm.ui.qml</file>
+        <file>main.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>P34PWMForm.ui.qml</file>
+        <file>P42AnalogForm.ui.qml</file>
+        <file>P5RGBForm.ui.qml</file>
+        <file>ColorWheel.qml</file>
+        <file>content/CheckerBoard.qml</file>
+        <file>content/ColorUtils.js</file>
+        <file>content/mathUtils.js</file>
+        <file>content/NumberBox.qml</file>
+        <file>content/PanelBorder.qml</file>
+        <file>content/VerticalSlider.qml</file>
+        <file>content/Wheel.qml</file>
+    </qresource>
+</RCC>
