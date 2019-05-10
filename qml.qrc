@@ -17,5 +17,6 @@
         <file>content/VerticalSlider.qml</file>
         <file>content/Wheel.qml</file>
         <file>ToggleButton.qml</file>
+        <file>LightsMoveForm.ui.qml</file>
     </qresource>
 </RCC>

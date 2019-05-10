@@ -4,8 +4,8 @@ import QtQuick.Dialogs 1.0
 
 ApplicationWindow {
     visible: true
-    width: 640
-    height: 480
+    width: 480
+    height: 640
     title: qsTr("Tabs")
 
     SwipeView {
@@ -27,6 +27,10 @@ ApplicationWindow {
 
         P5RGBForm {
         }
+
+        LightsMoveForm {
+
+        }
     }
 
     footer: TabBar {
@@ -47,6 +51,9 @@ ApplicationWindow {
         }
         TabButton {
             text: qsTr("RGB")
+        }
+        TabButton {
+            text: qsTr("Move Light")
         }
     }
 }
