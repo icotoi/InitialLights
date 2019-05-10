@@ -13,19 +13,19 @@ ApplicationWindow {
         anchors.fill: parent
         currentIndex: tabBar.currentIndex
 
-        Page1Form {
+        P1MainForm {
         }
 
-        Page2Form {
+        P2RoomForm {
         }
 
-        Page3Form {
+        P34PWMForm {
         }
 
-        Page4Form {
+        P42AnalogForm {
         }
 
-        Page5Form {
+        P5RGBForm {
         }
     }
 

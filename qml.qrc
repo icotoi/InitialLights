@@ -16,5 +16,6 @@
         <file>content/PanelBorder.qml</file>
         <file>content/VerticalSlider.qml</file>
         <file>content/Wheel.qml</file>
+        <file>ToggleButton.qml</file>
     </qresource>
 </RCC>

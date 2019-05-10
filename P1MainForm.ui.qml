@@ -16,6 +16,5 @@ Page {
         anchors.centerIn: parent
     }
 
-    ColorWheel {
-    }
+ToggleButton { width: 138;height: 82}
 }
