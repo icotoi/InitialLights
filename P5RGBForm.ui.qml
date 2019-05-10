@@ -1,9 +1,11 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.3
 
 Page {
-    width: 600
-    height: 400
+    id: page
+    width: 400
+    height: 600
 
     header: Label {
         text: qsTr("RGB")
@@ -11,16 +13,15 @@ Page {
         padding: 10
     }
 
-    Label {
-        text: qsTr("RGB")
-        anchors.centerIn: parent
-
+    ColumnLayout {
+        anchors.fill: parent
         ColorWheel {
             id: colorWheel
             x: -199
             y: -142
-            width: 424
-            height: 301
+
+            Layout.fillHeight: true
+            Layout.fillWidth: true
         }
     }
 }

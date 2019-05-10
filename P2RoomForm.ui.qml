@@ -6,7 +6,7 @@ Page {
     height: 400
 
     header: Label {
-        text: qsTr("Page 2")
+        text: qsTr("Room")
         font.pixelSize: Qt.application.font.pixelSize * 2
         padding: 10
     }

@@ -77,8 +77,8 @@ Page {
                 Layout.fillWidth: true
 
                 RoundButton {
-                    width: 100
-                    height: 100
+                    width: 80
+                    height: 80
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
                     Layout.fillWidth: false

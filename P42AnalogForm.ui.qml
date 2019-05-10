@@ -6,7 +6,7 @@ Page {
     height: 400
 
     header: Label {
-        text: qsTr("Page 1")
+        text: "0-10V Channels"
         font.pixelSize: Qt.application.font.pixelSize * 2
         padding: 10
     }
