@@ -4,8 +4,8 @@ import QtQuick.Dialogs 1.0
 
 ApplicationWindow {
     visible: true
-    width: 480
-    height: 640
+    width: 720
+    height: 1280
     title: qsTr("Tabs")
 
     SwipeView {
@@ -36,6 +36,7 @@ ApplicationWindow {
     footer: TabBar {
         id: tabBar
         currentIndex: swipeView.currentIndex
+        contentHeight: 50
 
         TabButton {
             text: qsTr("Main")
@@ -47,7 +48,7 @@ ApplicationWindow {
             text: qsTr("4PWM")
         }
         TabButton {
-            text: qsTr("2Analog")
+            text: qsTr("0-10V")
         }
         TabButton {
             text: qsTr("RGB")

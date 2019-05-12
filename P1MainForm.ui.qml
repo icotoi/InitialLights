@@ -4,8 +4,8 @@ import QtQuick.Layouts 1.1
 
 Page {
     id: page
-    width: 400
-    height: 600
+    width: 720
+    height: 1180
 
     header: Label {
         text: qsTr("Main")
