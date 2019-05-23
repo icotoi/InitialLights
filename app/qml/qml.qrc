@@ -1,9 +1,12 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>ILToggleButton.qml</file>
         <file>Constants/ILStyle.qml</file>
         <file>Constants/qmldir</file>
         <file>qtquickcontrols2.conf</file>
+        <file>Controls/qmldir</file>
+        <file>P1Main.qml</file>
+        <file>P1MainForm.ui.qml</file>
+        <file>Controls/ILToggleLightButton.qml</file>
     </qresource>
 </RCC>

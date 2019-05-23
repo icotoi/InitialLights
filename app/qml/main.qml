@@ -12,11 +12,7 @@ ApplicationWindow {
         anchors.fill: parent
         currentIndex: tabBar.currentIndex
 
-        Page {
-            Label {
-                text: qsTr("Main")
-                anchors.centerIn: parent
-            }
+        P1Main {
         }
 
         Page {
