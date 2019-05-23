@@ -8,7 +8,6 @@ QtObject {
 
     // ILToggleLightButton
     property QtObject toggleLedButton: QtObject {
-        id: toggleLightButton
         property int labelVerticalOffset: -3
 
         property int ledVerticalMargin: 3
