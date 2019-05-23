@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>ILToggleButton.qml</file>
+        <file>Constants/ILStyle.qml</file>
+        <file>Constants/qmldir</file>
     </qresource>
 </RCC>
