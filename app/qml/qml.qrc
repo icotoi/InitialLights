@@ -4,5 +4,6 @@
         <file>ILToggleButton.qml</file>
         <file>Constants/ILStyle.qml</file>
         <file>Constants/qmldir</file>
+        <file>qtquickcontrols2.conf</file>
     </qresource>
 </RCC>
