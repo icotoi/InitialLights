@@ -7,9 +7,10 @@ QtObject {
     property color textColor: "#fbfbfb"
 
     // ILToggleLightButton
-    property QtObject toggleLightButton: QtObject {
+    property QtObject toggleLedButton: QtObject {
         id: toggleLightButton
         property int labelVerticalOffset: -3
+
         property int ledVerticalMargin: 3
         property int letHorizontalMargin: 3
         property int ledHeight: 5

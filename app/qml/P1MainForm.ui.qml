@@ -20,84 +20,84 @@ Item {
         columns: 3
 
         // row 1
-        ILToggleLightButton {
+        ILToggleLedButton {
             text: qsTr("Bathroom")
-            lightColor: "#ff8800"
+            ledColor: "#ff8800"
             Layout.fillWidth: true
         }
 
-        ILToggleLightButton {
+        ILToggleLedButton {
             text: qsTr("Bedroom")
             Layout.fillWidth: true
         }
 
-        ILToggleLightButton {
+        ILToggleLedButton {
             text: "Living Room"
-            lightColor: "#ff0088"
+            ledColor: "#ff0088"
             Layout.fillWidth: true
         }
 
         // row 2
-        ILToggleLightButton {
+        ILToggleLedButton {
             text: qsTr("Bathroom")
-            lightColor: "#ff8800"
+            ledColor: "#ff8800"
             Layout.fillWidth: true
             checked: true
         }
 
-        ILToggleLightButton {
+        ILToggleLedButton {
             text: qsTr("Bedroom")
             Layout.fillWidth: true
             checked: true
         }
 
-        ILToggleLightButton {
+        ILToggleLedButton {
             text: "Living Room"
-            lightColor: "#ff0088"
+            ledColor: "#ff0088"
             Layout.fillWidth: true
             checked: true
         }
 
         // row 3
-        ILToggleLightButton {
+        ILToggleLedButton {
             text: qsTr("Bathroom")
-            lightColor: "#ff8800"
+            ledColor: "#ff8800"
             Layout.fillWidth: true
             enabled: false
         }
 
-        ILToggleLightButton {
+        ILToggleLedButton {
             text: qsTr("Bedroom")
             Layout.fillWidth: true
             enabled: false
         }
 
-        ILToggleLightButton {
+        ILToggleLedButton {
             text: "Living Room"
-            lightColor: "#ff0088"
+            ledColor: "#ff0088"
             Layout.fillWidth: true
             enabled: false
         }
 
         // row 4
-        ILToggleLightButton {
+        ILToggleLedButton {
             text: qsTr("Bathroom")
-            lightColor: "#ff8800"
+            ledColor: "#ff8800"
             Layout.fillWidth: true
             enabled: false
             checked: true
         }
 
-        ILToggleLightButton {
+        ILToggleLedButton {
             text: qsTr("Bedroom")
             Layout.fillWidth: true
             enabled: false
             checked: true
         }
 
-        ILToggleLightButton {
+        ILToggleLedButton {
             text: "Living Room"
-            lightColor: "#ff0088"
+            ledColor: "#ff0088"
             Layout.fillWidth: true
             enabled: false
             checked: true

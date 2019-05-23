@@ -14,7 +14,7 @@ Button {
     font.capitalization: Font.MixedCase
     font.bold: true
 
-    property color lightColor: "yellow"
+    property color ledColor: "yellow"
 
     contentItem: Label {
         text: control.text
@@ -24,7 +24,7 @@ Button {
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: ILStyle.toggleLightButton.labelVerticalOffset
+        anchors.verticalCenterOffset: ILStyle.toggleLedButton.labelVerticalOffset
     }
 
     background: Item {
@@ -37,32 +37,32 @@ Button {
             anchors.fill: parent
             radius: 2
             color: control.down
-                   ? ILStyle.toggleLightButton.backgroundDownColor
+                   ? ILStyle.toggleLedButton.backgroundDownColor
                    : control.hovered
-                     ? ILStyle.toggleLightButton.backgroundHoveredColor
-                     : ILStyle.toggleLightButton.backgroundDefaultColor
+                     ? ILStyle.toggleLedButton.backgroundHoveredColor
+                     : ILStyle.toggleLedButton.backgroundDefaultColor
 
             Rectangle {
                 id: ledRect
                 anchors {
                     left: parent.left
                     right: parent.right
-                    leftMargin: ILStyle.toggleLightButton.letHorizontalMargin
-                    rightMargin: ILStyle.toggleLightButton.letHorizontalMargin
+                    leftMargin: ILStyle.toggleLedButton.letHorizontalMargin
+                    rightMargin: ILStyle.toggleLedButton.letHorizontalMargin
                     bottom: parent.bottom
-                    bottomMargin: ILStyle.toggleLightButton.ledVerticalMargin
+                    bottomMargin: ILStyle.toggleLedButton.ledVerticalMargin
                 }
 
-                height: ILStyle.toggleLightButton.ledHeight
-                radius: ILStyle.toggleLightButton.ledRadius
-                color: control.checked ? control.lightColor : Qt.darker(control.lightColor, 3)
+                height: ILStyle.toggleLedButton.ledHeight
+                radius: ILStyle.toggleLedButton.ledRadius
+                color: control.checked ? control.ledColor : Qt.darker(control.ledColor, 3)
             }
         }
 
         DropShadow {
             source: buttonRect
             anchors.fill: buttonRect
-            color: ILStyle.toggleLightButton.dropShadowColor
+            color: ILStyle.toggleLedButton.dropShadowColor
             verticalOffset: control.down ? 2 : 1
             radius: control.down ? 8 : 2
             samples: 12

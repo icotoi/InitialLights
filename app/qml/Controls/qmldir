@@ -1,2 +1,2 @@
 module Controls
-ILToggleLightButton 1.0 ILToggleLightButton.qml
+ILToggleLedButton 1.0 ILToggleLedButton.qml
