@@ -8,7 +8,7 @@ Item {
     implicitHeight: 200
     implicitWidth: 200
 
-    property real innerCircleScale: 0.5
+    property real innerCircleScale: 0.65
     property int innerCircleMargin: 10
 
     property color borderColor: "#b0b0b0"
@@ -20,6 +20,7 @@ Item {
     property real plusLabelTextScale: 1.5
     property string leftLabelText: qsTr("<b>WARM</b><br>Light")
     property string rightLabelText: qsTr("<b>COOL</b><br>Light")
+    property bool useShaderWheel: false
 
     // internal
     QtObject {
@@ -32,9 +33,9 @@ Item {
 
     Wheel {
         id: wheel
+        useShader: useShaderWheel
         anchors.fill: parent
         anchors.margins: innerCircleMargin
-        saturation: 1
     }
 
     Rectangle {

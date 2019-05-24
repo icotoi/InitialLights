@@ -5,34 +5,53 @@ Item {
     width: 200
     height: 200
 
-    property real hue : 1
-    property real saturation : 1
+    // property real hue : 1
+    // property real saturation : 1
 
-    property alias wheelSize: wheel.width
+    property real wheelSize: parent.width < parent.height ? parent.width : parent.height
+    property bool useShader: false
 
     signal accepted()
     signal updateHS(var hueSignal, var saturationSignal)
 
-    states :
-        // When user is moving the slider
-        State {
-            name: "editing"
-            PropertyChanges {
-                target: root
-                // Better solution ? because the value is change in the fonction of mouse area
-                hue: hue
-                saturation: saturation
+    Canvas {
+        visible: !useShader
+        anchors.centerIn: parent
+        width: wheelSize
+        height: wheelSize
+        // renderStrategy: Canvas.Threaded
+
+        onPaint: {
+            var ctx = getContext("2d");
+            ctx.reset();
+
+            var x = width / 2;
+            var y = height / 2;
+            var radius = width / 2;
+            var counterClockwise = false;
+
+            for(var angle=0; angle<=360; angle+=1){
+                var offsetAngle = Math.PI
+                var startAngle = (angle-2)*Math.PI/180 + offsetAngle;
+                var endAngle = angle * Math.PI/180 + offsetAngle;
+                var a = 360 - angle
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.arc(x, y, radius, startAngle, endAngle, counterClockwise);
+                ctx.closePath();
+                ctx.fillStyle = 'hsl('+a+', 100%, 50%)';
+                ctx.fill();
             }
         }
+    }
 
     Rectangle {
-        id: wheel
-        //Keep the wheel round
-        width: parent.width < parent.height ? parent.width : parent.height ;
-        height: width ;
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
+        visible: useShader
+        width: wheelSize
+        height: wheelSize
+        anchors.centerIn: parent
         color: "transparent"
+
         ShaderEffect {
             id: shader
             anchors.fill: parent
@@ -79,59 +98,5 @@ Item {
                     gl_FragColor.a = 1.0;
             }"
         }
-
-        Item {
-            visible: false
-            id: pickerCursor
-            x: parent.width/2 * (1 + root.saturation * Math.cos(2 * Math.PI * root.hue - Math.PI)) - r
-            y: parent.width/2 * (1 + root.saturation * Math.sin(-2 * Math.PI * root.hue - Math.PI)) - r
-            property int r : 8
-            Rectangle {
-                width: parent.r*2; height: parent.r*2
-                radius: parent.r
-                border.color: "black"; border.width: 2
-                color: "transparent"
-                Rectangle {
-                    anchors.fill: parent; anchors.margins: 2;
-                    border.color: "white"; border.width: 2
-                    radius: width/2
-                    color: "transparent"
-                }
-            }
-        }
-
-        MouseArea {
-            id : wheelArea
-            // Keep cursor in wheel
-            function keepCursorInWheel(mouse, wheelArea, wheel) {
-                root.state = 'editing'
-                if (mouse.buttons & Qt.LeftButton) {
-                    // cartesian to polar coords
-                    var ro = Math.sqrt(Math.pow(mouse.x-wheel.width/2,2)+Math.pow(mouse.y-wheel.height/2,2));
-                    var theta = Math.atan2(((mouse.y-wheel.height/2)*(-1)),((mouse.x-wheel.width/2)));
-
-                    // Wheel limit
-                    if(ro > wheel.width/2)
-                        ro = wheel.width/2;
-
-                    // polar to cartesian coords
-                    var cursor = Qt.vector2d(0, 0);
-                    cursor.x = Math.max(-pickerCursor.r, Math.min(wheelArea.width, ro*Math.cos(theta)+wheel.width/2)-pickerCursor.r);
-                    cursor.y = Math.max(-pickerCursor.r, Math.min(wheelArea.height, wheel.height/2-ro*Math.sin(theta)-pickerCursor.r));
-
-                    hue = Math.ceil((Math.atan2(((cursor.y+pickerCursor.r-wheel.height/2)*(-1)),((cursor.x+pickerCursor.r-wheel.width/2)))/(Math.PI*2)+0.5)*100)/100
-                    saturation = Math.ceil(Math.sqrt(Math.pow(cursor.x+pickerCursor.r-width/2,2)+Math.pow(cursor.y+pickerCursor.r-height/2,2))/wheel.height*2*100)/100;
-                    root.updateHS(hue, saturation) ;
-                }
-            }
-            anchors.fill: parent
-            onPositionChanged: keepCursorInWheel(mouse, wheelArea,  wheel)
-            onPressed: keepCursorInWheel(mouse, wheelArea, wheel)
-            onReleased: {
-                root.state = ''
-                root.accepted() ;
-            }
-        }
     }
-
 }
