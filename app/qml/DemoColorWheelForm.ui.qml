@@ -19,7 +19,6 @@ Item {
 
         ILColorWheel {
             id: canvasColorWheel
-            hue: hueSlider.value
             useShaderWheel: false
             visible: canvasWheelSwitch.checked
             Layout.fillHeight: true
@@ -34,7 +33,6 @@ Item {
 
         ILColorWheel {
             id: shaderColorWheel
-            hue: hueSlider.value
             useShaderWheel: true
             visible: shaderWheelSwitch.checked
             Layout.fillHeight: true
@@ -54,12 +52,6 @@ Item {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
 
-        Slider {
-            id: hueSlider
-            Layout.fillWidth: true
-            value: 0.5
-        }
-
         Switch {
             id: canvasWheelSwitch
             text: qsTr("Enable Canvas Wheel")
@@ -75,6 +67,8 @@ Item {
         }
     }
 }
+
+
 
 /*##^## Designer {
     D{i:1;anchors_height:100;anchors_width:100;anchors_x:118;anchors_y:181}D{i:6;anchors_width:100}
