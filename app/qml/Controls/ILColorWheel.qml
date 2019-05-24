@@ -8,6 +8,8 @@ Item {
     implicitHeight: 200
     implicitWidth: 200
 
+    property real hue: 0.0
+
     property real innerCircleScale: 0.6
     property int innerCircleMargin: 10
 
@@ -21,6 +23,10 @@ Item {
     property string leftLabelText: qsTr("<b>WARM</b><br>Light")
     property string rightLabelText: qsTr("<b>COOL</b><br>Light")
     property bool useShaderWheel: false
+
+    property int pickerRadius: 10
+    property int pickerBorderWidth: 2
+    property color pickerBorderColor: borderColor
 
     // internal
     QtObject {
@@ -125,6 +131,25 @@ Item {
                 anchors.centerIn: parent
                 font.pointSize: labelLeft.font.pixelSize * plusLabelTextScale
             }
+        }
+    }
+
+    Item {
+        id: pickerCursor
+        x: trackRadius * Math.cos(2 * Math.PI * control.hue - Math.PI) + control.width / 2 - r
+        y: trackRadius * Math.sin(-2 * Math.PI * control.hue - Math.PI) + control.height / 2 - r
+
+        property int trackRadius: (wheel.wheelSize - trackWidth) * 0.5
+        property int trackWidth: wheel.wheelSize * (1 - control.innerCircleScale) * 0.5
+        property int r : trackWidth * 0.3
+
+        Rectangle {
+            width: parent.r*2
+            height: parent.r*2
+            radius: parent.r
+            border.color: control.pickerBorderColor
+            border.width: control.pickerBorderWidth
+            color: "white"
         }
     }
 }

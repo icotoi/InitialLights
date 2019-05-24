@@ -19,6 +19,7 @@ Item {
 
         ILColorWheel {
             id: canvasColorWheel
+            hue: hueSlider.value
             useShaderWheel: false
             visible: canvasWheelSwitch.checked
             Layout.fillHeight: true
@@ -28,6 +29,7 @@ Item {
 
         ILColorWheel {
             id: shaderColorWheel
+            hue: hueSlider.value
             useShaderWheel: true
             visible: shaderWheelSwitch.checked
             Layout.fillHeight: true
@@ -38,10 +40,15 @@ Item {
 
     ColumnLayout {
         id: switchColumnLayout
-        height: 100
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.bottom: parent.bottom
+
+        Slider {
+            id: hueSlider
+            Layout.fillWidth: true
+            value: 0.5
+        }
 
         Switch {
             id: canvasWheelSwitch
@@ -57,9 +64,16 @@ Item {
             Layout.fillWidth: true
         }
 
+
     }
 
 }
+
+
+
+
+
+
 
 
 
