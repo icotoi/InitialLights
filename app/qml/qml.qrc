@@ -7,10 +7,10 @@
         <file>Controls/qmldir</file>
         <file>Controls/ILToggleLedButton.qml</file>
         <file>Controls/ILColorWheel.qml</file>
-        <file>Controls/Wheel.qml</file>
         <file>DemoToggleLedButton.qml</file>
         <file>DemoToggleLedButtonForm.ui.qml</file>
         <file>DemoColorWheel.qml</file>
         <file>DemoColorWheelForm.ui.qml</file>
+        <file>Controls/ColorWheel.qml</file>
     </qresource>
 </RCC>

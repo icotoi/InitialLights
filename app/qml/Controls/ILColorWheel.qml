@@ -31,7 +31,7 @@ Item {
         property real labelInnerSpacingScale: 1.0 / 20
     }
 
-    Wheel {
+    ColorWheel {
         id: wheel
         useShader: useShaderWheel
         anchors.fill: parent
