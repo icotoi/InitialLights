@@ -12,42 +12,10 @@ ApplicationWindow {
         anchors.fill: parent
         currentIndex: tabBar.currentIndex
 
-        P1Main {
+        DemoColorWheel {
         }
 
-        Page {
-            Label {
-                text: qsTr("Room")
-                anchors.centerIn: parent
-            }
-        }
-
-        Page {
-            Label {
-                text: qsTr("4PWM")
-                anchors.centerIn: parent
-            }
-        }
-
-        Page {
-            Label {
-                text: qsTr("0-10V")
-                anchors.centerIn: parent
-            }
-        }
-
-        Page {
-            Label {
-                text: qsTr("RGB")
-                anchors.centerIn: parent
-            }
-        }
-
-        Page {
-            Label {
-                text: qsTr("Move Light")
-                anchors.centerIn: parent
-            }
+        DemoToggleLedButton {
         }
     }
 
@@ -56,22 +24,10 @@ ApplicationWindow {
         currentIndex: swipeView.currentIndex
 
         TabButton {
-            text: qsTr("Main")
+            text: qsTr("Color Wheel")
         }
         TabButton {
-            text: qsTr("Room")
-        }
-        TabButton {
-            text: qsTr("4PWM")
-        }
-        TabButton {
-            text: qsTr("0-10V")
-        }
-        TabButton {
-            text: qsTr("RGB")
-        }
-        TabButton {
-            text: qsTr("Move Light")
+            text: qsTr("Buttons")
         }
     }
 }
