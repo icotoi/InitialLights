@@ -8,7 +8,12 @@ Item {
     implicitHeight: 200
     implicitWidth: 200
 
+    // color hue: 0.0 - 1.0
     property real hue: 0.0
+
+    // do not assign values to this property
+    // instead, use it to read the hue as a color
+    property color color: Qt.hsla(hue, 1, 0.5, 1)
 
     property int borderWidth: 2
     property color borderColor: "#b0b0b0"
