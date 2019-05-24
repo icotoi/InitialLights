@@ -8,7 +8,7 @@ Item {
     implicitHeight: 200
     implicitWidth: 200
 
-    property real innerCircleScale: 0.65
+    property real innerCircleScale: 0.6
     property int innerCircleMargin: 10
 
     property color borderColor: "#b0b0b0"

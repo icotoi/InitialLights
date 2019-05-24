@@ -5,14 +5,16 @@ Item {
     width: 200
     height: 200
 
-    // property real hue : 1
-    // property real saturation : 1
-
     property real wheelSize: parent.width < parent.height ? parent.width : parent.height
+
+    // if false, show the canvas color wheel
+    // if true, show the shader color wheel
     property bool useShader: false
 
-    signal accepted()
-    signal updateHS(var hueSignal, var saturationSignal)
+    // use 1 to get something like when using the shader color wheel
+    // use > 1 to get discrete color sectors
+    // works only with the canvas color wheel
+    property int canvasAngleStep: 4
 
     Canvas {
         visible: !useShader
@@ -29,10 +31,11 @@ Item {
             var y = height / 2;
             var radius = width / 2;
             var counterClockwise = false;
+            var angleStep = canvasAngleStep
 
-            for(var angle=0; angle<=360; angle+=1){
+            for(var angle=0; angle<=360; angle+=angleStep){
                 var offsetAngle = Math.PI
-                var startAngle = (angle-2)*Math.PI/180 + offsetAngle;
+                var startAngle = (angle - angleStep - 1) * Math.PI/180 + offsetAngle;
                 var endAngle = angle * Math.PI/180 + offsetAngle;
                 var a = 360 - angle
                 ctx.beginPath();
