@@ -44,6 +44,12 @@ Item {
     property int pickerBorderWidth: 2
     property color pickerBorderColor: borderColor
 
+    //////////////////////////
+    // current color sampler
+//    property int currentColorRectangleSize: 40
+//    property int currentColorRectangleRadius: 5
+    property int currentColorRingWidth: 10
+
     // internal properties not to be exported outside the control
     QtObject {
         id: _
@@ -60,10 +66,37 @@ Item {
         property real initialHue: -1
     }
 
+    // TODO: decide what to keep: the currentColorRing or the currentColorRectangle
+//    Rectangle {
+//        id: currentColorRing
+//        anchors {
+//            left: parent.left
+//            bottom: parent.bottom
+//        }
+//        width: control.currentColorRectangleSize
+//        height: width
+//        radius: control.currentColorRectangleRadius
+//        border.width: control.borderWidth
+//        border.color: control.borderColor
+//        color: control.color
+//    }
+
+    Rectangle {
+        id: currentColorRectangle
+        width: wheel.wheelSize + 2 * control.currentColorRingWidth
+        height: width
+        radius: width / 2
+        border.color: control.borderColor
+        border.width: control.borderWidth
+        color: control.color
+        anchors.centerIn: wheel
+    }
+
     ColorWheel {
         id: wheel
         useShader: false
         anchors.fill: parent
+        anchors.margins: control.currentColorRingWidth
     }
 
     Rectangle {
@@ -205,3 +238,8 @@ Item {
         }
     }
 }
+
+/*##^## Designer {
+    D{i:0;height:400;width:400}
+}
+ ##^##*/
