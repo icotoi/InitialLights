@@ -21,5 +21,8 @@
         <file>Images/power_on.png</file>
         <file>Images/power_on@2x.png</file>
         <file>Images/power_on@3x.png</file>
+        <file>P2Room.qml</file>
+        <file>P2RoomForm.ui.qml</file>
+        <file>Images/pixabay_illumination-lights-bulbs-731494_1920.jpg</file>
     </qresource>
 </RCC>
