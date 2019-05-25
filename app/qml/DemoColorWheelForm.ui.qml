@@ -27,6 +27,7 @@ Item {
 
         ILColorWheel {
             id: shaderColorWheel
+            color: "#00ffff"
             useShaderWheel: true
             visible: shaderWheelSwitch.checked
             Layout.fillHeight: true
@@ -55,6 +56,8 @@ Item {
         }
     }
 }
+
+
 
 
 

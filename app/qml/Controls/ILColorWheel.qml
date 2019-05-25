@@ -8,12 +8,7 @@ Item {
     implicitHeight: 200
     implicitWidth: 200
 
-    // color hue: 0.0 - 1.0
-    property real hue: 0.0
-
-    // do not assign values to this property
-    // instead, use it to read the hue as a color
-    property color color: Qt.hsla(hue, 1, 0.5, 1)
+    property color color: "red"
 
     property int borderWidth: 2
     property color borderColor: "#b0b0b0"
@@ -50,6 +45,10 @@ Item {
 //    property int currentColorRectangleRadius: 5
     property int currentColorRingWidth: 10
 
+    onColorChanged: {
+        _.hue = color.hslHue
+    }
+
     // internal properties not to be exported outside the control
     QtObject {
         id: _
@@ -62,8 +61,14 @@ Item {
         property int trackRadius: (trackInnerRadius + trackOuterRadius) * 0.5
         property int trackWidth: trackOuterRadius - trackInnerRadius
 
-        property real currentHue: -1
-        property real initialHue: -1
+        property real hue: 0
+
+        property bool selectingWarmWhite: false
+        property bool selectingCoolWhite: false
+
+        function hue2color(hue) {
+            return Qt.hsla(hue, 1, 0.5, 1)
+        }
     }
 
     // TODO: decide what to keep: the currentColorRing or the currentColorRectangle
@@ -196,7 +201,7 @@ Item {
         y: _.trackRadius * Math.sin(-2 * Math.PI * hue - Math.PI) + control.height / 2 - r
 
         property int r : _.trackWidth * 0.3
-        property real hue: _.currentHue >= 0 ? _.currentHue : control.hue
+        property real hue: _.hue
 
         Rectangle {
             width: parent.r*2
@@ -215,27 +220,48 @@ Item {
         height: wheel.wheelSize
         preventStealing: true
 
-        function updateHue(mouse, area, minRadius, maxRadius) {
+        function updateHue(mouse, area, minRadius, maxRadius, mousePressed, mouseReleased) {
             // cartesian to polar coords
             var ro = Math.sqrt(Math.pow(mouse.x - area.width / 2, 2) + Math.pow(mouse.y - area.height / 2, 2));
             var theta = Math.atan2(-(mouse.y - area.height / 2), (mouse.x - area.width / 2)) + Math.PI;
 
-            if (minRadius <= ro && ro <= maxRadius) {
-                _.currentHue = theta / (2*Math.PI)
-                control.hue = _.currentHue
-            } else {
-                _.currentHue = -1
-                control.hue = _.initialHue
+            if (mousePressed) {
+                _.selectingWarmWhite = false
+                _.selectingCoolWhite = false
+            }
+
+            if (ro <= minRadius) {
+                if (mousePressed) {
+                    if (mouse.x < area.width / 2) {
+                        _.selectingWarmWhite = true
+                    } else {
+                        _.selectingCoolWhite = true
+                    }
+                } else if (mouseReleased) {
+                    if (mouse.x < area.width / 2) {
+                        if (_.selectingWarmWhite) {
+                            control.color = control.warmWhiteColor
+                        }
+                    } else {
+                        if (_.selectingCoolWhite) {
+                            control.color = control.coolWhiteColor
+                        }
+                    }
+                }
+            } else if (ro <= maxRadius && !_.selectingCoolWhite && !_.selectingWarmWhite) {
+                _.hue = theta / (2*Math.PI)
+                control.color = _.hue2color(_.hue)
+            }
+
+            if (mouseReleased) {
+                _.selectingWarmWhite = false
+                _.selectingCoolWhite = false
             }
         }
 
-        onPositionChanged: {
-            updateHue(mouse, wheelArea, _.trackInnerRadius, _.trackOuterRadius)
-        }
-        onPressed: {
-            _.initialHue = control.hue
-            updateHue(mouse, wheelArea, _.trackInnerRadius, _.trackOuterRadius)
-        }
+        onPressed: updateHue(mouse, wheelArea, _.trackInnerRadius, _.trackOuterRadius, true, false)
+        onPositionChanged: updateHue(mouse, wheelArea, _.trackInnerRadius, _.trackOuterRadius, false, false)
+        onReleased: updateHue(mouse, wheelArea, _.trackInnerRadius, _.trackOuterRadius, false, true)
     }
 }
 
