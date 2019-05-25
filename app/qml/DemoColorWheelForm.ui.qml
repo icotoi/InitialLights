@@ -10,6 +10,12 @@ Item {
     width: 400
     height: 400
 
+    Rectangle {
+        id: rectangle
+        color: "#ffffff"
+        anchors.fill: parent
+    }
+
     ColumnLayout {
         id: columnLayout
         anchors.bottom: switchColumnLayout.top
@@ -55,6 +61,7 @@ Item {
             Layout.fillWidth: true
         }
     }
+
 }
 
 
@@ -62,7 +69,10 @@ Item {
 
 
 
+
+
 /*##^## Designer {
-    D{i:1;anchors_height:100;anchors_width:100;anchors_x:118;anchors_y:181}D{i:4;anchors_width:100}
+    D{i:1;anchors_height:200;anchors_width:200}D{i:2;anchors_height:100;anchors_width:100;anchors_x:118;anchors_y:181}
+D{i:5;anchors_width:100}
 }
  ##^##*/

@@ -12,5 +12,14 @@
         <file>DemoColorWheel.qml</file>
         <file>DemoColorWheelForm.ui.qml</file>
         <file>Controls/ColorWheel.qml</file>
+        <file>P1Main.qml</file>
+        <file>P1MainForm.ui.qml</file>
+        <file>Controls/ILMainPowerButton.qml</file>
+        <file>Images/power_off.png</file>
+        <file>Images/power_off@2x.png</file>
+        <file>Images/power_off@3x.png</file>
+        <file>Images/power_on.png</file>
+        <file>Images/power_on@2x.png</file>
+        <file>Images/power_on@3x.png</file>
     </qresource>
 </RCC>

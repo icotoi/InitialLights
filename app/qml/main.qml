@@ -12,6 +12,10 @@ ApplicationWindow {
         anchors.fill: parent
         currentIndex: tabBar.currentIndex
 
+        P1Main {
+
+        }
+
         DemoColorWheel {
         }
 
@@ -24,8 +28,13 @@ ApplicationWindow {
         currentIndex: swipeView.currentIndex
 
         TabButton {
+            text: qsTr("Main")
+        }
+
+        TabButton {
             text: qsTr("Color Wheel")
         }
+
         TabButton {
             text: qsTr("Buttons")
         }
