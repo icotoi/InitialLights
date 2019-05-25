@@ -3,8 +3,12 @@ pragma Singleton
 import QtQuick 2.12
 
 QtObject {
+    id: root
+
     property color windowBackground: "#303030"
     property color textColor: "#fbfbfb"
+
+    property color borderColor: "#b0b0b0"
 
     // ILToggleLightButton
     property QtObject toggleLedButton: QtObject {
@@ -20,5 +24,15 @@ QtObject {
         property color backgroundDefaultColor: "#505050"
 
         property color dropShadowColor: "#202020"
+    }
+
+    // ILColorWheel
+    property QtObject colorWheel: QtObject {
+        property color borderColor: root.borderColor
+    }
+
+    // ILCircularToggleLedButton
+    property QtObject circularToggleLedButton: QtObject {
+        property color borderColor: root.borderColor
     }
 }
