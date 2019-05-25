@@ -43,7 +43,7 @@ Item {
         Switch {
             id: canvasWheelSwitch
             text: qsTr("Enable Canvas Wheel")
-            checked: true
+            checked: false
             Layout.fillWidth: true
         }
 
