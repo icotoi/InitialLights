@@ -24,5 +24,6 @@
         <file>P2Room.qml</file>
         <file>P2RoomForm.ui.qml</file>
         <file>Images/pixabay_illumination-lights-bulbs-731494_1920.jpg</file>
+        <file>Controls/ILCircularToggleLedButton.qml</file>
     </qresource>
 </RCC>

@@ -44,14 +44,14 @@ Item {
         Switch {
             id: canvasWheelSwitch
             text: qsTr("Enable Canvas Wheel")
-            checked: false
+            checked: true
             Layout.fillWidth: true
         }
 
         Switch {
             id: shaderWheelSwitch
             text: qsTr("Enable Shader Wheel")
-            checked: true
+            checked: false
             Layout.fillWidth: true
         }
     }

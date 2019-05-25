@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.12
 
+import "../Constants"
+
 Item {
     id: control
 
@@ -11,7 +13,7 @@ Item {
     property color color: "red"
 
     property int borderWidth: 2
-    property color borderColor: "#b0b0b0"
+    property color borderColor: ILStyle.colorWheel.borderColor
 
     ////////////////////
     // the color wheel
