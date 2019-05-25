@@ -5,7 +5,7 @@ Item {
     width: 200
     height: 200
 
-    property real wheelSize: parent.width < parent.height ? parent.width : parent.height
+    property real wheelSize: width < height ? width : height
 
     // if false, show the canvas color wheel
     // if true, show the shader color wheel
