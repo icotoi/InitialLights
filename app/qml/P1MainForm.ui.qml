@@ -8,6 +8,7 @@ Item {
     id: element
     width: 400
     height: 400
+    clip: true
     property alias bottomGridLayout: bottomGridLayout
     property alias topGridLayout: topGridLayout
 
@@ -42,4 +43,5 @@ Item {
             Layout.topMargin: 20
         }
     }
+
 }
