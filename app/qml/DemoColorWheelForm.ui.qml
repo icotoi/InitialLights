@@ -25,23 +25,11 @@ Item {
             Layout.fillWidth: true
         }
 
-        Rectangle {
-            height: 10
-            color: canvasColorWheel.color
-            Layout.fillWidth: true
-        }
-
         ILColorWheel {
             id: shaderColorWheel
             useShaderWheel: true
             visible: shaderWheelSwitch.checked
             Layout.fillHeight: true
-            Layout.fillWidth: true
-        }
-
-        Rectangle {
-            height: 10
-            color: shaderColorWheel.color
             Layout.fillWidth: true
         }
     }
@@ -70,7 +58,8 @@ Item {
 
 
 
+
 /*##^## Designer {
-    D{i:1;anchors_height:100;anchors_width:100;anchors_x:118;anchors_y:181}D{i:6;anchors_width:100}
+    D{i:1;anchors_height:100;anchors_width:100;anchors_x:118;anchors_y:181}D{i:4;anchors_width:100}
 }
  ##^##*/
