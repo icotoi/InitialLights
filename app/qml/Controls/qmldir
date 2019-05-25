@@ -1,2 +1,3 @@
 module Controls
 ILToggleLedButton 1.0 ILToggleLedButton.qml
+ILColorWheel 1.0 ILColorWheel.qml
