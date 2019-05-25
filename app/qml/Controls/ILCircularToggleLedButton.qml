@@ -11,6 +11,9 @@ Item {
 
     property int size: Math.min(width, height)
     property color color: "blue"
+    property bool isOn: false
+
+    property alias checked: button.checked
 
     property real buttonOpacity: 0.5
 
@@ -20,6 +23,8 @@ Item {
     property real lightIntensity: 0.3
     property real lightTemperature: 0.7
     property int lightIndicatorWidth: 3
+
+    signal toggled()
 
     AbstractButton {
         id: button
@@ -33,7 +38,7 @@ Item {
                 height: width
                 radius: width / 2
                 color: control.color
-                opacity: button.checked ? 1.0 : control.buttonOpacity
+                opacity: control.isOn ? 1.0 : control.buttonOpacity
             }
 
             Rectangle {
@@ -85,5 +90,9 @@ Item {
                 color: control.color
             }
         }
+    }
+
+    Component.onCompleted: {
+        button.toggled.connect(toggled)
     }
 }
