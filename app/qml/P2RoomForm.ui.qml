@@ -9,64 +9,46 @@ Item {
     id: element
     width: 360
     height: 590
+    property alias roomView: roomView
     property alias temperatureSlider: temperatureSlider
     property alias intensitySlider: intensitySlider
     property alias onSwitch: onSwitch
     property alias configurationPane: configurationPane
-    property alias iLCircularToggleLedButton2: iLCircularToggleLedButton2
-    property alias iLCircularToggleLedButton1: iLCircularToggleLedButton1
-    property alias iLCircularToggleLedButton0: iLCircularToggleLedButton0
-    property alias imageMouseArea: imageMouseArea
     clip: true
 
+    ILRoomView {
+        id: roomView
 
-    Item {
-        id: controlContainer
-        x: 15
         y: 0
         width: 330
         height: 330
+        anchors.horizontalCenter: parent.horizontalCenter
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-        Image {
-            id: image
-            anchors.fill: parent
-            fillMode: Image.PreserveAspectFit
-            source: "Images/pixabay_illumination-lights-bulbs-731494_1920.jpg"
-        }
+        image: "Images/pixabay_illumination-lights-bulbs-731494_1920.jpg"
 
-        MouseArea {
-            id: imageMouseArea
-            anchors.fill: parent
-        }
-
-
-        ILCircularToggleLedButton {
-            id: iLCircularToggleLedButton0
-            x: 33
-            y: 187
+        ILRoomLight {
+            x: 35
+            y: 184
             color: "#00ffff"
             lightTemperature: 0.9
             lightIntensity: 0.2
         }
 
-        ILCircularToggleLedButton {
-            id: iLCircularToggleLedButton1
-            x: 97
-            y: 111
+        ILRoomLight {
+            x: 96
+            y: 110
             color: "#ffff00"
         }
 
-        ILCircularToggleLedButton {
-            id: iLCircularToggleLedButton2
-            x: 119
-            y: 201
+        ILRoomLight {
+            x: 120
+            y: 198
             color: "#ffffff"
             isOn: true
             lightIntensity: 0.5
             lightTemperature: 1
         }
-
     }
 
     Pane {
@@ -98,7 +80,6 @@ Item {
                     id: onSwitch
                     display: AbstractButton.IconOnly
                 }
-
             }
 
             Label {
@@ -128,41 +109,3 @@ Item {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*##^## Designer {
-    D{i:2;anchors_x:108;anchors_y:138}D{i:3;anchors_height:100;anchors_width:100}D{i:4;anchors_x:108;anchors_y:138}
-D{i:1;anchors_width:100}
-}
- ##^##*/
