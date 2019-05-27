@@ -13,7 +13,7 @@ Item {
     property var dragTarget: null
 
     property int size: Math.min(width, height)
-    property color color: "blue"
+    property color color: "white"
     property bool isOn: false
 
     property alias checked: button.checked
