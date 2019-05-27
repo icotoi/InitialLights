@@ -1,54 +1,89 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.5
+import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
 
 ApplicationWindow {
+    id: window
     visible: true
     width: 360
     height: 640
     title: qsTr("Initial Lights")
 
-    SwipeView {
-        id: swipeView
+    property bool onStartPage: stackView.depth == 1
+    property var titleStack: [window.title]
+
+    header: ToolBar {
+        RowLayout {
+            anchors.fill: parent
+
+            // a hamburger button that rotates
+            ToolButton {
+                id: hamburgerButton
+                text: onStartPage ? qsTr("☰") : qsTr("‹")
+                onClicked: {
+                    if (onStartPage) {
+                        drawer.visible ? drawer.close() : drawer.open()
+                        toolbarLabel.text = window.title
+                    } else {
+                        titleStack.pop()
+                        toolbarLabel.text = titleStack[titleStack.length - 1]
+                        stackView.pop()
+                    }
+                }
+                transform: Rotation {
+                    origin {
+                        x: hamburgerButton.width / 2
+                        y: hamburgerButton.height / 2
+                    }
+                    angle: (onStartPage && drawer.visible) ? drawer.position * 90: 0
+                }
+            }
+
+            Label {
+                id: toolbarLabel
+                text: window.title
+                elide: Label.ElideRight
+                horizontalAlignment: Qt.AlignHCenter
+                verticalAlignment: Qt.AlignVCenter
+                Layout.fillWidth: true
+            }
+
+            ToolButton {
+                text: qsTr("⋮")
+//                onClicked: menu.open()
+            }
+        }
+    }
+
+    Drawer {
+        id: drawer
+        y: header.height
+        width: window.width * 0.6
+        height: window.height - header.height
+        P0Drawer {
+            anchors.fill: parent
+            onRoomClicked: {
+                drawer.close()
+                toolbarLabel.text = room.text
+                titleStack.push(room.text)
+                stackView.push(roomView)
+            }
+        }
+    }
+
+    StackView {
+        id: stackView
         anchors.fill: parent
-        currentIndex: tabBar.currentIndex
-
-        P1Main {
-
-        }
-
-        P2Room {
-
-        }
-
-        DemoColorWheel {
-        }
-
-//        DemoToggleLedButton {
-//        }
+        initialItem: mainView
     }
 
-    footer: TabBar {
-        id: tabBar
-        currentIndex: swipeView.currentIndex
-
-        TabButton {
-            text: qsTr("Main")
-        }
-
-        TabButton {
-            text: qsTr("Testroom1")
-        }
-
-        TabButton {
-            text: qsTr("Color Wheel")
-        }
-
-//        TabButton {
-//            text: qsTr("Buttons")
-//        }
+    Component {
+        id: mainView
+        P1Main {}
     }
 
-    Component.onCompleted: {
-        swipeView.setCurrentIndex(1)
+    Component {
+        id: roomView
+        P2Room {}
     }
 }

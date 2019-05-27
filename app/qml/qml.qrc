@@ -28,5 +28,7 @@
         <file>Controls/ILRoomLight.qml</file>
         <file>Images/material.io-sharp-delete-24px.svg</file>
         <file>Images/material.io-sharp-add-24px.svg</file>
+        <file>P0Drawer.qml</file>
+        <file>P0DrawerForm.ui.qml</file>
     </qresource>
 </RCC>

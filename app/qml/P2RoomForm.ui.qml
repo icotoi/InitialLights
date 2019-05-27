@@ -8,8 +8,6 @@ import "Constants"
 
 Item {
     id: element
-    width: 360
-    height: 590
     property alias colorRectangleMouseArea: colorRectangleMouseArea
     property alias colorRectangle: colorRectangle
     property alias deleteLightButton: deleteLightButton
@@ -86,7 +84,6 @@ Item {
                     display: AbstractButton.IconOnly
                 }
 
-
                 Item {
                     visible: true
                     Layout.fillWidth: true
@@ -151,11 +148,8 @@ Item {
 
 
 
-
-
-
-
 /*##^## Designer {
-    D{i:16;anchors_y:0}
+    D{i:0;autoSize:true;height:480;width:640}D{i:12;anchors_height:100;anchors_width:100}
+D{i:16;anchors_y:0}D{i:17;anchors_y:0}
 }
  ##^##*/
