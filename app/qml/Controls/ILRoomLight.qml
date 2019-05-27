@@ -106,6 +106,12 @@ Item {
             drag.minimumX: 0
             drag.minimumY: 0
             onPressed: held = true
+            onPositionChanged: {
+                if (!button.checked) {
+                    button.checked = true
+                    control.toggled()
+                }
+            }
             onReleased: held = false
             onClicked: {
                 button.toggle()
