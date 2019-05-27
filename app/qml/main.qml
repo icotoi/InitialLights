@@ -16,11 +16,15 @@ ApplicationWindow {
 
         }
 
+        P2Room {
+
+        }
+
         DemoColorWheel {
         }
 
-        DemoToggleLedButton {
-        }
+//        DemoToggleLedButton {
+//        }
     }
 
     footer: TabBar {
@@ -32,11 +36,19 @@ ApplicationWindow {
         }
 
         TabButton {
-            text: qsTr("Color Wheel")
+            text: qsTr("Testroom1")
         }
 
         TabButton {
-            text: qsTr("Buttons")
+            text: qsTr("Color Wheel")
         }
+
+//        TabButton {
+//            text: qsTr("Buttons")
+//        }
+    }
+
+    Component.onCompleted: {
+        swipeView.setCurrentIndex(1)
     }
 }
