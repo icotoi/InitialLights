@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Controls.Material 2.12
 import QtQuick.Layouts 1.12
 
 import "../Constants"
@@ -15,7 +16,8 @@ Item {
 
     property alias checked: button.checked
 
-    property real buttonOpacity: 0.5
+    property real onOpacity: 0.75
+    property real offOpacity: 0.25
 
     property color buttonBorderColor: ILStyle.circularToggleLedButton.borderColor
     property int buttonBorderWidth: 2
@@ -38,14 +40,14 @@ Item {
                 height: width
                 radius: width / 2
                 color: control.color
-                opacity: control.isOn ? 1.0 : control.buttonOpacity
+                opacity: control.isOn ? control.onOpacity : control.offOpacity
             }
 
             Rectangle {
                 width: control.size
                 height: width
                 radius: width / 2
-                border.color: control.buttonBorderColor
+                border.color: control.checked ? Material.accent : control.buttonBorderColor
                 border.width: control.buttonBorderWidth
                 color: "transparent"
             }
