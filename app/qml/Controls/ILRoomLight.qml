@@ -10,6 +10,8 @@ Item {
     width: 50
     height: 50
 
+    property var dragTarget: null
+
     property int size: Math.min(width, height)
     property color color: "blue"
     property bool isOn: false
@@ -101,12 +103,21 @@ Item {
             property bool held: false
 
             drag.target: held ? control : undefined
+            drag.minimumX: 0
+            drag.minimumY: 0
             onPressed: held = true
             onReleased: held = false
             onClicked: {
                 button.toggle()
                 control.toggled()
             }
+        }
+    }
+
+    onDragTargetChanged: {
+        if (dragTarget) {
+            mouseArea.drag.maximumX = dragTarget.width - control.width
+            mouseArea.drag.maximumY = dragTarget.height - control.height
         }
     }
 }

@@ -15,6 +15,7 @@ Item {
             currentLight = light.checked ? light : null
             _.configureCurrentLight()
         })
+        light.dragTarget = control
     }
 
     QtObject {
