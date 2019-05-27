@@ -1,4 +1,4 @@
 *.user
 .DS_Store
+*.autosave
 build-app-*/
-

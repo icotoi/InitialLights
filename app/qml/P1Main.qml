@@ -9,8 +9,8 @@ P1MainForm {
     topGridLayout.children: [
         // row 1
         ILToggleLedButton {
-            text: qsTr("Bathroom")
-            ledColor: "pink"
+            text: "Living Room"
+            ledColor: "skyblue"
             Layout.fillWidth: true
         },
 
@@ -21,8 +21,8 @@ P1MainForm {
         },
 
         ILToggleLedButton {
-            text: "Living Room"
-            ledColor: "skyblue"
+            text: qsTr("Bathroom")
+            ledColor: "pink"
             Layout.fillWidth: true
         },
 
@@ -52,7 +52,7 @@ P1MainForm {
     bottomGridLayout.children: [
         // row 1
         ILToggleLedButton {
-            text: qsTr("Commin in")
+            text: qsTr("Coming in")
             ledColor: "pink"
             Layout.fillWidth: true
         },
