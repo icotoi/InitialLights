@@ -8,8 +8,6 @@ import "Constants"
 
 Item {
     id: element
-    width: 360
-    height: 590
     property alias colorRectangleMouseArea: colorRectangleMouseArea
     property alias colorRectangle: colorRectangle
     property alias deleteLightButton: deleteLightButton
@@ -86,7 +84,6 @@ Item {
                     display: AbstractButton.IconOnly
                 }
 
-
                 Item {
                     visible: true
                     Layout.fillWidth: true
@@ -94,12 +91,13 @@ Item {
 
                 Rectangle {
                     id: colorRectangle
-                    width: 40
-                    height: 40
                     color: "white"
-                    radius: 4
-                    border.color: ILStyle.borderColor
-                    border.width: 2
+
+                    width: ILStyle.colorRectangle.size
+                    height: width
+                    radius: ILStyle.colorRectangle.radius
+                    border.width: ILStyle.colorRectangle.borderWidth
+                    border.color: ILStyle.colorRectangle.borderColor
 
                     MouseArea {
                         id: colorRectangleMouseArea
@@ -134,16 +132,13 @@ Item {
 
     ToolButton {
         id: addLightButton
-        anchors.top: parent.top
-        anchors.right: roomView.right
+        y: 0
         icon.source: "Images/material.io-sharp-add-24px.svg"
     }
 
     ToolButton {
         id: deleteLightButton
         visible: configurationPane.visible
-        anchors.top: parent.top
-        anchors.right: addLightButton.left
         icon.source: "Images/material.io-sharp-delete-24px.svg"
     }
 }
@@ -153,9 +148,8 @@ Item {
 
 
 
-
-
 /*##^## Designer {
-    D{i:16;anchors_y:0}
+    D{i:0;autoSize:true;height:480;width:640}D{i:12;anchors_height:100;anchors_width:100}
+D{i:16;anchors_y:0}D{i:17;anchors_y:0}
 }
  ##^##*/
