@@ -91,12 +91,13 @@ Item {
 
                 Rectangle {
                     id: colorRectangle
-                    width: 40
-                    height: 40
                     color: "white"
-                    radius: 4
-                    border.color: ILStyle.borderColor
-                    border.width: 2
+
+                    width: ILStyle.colorRectangle.size
+                    height: width
+                    radius: ILStyle.colorRectangle.radius
+                    border.width: ILStyle.colorRectangle.borderWidth
+                    border.color: ILStyle.colorRectangle.borderColor
 
                     MouseArea {
                         id: colorRectangleMouseArea

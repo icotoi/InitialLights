@@ -35,4 +35,12 @@ QtObject {
     property QtObject circularToggleLedButton: QtObject {
         property color borderColor: root.borderColor
     }
+
+    // Color Sampler
+    property QtObject colorRectangle: QtObject {
+        property int size: 40
+        property int radius: 4
+        property int borderWidth: 2
+        property color borderColor: root.borderColor
+    }
 }

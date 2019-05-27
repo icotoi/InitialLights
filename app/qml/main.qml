@@ -100,6 +100,7 @@ ApplicationWindow {
 
     Component {
         id: roomView
-        P2Room {}
+        P2Room {
+        }
     }
 }

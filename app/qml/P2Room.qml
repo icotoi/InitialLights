@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Window 2.12
 
 P2RoomForm {
     id: root
@@ -10,6 +11,36 @@ P2RoomForm {
         deleteLightButton,
         addLightButton,
     ]
+
+    Popup {
+        id: popup
+
+        x: (root.width - width) / 2
+        y: root.height - height
+        width: root.width - 50
+        height: root.height - 90
+
+        modal: true
+        focus: true
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+        LightColorChooserPopup {
+            id: colorChooser
+            anchors.fill: parent
+            acceptButton.onClicked: {
+                popup.close()
+                roomView.currentLight.color = colorChooser.newColor
+                colorRectangle.color = colorChooser.newColor
+            }
+        }
+    }
+
+    colorRectangleMouseArea.onClicked: {
+        var color = roomView.currentLight.color
+        colorChooser.oldColor = color
+        colorChooser.newColor = color
+        popup.open()
+    }
 
     addLightButton.onClicked: roomView.addNewLight()
     deleteLightButton.onClicked: roomView.removeCurrentLight()

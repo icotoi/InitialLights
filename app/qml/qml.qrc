@@ -30,5 +30,7 @@
         <file>Images/material.io-sharp-add-24px.svg</file>
         <file>P0Drawer.qml</file>
         <file>P0DrawerForm.ui.qml</file>
+        <file>LightColorChooserPopup.qml</file>
+        <file>LightColorChooserPopupForm.ui.qml</file>
     </qresource>
 </RCC>
