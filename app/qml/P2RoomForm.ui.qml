@@ -131,19 +131,18 @@ Item {
 
     ToolButton {
         id: addLightButton
-        anchors.top: parent.top
-        anchors.right: roomView.right
+        y: 0
         icon.source: "Images/material.io-sharp-add-24px.svg"
     }
 
     ToolButton {
         id: deleteLightButton
         visible: configurationPane.visible
-        anchors.top: parent.top
-        anchors.right: addLightButton.left
         icon.source: "Images/material.io-sharp-delete-24px.svg"
     }
 }
+
+
 
 
 

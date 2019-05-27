@@ -22,6 +22,7 @@ ApplicationWindow {
                 text: onStartPage ? qsTr("☰") : qsTr("‹")
                 onClicked: {
                     if (onStartPage) {
+                        extraToolbarItems.children = []
                         drawer.visible ? drawer.close() : drawer.open()
                         toolbarLabel.text = window.title
                     } else {
@@ -43,9 +44,13 @@ ApplicationWindow {
                 id: toolbarLabel
                 text: window.title
                 elide: Label.ElideRight
-                horizontalAlignment: Qt.AlignHCenter
+                horizontalAlignment: Qt.AlignLeading
                 verticalAlignment: Qt.AlignVCenter
                 Layout.fillWidth: true
+            }
+
+            RowLayout {
+                id: extraToolbarItems
             }
 
             ToolButton {
@@ -67,6 +72,7 @@ ApplicationWindow {
                 toolbarLabel.text = room.text
                 titleStack.push(room.text)
                 stackView.push(roomView)
+                extraToolbarItems.children = stackView.currentItem.extraToolbarItems
             }
         }
     }
