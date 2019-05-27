@@ -10,6 +10,28 @@ Item {
     property alias image: image.source
     property var currentLight: null
 
+    Component {
+        id: roomLight
+
+        ILRoomLight {
+        }
+    }
+
+    function addNewLight() {
+        var light = roomLight.createObject(control)
+        light.x = control.width / 2
+        light.y = control.height / 2
+        add(light)
+    }
+
+    function removeCurrentLight() {
+        if (currentLight) {
+            currentLight.destroy()
+            currentLight = null
+            _.configureCurrentLight()
+        }
+    }
+
     function add(light) {
         light.toggled.connect(function() {
             currentLight = light.checked ? light : null

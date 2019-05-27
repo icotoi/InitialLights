@@ -4,10 +4,15 @@ import QtQuick.Controls 2.12
 P2RoomForm {
     id: root
 
+    property var title: "Room"
+
     property var extraToolbarItems: [
         deleteLightButton,
         addLightButton,
     ]
+
+    addLightButton.onClicked: roomView.addNewLight()
+    deleteLightButton.onClicked: roomView.removeCurrentLight()
 
     onSwitch {
         onToggled: {

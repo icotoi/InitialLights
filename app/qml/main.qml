@@ -10,7 +10,6 @@ ApplicationWindow {
     title: qsTr("Initial Lights")
 
     property bool onStartPage: stackView.depth == 1
-    property var titleStack: [window.title]
 
     header: ToolBar {
         RowLayout {
@@ -22,13 +21,10 @@ ApplicationWindow {
                 text: onStartPage ? qsTr("☰") : qsTr("‹")
                 onClicked: {
                     if (onStartPage) {
-                        extraToolbarItems.children = []
                         drawer.visible ? drawer.close() : drawer.open()
-                        toolbarLabel.text = window.title
                     } else {
-                        titleStack.pop()
-                        toolbarLabel.text = titleStack[titleStack.length - 1]
                         stackView.pop()
+                        updateToolbarForCurrentItem()
                     }
                 }
                 transform: Rotation {
@@ -60,6 +56,20 @@ ApplicationWindow {
         }
     }
 
+    function updateToolbarForCurrentItem() {
+        if (onStartPage) {
+            extraToolbarItems.children = []
+            toolbarLabel.text = window.title
+        } else {
+            extraToolbarItems.children = stackView.currentItem.extraToolbarItems
+                    ? stackView.currentItem.extraToolbarItems
+                    : []
+            toolbarLabel.text = stackView.currentItem.title
+                    ? stackView.currentItem.title
+                    : window.title
+        }
+    }
+
     Drawer {
         id: drawer
         y: header.height
@@ -70,9 +80,9 @@ ApplicationWindow {
             onRoomClicked: {
                 drawer.close()
                 toolbarLabel.text = room.text
-                titleStack.push(room.text)
                 stackView.push(roomView)
-                extraToolbarItems.children = stackView.currentItem.extraToolbarItems
+                stackView.currentItem.title = room.text
+                updateToolbarForCurrentItem()
             }
         }
     }
