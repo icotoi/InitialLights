@@ -36,6 +36,7 @@ P2RoomForm {
                 intensitySlider.value = roomView.currentLight.lightIntensity
                 temperatureSlider.value = roomView.currentLight.lightTemperature
                 onSwitch.checked = roomView.currentLight.isOn
+                colorRectangle.color = roomView.currentLight.color
             }
         }
     }

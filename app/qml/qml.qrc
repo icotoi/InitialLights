@@ -26,5 +26,7 @@
         <file>Images/pixabay_illumination-lights-bulbs-731494_1920.jpg</file>
         <file>Controls/ILRoomView.qml</file>
         <file>Controls/ILRoomLight.qml</file>
+        <file>Images/material.io-sharp-delete-24px.svg</file>
+        <file>Images/material.io-sharp-add-24px.svg</file>
     </qresource>
 </RCC>

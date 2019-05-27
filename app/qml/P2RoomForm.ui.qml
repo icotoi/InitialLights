@@ -4,11 +4,16 @@ import QtQuick.Layouts 1.12
 
 import "Images"
 import "Controls"
+import "Constants"
 
 Item {
     id: element
     width: 360
     height: 590
+    property alias colorRectangleMouseArea: colorRectangleMouseArea
+    property alias colorRectangle: colorRectangle
+    property alias deleteLightButton: deleteLightButton
+    property alias addLightButton: addLightButton
     property alias roomView: roomView
     property alias temperatureSlider: temperatureSlider
     property alias intensitySlider: intensitySlider
@@ -73,12 +78,33 @@ Item {
                 Label {
                     id: label
                     text: qsTr("Power")
-                    Layout.fillWidth: true
+                    Layout.fillWidth: false
                 }
 
                 Switch {
                     id: onSwitch
                     display: AbstractButton.IconOnly
+                }
+
+
+                Item {
+                    visible: true
+                    Layout.fillWidth: true
+                }
+
+                Rectangle {
+                    id: colorRectangle
+                    width: 40
+                    height: 40
+                    color: "white"
+                    radius: 4
+                    border.color: ILStyle.borderColor
+                    border.width: 2
+
+                    MouseArea {
+                        id: colorRectangleMouseArea
+                        anchors.fill: parent
+                    }
                 }
             }
 
@@ -105,7 +131,31 @@ Item {
             }
         }
     }
+
+    ToolButton {
+        id: addLightButton
+        anchors.top: parent.top
+        anchors.right: roomView.right
+        icon.source: "Images/material.io-sharp-add-24px.svg"
+    }
+
+    ToolButton {
+        id: deleteLightButton
+        visible: configurationPane.visible
+        anchors.top: parent.top
+        anchors.right: addLightButton.left
+        icon.source: "Images/material.io-sharp-delete-24px.svg"
+    }
 }
 
 
 
+
+
+
+
+
+/*##^## Designer {
+    D{i:16;anchors_y:0}
+}
+ ##^##*/
