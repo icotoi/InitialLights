@@ -92,9 +92,21 @@ Item {
                 color: control.color
             }
         }
-    }
 
-    Component.onCompleted: {
-        button.toggled.connect(toggled)
+        MouseArea {
+            id: mouseArea
+
+            anchors.fill: parent
+
+            property bool held: false
+
+            drag.target: held ? control : undefined
+            onPressed: held = true
+            onReleased: held = false
+            onClicked: {
+                button.toggle()
+                control.toggled()
+            }
+        }
     }
 }
