@@ -32,5 +32,10 @@
         <file>P0DrawerForm.ui.qml</file>
         <file>LightColorChooserPopup.qml</file>
         <file>LightColorChooserPopupForm.ui.qml</file>
+        <file>Images/material.io-baseline-photo_camera-24px.svg</file>
+        <file>Images/material.io-baseline-photo_library-24px.svg</file>
+        <file>Images/material.io-baseline-arrow_back-24px.svg</file>
+        <file>Images/material.io-baseline-menu-24px.svg</file>
+        <file>Images/material.io-baseline-more_vert-24px.svg</file>
     </qresource>
 </RCC>

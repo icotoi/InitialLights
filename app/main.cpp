@@ -1,6 +1,12 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
+#ifdef Q_OS_ANDROID
+// Because deployment sometimes just forgets to include this lib otherwise
+// https://github.com/papyros/qml-material/issues/302
+#include <QtSvg>
+#endif
+
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
