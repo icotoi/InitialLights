@@ -1,19 +1,20 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 
-#ifdef Q_OS_ANDROID
-// Because deployment sometimes just forgets to include this lib otherwise
-// https://github.com/papyros/qml-material/issues/302
-#include <QtSvg>
-#endif
+#include "platformtimer.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
+    PlatformTimer timer;
+
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty(QStringLiteral("timer"), QVariant::fromValue(&timer));
+
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {

@@ -17,6 +17,8 @@ Item {
     property alias intensitySlider: intensitySlider
     property alias onSwitch: onSwitch
     property alias configurationPane: configurationPane
+    property alias cameraButton: cameraButton
+    property alias photosButton: photosButton
     clip: true
 
     ILRoomView {
@@ -132,7 +134,6 @@ Item {
 
     ToolButton {
         id: addLightButton
-        y: 0
         icon.source: "Images/material.io-sharp-add-24px.svg"
     }
 
@@ -141,9 +142,17 @@ Item {
         visible: configurationPane.visible
         icon.source: "Images/material.io-sharp-delete-24px.svg"
     }
+
+    ToolButton {
+        id: cameraButton
+        icon.source: "Images/material.io-baseline-photo_camera-24px.svg"
+    }
+
+    ToolButton {
+        id: photosButton
+        icon.source: "Images/material.io-baseline-photo_library-24px.svg"
+    }
 }
-
-
 
 
 

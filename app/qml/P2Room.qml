@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Window 2.12
+import QtMultimedia 5.12
 
 P2RoomForm {
     id: root
@@ -10,7 +11,45 @@ P2RoomForm {
     property var extraToolbarItems: [
         deleteLightButton,
         addLightButton,
+        cameraButton,
+        photosButton,
     ]
+
+    property bool isCameraAvailable: QtMultimedia.availableCameras.length > 0
+    property bool capturingImage: false
+
+    photosButton {
+        enabled: false // TODO: find out how to test if we can browse for photos
+    }
+
+    cameraButton {
+        enabled: isCameraAvailable
+        onClicked: capturingImage = !capturingImage
+    }
+
+    Camera {
+        id: camera
+
+        imageCapture {
+            onImageCaptured: {
+                // Show the preview in an Image
+                roomView.image = preview
+                capturingImage = false
+            }
+        }
+    }
+
+    VideoOutput {
+        visible: capturingImage
+        source: camera
+        focus : visible // to receive focus and capture key events when visible
+        anchors.fill: roomView
+
+        MouseArea {
+            anchors.fill: parent;
+            onClicked: camera.imageCapture.capture();
+        }
+    }
 
     Popup {
         id: popup
