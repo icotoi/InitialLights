@@ -1,3 +1,4 @@
 TEMPLATE = subdirs
 SUBDIRS = old \
-    app
+    app \
+    demo-android-intents
