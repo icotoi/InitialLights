@@ -70,6 +70,13 @@ ApplicationWindow {
         }
     }
 
+    function showRoom(roomName) {
+        toolbarLabel.text = roomName
+        stackView.push(roomView)
+        stackView.currentItem.title = roomName
+        updateToolbarForCurrentItem()
+    }
+
     Drawer {
         id: drawer
         y: header.height
@@ -79,10 +86,7 @@ ApplicationWindow {
             anchors.fill: parent
             onRoomClicked: {
                 drawer.close()
-                toolbarLabel.text = room.text
-                stackView.push(roomView)
-                stackView.currentItem.title = room.text
-                updateToolbarForCurrentItem()
+                showRoom(room.text)
             }
         }
     }
@@ -100,7 +104,10 @@ ApplicationWindow {
 
     Component {
         id: roomView
-        P2Room {
-        }
+        P2Room {}
+    }
+
+    Component.onCompleted: {
+        showRoom("Test")
     }
 }

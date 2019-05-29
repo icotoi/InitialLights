@@ -10,6 +10,8 @@ P2RoomForm {
     property var extraToolbarItems: [
         deleteLightButton,
         addLightButton,
+        cameraButton,
+        photosButton,
     ]
 
     Popup {
