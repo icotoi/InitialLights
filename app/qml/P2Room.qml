@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Window 2.12
+import QtMultimedia 5.12
 
 P2RoomForm {
     id: root
@@ -13,6 +14,16 @@ P2RoomForm {
         cameraButton,
         photosButton,
     ]
+
+    property bool isCameraAvailable: QtMultimedia.availableCameras.length > 0
+
+    photosButton {
+        enabled: false // TODO: find out how to test if we can browse for photos
+    }
+
+    cameraButton {
+        enabled: isCameraAvailable
+    }
 
     Popup {
         id: popup

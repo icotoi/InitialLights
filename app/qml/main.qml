@@ -18,7 +18,9 @@ ApplicationWindow {
             // a hamburger button that rotates
             ToolButton {
                 id: hamburgerButton
-                text: onStartPage ? qsTr("☰") : qsTr("‹")
+                icon.source: onStartPage
+                             ? "Images/material.io-baseline-menu-24px.svg"
+                             : "Images/material.io-baseline-arrow_back-24px.svg"
                 onClicked: {
                     if (onStartPage) {
                         drawer.visible ? drawer.close() : drawer.open()
@@ -50,7 +52,7 @@ ApplicationWindow {
             }
 
             ToolButton {
-                text: qsTr("⋮")
+                icon.source: "Images/material.io-baseline-more_vert-24px.svg"
 //                onClicked: menu.open()
             }
         }
@@ -108,6 +110,6 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        showRoom("Test")
+//        showRoom("Test")
     }
 }
