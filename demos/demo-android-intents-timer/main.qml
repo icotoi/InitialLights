@@ -7,7 +7,7 @@ Window {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Android Intents")
+    title: qsTr("Android Intents: Timer")
 
     ColumnLayout {
         anchors.verticalCenter: parent.verticalCenter
