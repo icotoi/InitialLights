@@ -29,4 +29,18 @@ ApplicationWindow {
             onClicked: camera.captureImage()
         }
     }
+
+    ListView {
+        id: listView
+        width: 150
+        anchors.bottom: parent.bottom
+        anchors.top: parent.top
+        anchors.right: parent.right
+        model: camera.imagePaths
+
+        delegate: Button {
+            text: modelData
+            onClicked: camera.imagePath = modelData
+        }
+    }
 }

@@ -1,6 +1,7 @@
 #include "platformcamera.h"
 
 #include <QDebug>
+#include <QDir>
 #include <QFile>
 
 #if defined(Q_OS_ANDROID)
@@ -18,7 +19,45 @@ enum ReceiverRequestCodes {
 
 PlatformCamera::PlatformCamera(QObject *parent) : QObject(parent)
 {
+#if defined (Q_OS_ANDROID)
+    QAndroidJniObject context = QtAndroid::androidContext();
 
+    QAndroidJniObject DIRECTORY_PICTURES = QAndroidJniObject::getStaticObjectField<jstring>("android/os/Environment",
+                                                                                            "DIRECTORY_PICTURES");
+    if (!DIRECTORY_PICTURES.isValid()) {
+        qWarning() << "invalid Environment.DIRECTORY_PICTURES";
+    } else {
+        QAndroidJniObject storageDir = context.callObjectMethod("getExternalFilesDir",
+                                                                "(Ljava/lang/String;)Ljava/io/File;",
+                                                                DIRECTORY_PICTURES.object<jstring>());
+        if (!storageDir.isValid()) {
+            qWarning() << "invalid storageDir";
+        } else {
+            QAndroidJniObject storageDirPath = storageDir.callObjectMethod("getAbsolutePath",
+                                                                           "()Ljava/lang/String;");
+            if (!storageDirPath.isValid()) {
+                qWarning() << "invalid storageDirPath";
+            } else {
+                QDir dir(storageDirPath.toString());
+
+                if (dir.exists() && !dir.isEmpty()) {
+                    QFileInfoList infos = dir.entryInfoList(QStringList() << "*.jpg",
+                                                             QDir::NoDotAndDotDot | QDir::Files,
+                                                             QDir::Name);
+                    QStringList images;
+                    foreach(auto info, infos) {
+                        images << info.absoluteFilePath();
+                    }
+                    setImagePaths(images);
+
+                    qDebug() << "===";
+                    qDebug() << m_imagePaths;
+                    qDebug() << "===";
+                }
+            }
+        }
+    }
+#endif
 }
 
 void PlatformCamera::captureImage()
@@ -132,6 +171,15 @@ void PlatformCamera::setImagePath(QString imagePath)
     emit imagePathChanged(m_imagePath);
 }
 
+void PlatformCamera::setImagePaths(QStringList imagePaths)
+{
+    if (m_imagePaths == imagePaths)
+        return;
+
+    m_imagePaths = imagePaths;
+    emit imagePathsChanged(m_imagePaths);
+}
+
 #ifdef Q_OS_ANDROID
 void PlatformCamera::handleActivityResult(int receiverRequestCode, int resultCode, const QAndroidJniObject &)
 {
@@ -150,6 +198,11 @@ void PlatformCamera::handleActivityResult(int receiverRequestCode, int resultCod
 
     qDebug() << "image acquired";
     setImagePath(m_temporaryImagePath);
+
+    QStringList images = m_imagePaths;
+    images.push_back(m_temporaryImagePath);
+    images.sort();
+    setImagePaths(images);
 }
 #endif
 
