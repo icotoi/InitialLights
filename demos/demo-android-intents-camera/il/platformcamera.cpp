@@ -86,7 +86,7 @@ void PlatformCamera::captureImage()
         qDebug() << "m_temporaryImagePath:" << m_temporaryImagePath;
     }
 
-    QAndroidJniObject authorithy = QAndroidJniObject::fromString("com.initiallights.demo-android-intents-camera.fileprovider");
+    QAndroidJniObject authorithy = QAndroidJniObject::fromString("com.initiallights.demo_android_intents_camera.fileprovider");
     QAndroidJniObject capturedImageUri = QAndroidJniObject::callStaticObjectMethod("android/support/v4/content/FileProvider",
                                                                                    "getUriForFile",
                                                                                    "(Landroid/content/Context;Ljava/lang/String;Ljava/io/File;)Landroid/net/Uri;",

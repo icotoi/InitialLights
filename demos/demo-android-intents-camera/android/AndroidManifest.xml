@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<manifest package="org.qtproject.example.demo_android_intents_camera" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0" android:versionCode="1" android:installLocation="auto">
+<manifest package="com.initiallights.demo_android_intents_camera" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0" android:versionCode="1" android:installLocation="auto">
     <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>
 
     <!-- The following comment will be replaced upon deployment with default permissions based on the dependencies of the application.
@@ -86,8 +86,7 @@
 
     <!-- For adding service(s) please check: https://wiki.qt.io/AndroidServices -->
 
-   <provider android:name="android.support.v4.content.FileProvider" android:authorities="com.initiallights.demo-android-intents-camera.fileprovider"
- android:exported="false" android:grantUriPermissions="true">
+   <provider android:name="android.support.v4.content.FileProvider" android:authorities="com.initiallights.demo_android_intents_camera.fileprovider" android:exported="false" android:grantUriPermissions="true">
         <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths">
         </meta-data>
     </provider>
