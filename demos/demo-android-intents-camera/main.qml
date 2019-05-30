@@ -19,14 +19,14 @@ ApplicationWindow {
             fillMode: Image.PreserveAspectFit
             Layout.fillHeight: true
             Layout.fillWidth: true
-            source: ""
+            source: camera.imagePath == "" ? "" : "file:" + camera.imagePath
         }
 
         Button {
             id: button
             text: qsTr("Launch Camera Intent")
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: camera.launch()
+            onClicked: camera.captureImage()
         }
     }
 }
