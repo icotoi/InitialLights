@@ -19,6 +19,7 @@ ApplicationWindow {
             fillMode: Image.PreserveAspectFit
             Layout.fillHeight: true
             Layout.fillWidth: true
+            source: photos.imagePath
         }
 
         Button {

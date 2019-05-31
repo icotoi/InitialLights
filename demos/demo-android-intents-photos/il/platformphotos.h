@@ -16,26 +16,26 @@ class PlatformPhotos : public QObject
 #endif
 {
     Q_OBJECT
-    Q_PROPERTY(QImage image READ image WRITE setImage NOTIFY imageChanged)
+    Q_PROPERTY(QString imagePath READ imagePath WRITE setImagePath NOTIFY imagePathChanged)
 
 public:
     explicit PlatformPhotos(QObject *parent = nullptr);
 
-    QImage image() const { return m_image; }
+    QString imagePath() const { return m_imagePath; }
 
 signals:
 
-    void imageChanged(QImage image);
+    void imagePathChanged(QString imagePath);
 
 public slots:
     void selectImage();
-    void setImage(QImage image);
+    void setImagePath(QString imagePath);
 
 private:
 #ifdef Q_OS_ANDROID
     void handleActivityResult(int receiverRequestCode, int resultCode, const QAndroidJniObject& data) override;
 #endif
-    QImage m_image;
+    QString m_imagePath;
 };
 
 } // namespace il

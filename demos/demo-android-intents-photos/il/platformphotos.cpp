@@ -9,6 +9,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QUrl>
+#include <QDir>
 #endif
 
 namespace il {
@@ -17,6 +18,33 @@ namespace {
 enum ReceiverRequestCodes {
     SelectImageReceiverRequestCode = 2
 };
+
+QString getPicturesFolder() {
+    QAndroidJniObject context = QtAndroid::androidContext();
+    QAndroidJniObject DIRECTORY_PICTURES = QAndroidJniObject::getStaticObjectField<jstring>("android/os/Environment",
+                                                                                            "DIRECTORY_PICTURES");
+    if (!DIRECTORY_PICTURES.isValid()) {
+        qWarning() << "invalid Environment.DIRECTORY_PICTURES";
+        return QString();
+    }
+
+    QAndroidJniObject storageDir = context.callObjectMethod("getExternalFilesDir",
+                                                            "(Ljava/lang/String;)Ljava/io/File;",
+                                                            DIRECTORY_PICTURES.object<jstring>());
+    if (!storageDir.isValid()) {
+        qWarning() << "invalid storageDir";
+        return QString();
+    }
+
+    QAndroidJniObject storageDirPath = storageDir.callObjectMethod("getAbsolutePath",
+                                                                   "()Ljava/lang/String;");
+    if (!storageDirPath.isValid()) {
+        qWarning() << "invalid storageDirPath";
+        return QString();
+    }
+
+    return storageDirPath.toString();
+}
 
 struct ImageExtractor {
     QImage image;
@@ -37,8 +65,8 @@ struct ImageExtractor {
         }
 
         QAndroidJniObject inputStream = contentResolver.callObjectMethod("openInputStream",
-                                                                           "(Landroid/net/Uri;)Ljava/io/InputStream;",
-                                                                           uri.object<jobject>());
+                                                                         "(Landroid/net/Uri;)Ljava/io/InputStream;",
+                                                                         uri.object<jobject>());
         if (!inputStream.isValid()) {
             qWarning() << "invalid input stream";
         }
@@ -72,9 +100,13 @@ PlatformPhotos::PlatformPhotos(QObject *parent) : QObject(parent)
 
 void PlatformPhotos::selectImage()
 {
+    // for simplicity, we unset the image when we're going to select a new one
+    // this should not be done in the final code
+    setImagePath("");
+
 #if defined (Q_OS_ANDROID)
     QAndroidJniObject ACTION_GET_CONTENT = QAndroidJniObject::getStaticObjectField<jstring>("android/content/Intent",
-                                                                                              "ACTION_GET_CONTENT");
+                                                                                            "ACTION_GET_CONTENT");
     if (!ACTION_GET_CONTENT.isValid()) {
         qWarning() << "invalid Intent.ACTION_GET_CONTENT";
         return;
@@ -117,13 +149,13 @@ void PlatformPhotos::selectImage()
 #endif
 }
 
-void PlatformPhotos::setImage(QImage image)
+void PlatformPhotos::setImagePath(QString imagePath)
 {
-    if (m_image == image)
+    if (m_imagePath == imagePath)
         return;
 
-    m_image = image;
-    emit imageChanged(m_image);
+    m_imagePath = imagePath;
+    emit imagePathChanged(m_imagePath);
 }
 
 #if defined (Q_OS_ANDROID)
@@ -150,10 +182,19 @@ void PlatformPhotos::handleActivityResult(int receiverRequestCode, int resultCod
     auto imageExtractor = ImageExtractor();
     if (!imageExtractor.extract(uri)) {
         qWarning() << "could not extract the image";
-    } else {
-        setImage(imageExtractor.image);
-        qDebug() << "image:" << m_image.size();
+        return;
     }
+
+    QString picturesFolderPath = getPicturesFolder();
+    QDir dir(picturesFolderPath);
+    dir.mkpath(picturesFolderPath);
+    QFileInfo info(dir, "foo.jpg");
+    QString path = info.absoluteFilePath();
+    imageExtractor.image.save(path);
+
+    qDebug() << "image saved to:" << path;
+
+    setImagePath("file://" + path);
 }
 #endif
 
