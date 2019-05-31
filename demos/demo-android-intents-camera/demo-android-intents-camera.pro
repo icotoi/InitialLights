@@ -34,15 +34,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 android {
     QT += androidextras
-    DISTFILES += android/AndroidManifest.xml
+
+    DISTFILES += \
+        android/AndroidManifest.xml \
+        android/build.gradle \
+        android/gradle/wrapper/gradle-wrapper.jar \
+        android/gradle/wrapper/gradle-wrapper.properties \
+        android/gradlew \
+        android/gradlew.bat \
+        android/res/values/libs.xml \
+        android/res/xml/file_paths.xml
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 }
-
-DISTFILES += \
-    android/build.gradle \
-    android/gradle/wrapper/gradle-wrapper.jar \
-    android/gradle/wrapper/gradle-wrapper.properties \
-    android/gradlew \
-    android/gradlew.bat \
-    android/res/values/libs.xml \
-    android/res/xml/file_paths.xml
