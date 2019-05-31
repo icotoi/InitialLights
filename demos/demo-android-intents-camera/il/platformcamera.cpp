@@ -42,17 +42,13 @@ PlatformCamera::PlatformCamera(QObject *parent) : QObject(parent)
 
                 if (dir.exists() && !dir.isEmpty()) {
                     QFileInfoList infos = dir.entryInfoList(QStringList() << "*.jpg",
-                                                             QDir::NoDotAndDotDot | QDir::Files,
-                                                             QDir::Name);
+                                                            QDir::NoDotAndDotDot | QDir::Files,
+                                                            QDir::Name);
                     QStringList images;
                     foreach(auto info, infos) {
                         images << info.absoluteFilePath();
                     }
                     setImagePaths(images);
-
-                    qDebug() << "===";
-                    qDebug() << m_imagePaths;
-                    qDebug() << "===";
                 }
             }
         }
@@ -116,7 +112,7 @@ void PlatformCamera::captureImage()
     }
 
     QAndroidJniObject temporaryImagePath = photo.callObjectMethod("getAbsolutePath",
-                                                  "()Ljava/lang/String;");
+                                                                  "()Ljava/lang/String;");
     if (!temporaryImagePath.isValid()) {
         m_temporaryImagePath.clear();
         qWarning() << "invalid temporaryImagePath";

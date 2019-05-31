@@ -13,10 +13,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 HEADERS += \
-    il/platformcamera.h
+    il/platformphotos.h
 
 SOURCES += \
-    il/platformcamera.cpp \
+    il/platformphotos.cpp \
     main.cpp
 
 RESOURCES += qml.qrc
@@ -42,7 +42,8 @@ android {
         android/gradle/wrapper/gradle-wrapper.properties \
         android/gradlew \
         android/gradlew.bat \
-        android/res/values/libs.xml \
-        android/res/xml/file_paths.xml
-    ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+        android/res/values/libs.xml
+
+    ANDROID_PACKAGE_SOURCE_DIR = \
+        $$PWD/android
 }
