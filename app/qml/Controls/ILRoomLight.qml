@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Controls.Material 2.12
 import QtQuick.Layouts 1.12
 
 import "../Constants"
@@ -9,13 +10,16 @@ Item {
     width: 50
     height: 50
 
+    property var dragTarget: null
+
     property int size: Math.min(width, height)
-    property color color: "blue"
+    property color color: "white"
     property bool isOn: false
 
     property alias checked: button.checked
 
-    property real buttonOpacity: 0.5
+    property real onOpacity: 0.75
+    property real offOpacity: 0.25
 
     property color buttonBorderColor: ILStyle.circularToggleLedButton.borderColor
     property int buttonBorderWidth: 2
@@ -38,14 +42,14 @@ Item {
                 height: width
                 radius: width / 2
                 color: control.color
-                opacity: control.isOn ? 1.0 : control.buttonOpacity
+                opacity: control.isOn ? control.onOpacity : control.offOpacity
             }
 
             Rectangle {
                 width: control.size
                 height: width
                 radius: width / 2
-                border.color: control.buttonBorderColor
+                border.color: control.checked ? Material.accent : control.buttonBorderColor
                 border.width: control.buttonBorderWidth
                 color: "transparent"
             }
@@ -90,9 +94,36 @@ Item {
                 color: control.color
             }
         }
+
+        MouseArea {
+            id: mouseArea
+
+            anchors.fill: parent
+
+            property bool held: false
+
+            drag.target: held ? control : undefined
+            drag.minimumX: 0
+            drag.minimumY: 0
+            onPressed: held = true
+            onPositionChanged: {
+                if (!button.checked) {
+                    button.checked = true
+                    control.toggled()
+                }
+            }
+            onReleased: held = false
+            onClicked: {
+                button.toggle()
+                control.toggled()
+            }
+        }
     }
 
-    Component.onCompleted: {
-        button.toggled.connect(toggled)
+    onDragTargetChanged: {
+        if (dragTarget) {
+            mouseArea.drag.maximumX = dragTarget.width - control.width
+            mouseArea.drag.maximumY = dragTarget.height - control.height
+        }
     }
 }

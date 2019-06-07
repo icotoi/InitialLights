@@ -24,6 +24,18 @@
         <file>P2Room.qml</file>
         <file>P2RoomForm.ui.qml</file>
         <file>Images/pixabay_illumination-lights-bulbs-731494_1920.jpg</file>
-        <file>Controls/ILCircularToggleLedButton.qml</file>
+        <file>Controls/ILRoomView.qml</file>
+        <file>Controls/ILRoomLight.qml</file>
+        <file>Images/material.io-sharp-delete-24px.svg</file>
+        <file>Images/material.io-sharp-add-24px.svg</file>
+        <file>P0Drawer.qml</file>
+        <file>P0DrawerForm.ui.qml</file>
+        <file>LightColorChooserPopup.qml</file>
+        <file>LightColorChooserPopupForm.ui.qml</file>
+        <file>Images/material.io-baseline-photo_camera-24px.svg</file>
+        <file>Images/material.io-baseline-photo_library-24px.svg</file>
+        <file>Images/material.io-baseline-arrow_back-24px.svg</file>
+        <file>Images/material.io-baseline-menu-24px.svg</file>
+        <file>Images/material.io-baseline-more_vert-24px.svg</file>
     </qresource>
 </RCC>

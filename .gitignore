@@ -1,4 +1,6 @@
 *.user
 .DS_Store
+*.autosave
 build-app-*/
-
+demos/build-demo-android-intents-photos-Android_for_x86_Clang_Qt_5_12_3_for_Android_x86_f9a5d0-Debug
+demos/build-demo-android-intents-photos-Desktop_Qt_5_12_3_clang_64bit-Debug
