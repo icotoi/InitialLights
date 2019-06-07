@@ -19,6 +19,7 @@ enum ReceiverRequestCodes {
     SelectImageReceiverRequestCode = 2
 };
 
+#if defined(Q_OS_ANDROID)
 QString getPicturesFolder() {
     QAndroidJniObject context = QtAndroid::androidContext();
     QAndroidJniObject DIRECTORY_PICTURES = QAndroidJniObject::getStaticObjectField<jstring>("android/os/Environment",
@@ -90,7 +91,7 @@ struct ImageExtractor {
         return image.loadFromData(qtBuffer);
     }
 };
-
+#endif
 }
 
 PlatformPhotos::PlatformPhotos(QObject *parent) : QObject(parent)
