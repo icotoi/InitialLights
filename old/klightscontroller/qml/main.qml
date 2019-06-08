@@ -27,4 +27,25 @@ ApplicationWindow {
             }
         }
     }
+
+    BusyIndicator {
+        id: busyIndicator
+        anchors.centerIn: parent
+        visible: lightsUart.scanning
+    }
+
+    Label {
+        id: messageLabel
+        visible: lightsUart.message !== ""
+        text: lightsUart.message
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        horizontalAlignment: Text.AlignHCenter
+
+        background: Rectangle {
+            color: "black"
+            opacity: 0.2
+        }
+    }
 }

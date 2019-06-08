@@ -2,43 +2,76 @@
 
 namespace il {
 
-struct LightsUart::Impl {
-    QQmlListProperty<DeviceInfo> devices;
-    bool scanning = false;
-};
-
 LightsUart::LightsUart(QObject *parent)
     : QObject (parent)
-    , m_impl { new Impl }
 {
+    connect(&m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
+                this, &LightsUart::deviceDiscovered);
+    connect(&m_deviceDiscoveryAgent, qOverload<QBluetoothDeviceDiscoveryAgent::Error>(&QBluetoothDeviceDiscoveryAgent::error),
+            this, &LightsUart::scanError);
+    connect(&m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished,
+            this, &LightsUart::scanFinished);
 }
 
 LightsUart::~LightsUart()
 {
 }
 
-QQmlListProperty<DeviceInfo> LightsUart::devices() const
-{
-    return m_impl->devices;
-}
-
-bool LightsUart::scanning() const
-{
-    return m_impl->scanning;
-}
-
 void LightsUart::scan()
 {
     setScanning(true);
+    setMessage("Scanning for devices...");
+    m_deviceDiscoveryAgent.start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
 }
 
 void LightsUart::setScanning(bool scanning)
 {
-    if (m_impl->scanning == scanning)
+    if (m_scanning == scanning)
         return;
 
-    m_impl->scanning = scanning;
-    emit scanningChanged(m_impl->scanning);
+    m_scanning = scanning;
+    emit scanningChanged(m_scanning);
+}
+
+void LightsUart::setMessage(QString message)
+{
+    if (m_message == message)
+        return;
+
+    m_message = message;
+    emit messageChanged(m_message);
+}
+
+void LightsUart::deviceDiscovered(const QBluetoothDeviceInfo &device) {
+    if (device.serviceUuids().contains(m_uartServiceUuid)) {
+        auto dev = new DeviceInfo(device);
+        qWarning() << "Discovered LE Device name: " << dev->getName()
+                   << " Address: " << dev->getAddress();
+        //            m_devices.append(dev);
+        delete dev;
+        setMessage("Low Energy device found. Scanning for more...");
+    }
+    //...
+}
+
+void LightsUart::scanError(QBluetoothDeviceDiscoveryAgent::Error error) {
+    switch (error) {
+    case QBluetoothDeviceDiscoveryAgent::PoweredOffError:
+        setMessage("The Bluetooth adaptor is powered off, power it on before doing discovery.");
+        break;
+    case QBluetoothDeviceDiscoveryAgent::InputOutputError:
+        setMessage("Writing or reading from the device resulted in an error.");
+        break;
+    default:
+        setMessage("An unknown error has occurred.");
+    }
+}
+
+void LightsUart::scanFinished() {
+    setScanning(false);
+    setMessage("Scan finished");
+    //    if (m_devices.size() == 0)
+    //        setMessage("No Low Energy devices found");
 }
 
 }
@@ -91,13 +124,6 @@ void LightsUart::setScanning(bool scanning)
 //        setMessage("Low Energy device found. Scanning for more...");
 //    }
 //    //...
-//}
-
-//void LightsUart::scanFinished()
-//{
-//    if (m_devices.size() == 0)
-//        setMessage("No Low Energy devices found");
-//    emit nameChanged();
 //}
 
 //void LightsUart::deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error)

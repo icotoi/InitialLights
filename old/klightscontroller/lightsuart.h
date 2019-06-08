@@ -1,5 +1,9 @@
 #pragma once
 
+#include <QBluetoothDeviceDiscoveryAgent>
+#include <QBluetoothUuid>
+#include <QQmlListProperty>
+
 #include "deviceinfo.h"
 
 //#include <QDateTime>
@@ -10,36 +14,45 @@
 //#include <QLowEnergyController>
 //#include <QLowEnergyService>
 
-#include <QObject>
-#include <QQmlListProperty>
-
 namespace il {
 
 class LightsUart: public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QQmlListProperty<DeviceInfo> devices READ devices CONSTANT)
-
     Q_PROPERTY(bool scanning READ scanning NOTIFY scanningChanged)
+    Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY messageChanged)
 
 public:
     explicit LightsUart(QObject* parent = nullptr);
     virtual ~LightsUart();
 
-    QQmlListProperty<DeviceInfo> devices() const;
-    bool scanning() const;
+    bool scanning() const { return m_scanning; }
+    QString message() const { return m_message; }
 
 public slots:
     void scan();
-    void setScanning(bool scanning);
 
 signals:
     void scanningChanged(bool scanning);
+    void messageChanged(QString message);
 
 private:
-    struct Impl;
-    std::unique_ptr<Impl> m_impl;
+    void setScanning(bool scanning);
+    void setMessage(QString message);
+
+    void deviceDiscovered(const QBluetoothDeviceInfo &device);
+    void scanError(QBluetoothDeviceDiscoveryAgent::Error error);
+    void scanFinished();
+
+    const QBluetoothUuid m_uartServiceUuid = QBluetoothUuid(QStringLiteral("6E400001-B5A3-F393-E0A9-E50E24DCCA9E"));
+    const QBluetoothUuid m_uartWriteCharUuid = QBluetoothUuid(QStringLiteral("6E400002-B5A3-F393-E0A9-E50E24DCCA9E"));
+    const QBluetoothUuid m_uartReadCharUuid = QBluetoothUuid(QStringLiteral("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"));
+
+    bool m_scanning = false;
+    QString m_message;
+
+    QBluetoothDeviceDiscoveryAgent m_deviceDiscoveryAgent;
 };
 
 }
