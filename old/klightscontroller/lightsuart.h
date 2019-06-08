@@ -38,6 +38,8 @@ signals:
     void messageChanged(QString message);
 
 private:
+    class DeviceInfoContainer;
+
     void setScanning(bool scanning);
     void setMessage(QString message);
 
@@ -53,6 +55,7 @@ private:
     QString m_message;
 
     QBluetoothDeviceDiscoveryAgent m_deviceDiscoveryAgent;
+    std::unique_ptr<DeviceInfoContainer> m_devices;
 };
 
 }

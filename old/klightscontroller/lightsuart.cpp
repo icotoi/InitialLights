@@ -2,11 +2,61 @@
 
 namespace il {
 
+class LightsUart::DeviceInfoContainer {
+public:
+    ~DeviceInfoContainer() {
+        clear();
+    }
+
+    void add(DeviceInfo* device) {
+        if (contains(device)) {
+            qWarning() << "ignoring known device...";
+            return;
+        }
+
+        qWarning() << "LE Device name:" << device->getName()
+                   << "address:" << device->getAddress() << "scanned; adding it to the devices list...";
+
+        addToVector(&m_data, device);
+    }
+
+    // returns true if a device with same address is already in the container
+    bool contains(DeviceInfo* device) {
+        auto address = device->getAddress();
+        for (auto d: m_data) {
+            if (d->getAddress() == address)
+                return true;
+        }
+        return false;
+    }
+
+    void clear() {
+        for (auto d: m_data) {
+            delete d;
+        }
+    }
+
+    int size() const {
+        return m_data.size();
+    }
+
+private:
+    template <typename T>
+    void addToVector(QVector<T*>* v, T* obj)
+    {
+        v->push_back(obj);
+        QObject::connect(obj, &QObject::destroyed, [=]{ v->removeOne(obj); });
+    }
+
+    QVector<DeviceInfo*> m_data;
+};
+
 LightsUart::LightsUart(QObject *parent)
     : QObject (parent)
+    , m_devices(new DeviceInfoContainer())
 {
     connect(&m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
-                this, &LightsUart::deviceDiscovered);
+            this, &LightsUart::deviceDiscovered);
     connect(&m_deviceDiscoveryAgent, qOverload<QBluetoothDeviceDiscoveryAgent::Error>(&QBluetoothDeviceDiscoveryAgent::error),
             this, &LightsUart::scanError);
     connect(&m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished,
@@ -21,6 +71,7 @@ void LightsUart::scan()
 {
     setScanning(true);
     setMessage("Scanning for devices...");
+    m_devices->clear();
     m_deviceDiscoveryAgent.start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
 }
 
@@ -42,19 +93,17 @@ void LightsUart::setMessage(QString message)
     emit messageChanged(m_message);
 }
 
-void LightsUart::deviceDiscovered(const QBluetoothDeviceInfo &device) {
+void LightsUart::deviceDiscovered(const QBluetoothDeviceInfo &device)
+{
     if (device.serviceUuids().contains(m_uartServiceUuid)) {
-        auto dev = new DeviceInfo(device);
-        qWarning() << "Discovered LE Device name: " << dev->getName()
-                   << " Address: " << dev->getAddress();
-        //            m_devices.append(dev);
-        delete dev;
+        m_devices->add(new DeviceInfo(device));
         setMessage("Low Energy device found. Scanning for more...");
     }
     //...
 }
 
-void LightsUart::scanError(QBluetoothDeviceDiscoveryAgent::Error error) {
+void LightsUart::scanError(QBluetoothDeviceDiscoveryAgent::Error error)
+{
     switch (error) {
     case QBluetoothDeviceDiscoveryAgent::PoweredOffError:
         setMessage("The Bluetooth adaptor is powered off, power it on before doing discovery.");
@@ -67,11 +116,13 @@ void LightsUart::scanError(QBluetoothDeviceDiscoveryAgent::Error error) {
     }
 }
 
-void LightsUart::scanFinished() {
+void LightsUart::scanFinished()
+{
+    qDebug() << "scan finished";
     setScanning(false);
-    setMessage("Scan finished");
-    //    if (m_devices.size() == 0)
-    //        setMessage("No Low Energy devices found");
+    setMessage(m_devices->size() == 0
+               ? "No Low Energy devices found"
+               : QString("Found %1 device(s)").arg(m_devices->size()));
 }
 
 }
@@ -98,55 +149,6 @@ void LightsUart::scanFinished() {
 //    // initialize random seed for demo mode
 //    // FIXME: qsrand is obsolete
 ////    qsrand(QTime::currentTime().msec());
-//}
-
-//LightsUart::~LightsUart()
-//{
-//    qDeleteAll(m_devices);
-//    m_devices.clear();
-//}
-
-//void LightsUart::deviceSearch()
-//{
-//    qDeleteAll(m_devices);
-//    m_devices.clear();
-//    m_deviceDiscoveryAgent->start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
-//    setMessage("Scanning for devices...");
-//}
-
-//void LightsUart::addDevice(const QBluetoothDeviceInfo &device)
-//{
-//    if (device.serviceUuids().contains(m_uartServiceUuid)) {
-//        qWarning() << "Discovered LE Device name: " << device.name() << " Address: "
-//                   << device.address().toString();
-//        DeviceInfo *dev = new DeviceInfo(device);
-//        m_devices.append(dev);
-//        setMessage("Low Energy device found. Scanning for more...");
-//    }
-//    //...
-//}
-
-//void LightsUart::deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error)
-//{
-//    switch (error) {
-//    case QBluetoothDeviceDiscoveryAgent::PoweredOffError:
-//        setMessage("The Bluetooth adaptor is powered off, power it on before doing discovery.");
-//        break;
-//    case QBluetoothDeviceDiscoveryAgent::InputOutputError:
-//        setMessage("Writing or reading from the device resulted in an error.");
-//        break;
-//    default:
-//        setMessage("An unknown error has occurred.");
-//    }
-//}
-
-//void LightsUart::setMessage(QString message)
-//{
-//    if (m_info == message)
-//        return;
-
-//    m_info = message;
-//    emit messageChanged();
 //}
 
 //QVariant LightsUart::name()
