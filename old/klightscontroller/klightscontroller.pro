@@ -36,3 +36,5 @@ contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
         android/res/values/libs.xml
 }
 
+include($$PWD/../../3rdparty/qt-supermacros/QtSuperMacros.pri)
+include($$PWD/../../3rdparty/qt-qml-models/QtQmlModels.pri)

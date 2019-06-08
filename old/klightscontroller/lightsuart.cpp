@@ -2,49 +2,9 @@
 
 namespace il {
 
-class LightsUart::DeviceInfoContainer {
-public:
-    ~DeviceInfoContainer() {
-        clear();
-    }
-
-    void add(DeviceInfo* device) {
-        if (contains(device)) {
-            return;
-        }
-
-        qWarning() << "LE Device name:" << device->getName()
-                   << "address:" << device->getAddress() << "scanned; adding it to the devices list...";
-
-        m_data.append(device);
-    }
-
-    // returns true if a device with same address is already in the container
-    bool contains(DeviceInfo* device) {
-        auto address = device->getAddress();
-        for (auto d: m_data) {
-            if (d->getAddress() == address)
-                return true;
-        }
-        return false;
-    }
-
-    void clear() {
-        qDeleteAll(m_data);
-        m_data.clear();
-    }
-
-    int size() const {
-        return m_data.size();
-    }
-
-private:
-    QVector<DeviceInfo*> m_data;
-};
-
 LightsUart::LightsUart(QObject *parent)
     : QObject (parent)
-    , m_devices(new DeviceInfoContainer())
+    , m_devices(new QQmlObjectListModel<DeviceInfo>(this))
 {
     connect(&m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
             this, &LightsUart::deviceDiscovered);
@@ -84,10 +44,23 @@ void LightsUart::setMessage(QString message)
     emit messageChanged(m_message);
 }
 
+bool LightsUart::deviceAlreadyScanned(const QBluetoothDeviceInfo &device) const
+{
+    auto address = DeviceInfo::getAddress(device);
+    return std::any_of(m_devices->begin(), m_devices->end(), [address](DeviceInfo* device){
+       return device->getAddress() == address;
+    });
+}
+
 void LightsUart::deviceDiscovered(const QBluetoothDeviceInfo &device)
 {
     if (device.serviceUuids().contains(m_uartServiceUuid)) {
-        m_devices->add(new DeviceInfo(device));
+        if (!deviceAlreadyScanned(device)) {
+            auto dev = new DeviceInfo(device);
+            m_devices->append(dev);
+            qWarning() << "LE Device name:" << dev->getName()
+                       << "address:" << dev->getAddress() << "scanned; adding it to the devices list...";
+        }
         setMessage("Low Energy device found. Scanning for more...");
     }
     //...
