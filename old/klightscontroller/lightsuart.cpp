@@ -4,6 +4,7 @@ namespace il {
 
 struct LightsUart::Impl {
     QQmlListProperty<DeviceInfo> devices;
+    bool scanning = false;
 };
 
 LightsUart::LightsUart(QObject *parent)
@@ -21,8 +22,23 @@ QQmlListProperty<DeviceInfo> LightsUart::devices() const
     return m_impl->devices;
 }
 
+bool LightsUart::scanning() const
+{
+    return m_impl->scanning;
+}
+
 void LightsUart::scan()
 {
+    setScanning(true);
+}
+
+void LightsUart::setScanning(bool scanning)
+{
+    if (m_impl->scanning == scanning)
+        return;
+
+    m_impl->scanning = scanning;
+    emit scanningChanged(m_impl->scanning);
 }
 
 }

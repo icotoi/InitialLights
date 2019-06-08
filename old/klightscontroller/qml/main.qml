@@ -21,25 +21,10 @@ ApplicationWindow {
                 Layout.fillWidth: true
             }
             ToolButton {
+                onClicked: lightsUart.scan()
+                enabled: !lightsUart.scanning
                 icon.source: "images/material.io--baseline-perm_scan_wifi-24px.svg"
             }
         }
     }
 }
-
-//        Button {
-//            id:call
-//            width: 0.75*parent.width
-//            height: 0.15*parent.height
-//            anchors.centerIn: parent
-//            text: "Scan for Devices"
-//            onClicked: pageLoader.source="home.qml"
-//        }
-//    }
-
-//    Loader {
-//        id: pageLoader
-//        anchors.fill: parent
-//    }
-//}
-

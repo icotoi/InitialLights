@@ -21,14 +21,21 @@ class LightsUart: public QObject
 
     Q_PROPERTY(QQmlListProperty<DeviceInfo> devices READ devices CONSTANT)
 
+    Q_PROPERTY(bool scanning READ scanning NOTIFY scanningChanged)
+
 public:
     explicit LightsUart(QObject* parent = nullptr);
     virtual ~LightsUart();
 
     QQmlListProperty<DeviceInfo> devices() const;
+    bool scanning() const;
 
 public slots:
     void scan();
+    void setScanning(bool scanning);
+
+signals:
+    void scanningChanged(bool scanning);
 
 private:
     struct Impl;
