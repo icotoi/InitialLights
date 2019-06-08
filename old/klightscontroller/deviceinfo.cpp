@@ -1,5 +1,10 @@
 #include "deviceinfo.h"
+
+#if defined (Q_OS_MAC)
 #include <QBluetoothUuid>
+#else
+#include <QBluetoothAddress>
+#endif
 
 namespace il {
 
@@ -16,7 +21,7 @@ QString DeviceInfo::getName() const
 
 QString DeviceInfo::getAddress() const
 {
-#ifdef Q_OS_MAC
+#if defined(Q_OS_MAC)
     // workaround for Core Bluetooth:
     return m_device.deviceUuid().toString();
 #else

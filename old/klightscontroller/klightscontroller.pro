@@ -1,7 +1,7 @@
 TEMPLATE = app
 TARGET = klightscontroller
 
-QT += quick bluetooth
+QT += quick bluetooth svg
 CONFIG += c++17
 
 HEADERS += \
