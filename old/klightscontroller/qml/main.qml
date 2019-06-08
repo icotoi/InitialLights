@@ -23,7 +23,7 @@ ApplicationWindow {
             ToolButton {
                 onClicked: lightsUart.scan()
                 enabled: !lightsUart.scanning
-                icon.source: "images/material.io--baseline-perm_scan_wifi-24px.svg"
+                icon.source: "images/material.io--baseline-bluetooth_searching-24px.svg"
             }
         }
     }

@@ -10,14 +10,13 @@ public:
 
     void add(DeviceInfo* device) {
         if (contains(device)) {
-            qWarning() << "ignoring known device...";
             return;
         }
 
         qWarning() << "LE Device name:" << device->getName()
                    << "address:" << device->getAddress() << "scanned; adding it to the devices list...";
 
-        addToVector(&m_data, device);
+        m_data.append(device);
     }
 
     // returns true if a device with same address is already in the container
@@ -31,9 +30,8 @@ public:
     }
 
     void clear() {
-        for (auto d: m_data) {
-            delete d;
-        }
+        qDeleteAll(m_data);
+        m_data.clear();
     }
 
     int size() const {
@@ -41,13 +39,6 @@ public:
     }
 
 private:
-    template <typename T>
-    void addToVector(QVector<T*>* v, T* obj)
-    {
-        v->push_back(obj);
-        QObject::connect(obj, &QObject::destroyed, [=]{ v->removeOne(obj); });
-    }
-
     QVector<DeviceInfo*> m_data;
 };
 
