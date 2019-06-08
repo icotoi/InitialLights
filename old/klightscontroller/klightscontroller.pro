@@ -5,13 +5,13 @@ QT += quick bluetooth
 
 HEADERS += \
     deviceinfo.h \
-    light_uart_protocol.h \
-    lightsuart.h
+    lightsuart.h \
+    lightuartprotocol.h
 
 SOURCES += \
     deviceinfo.cpp \
-    light_uart_protocol.cpp \
     lightsuart.cpp \
+    lightuartprotocol.cpp \
     main.cpp
 
 RESOURCES += \
