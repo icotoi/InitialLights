@@ -3,6 +3,8 @@
 #include <QObject>
 #include <QBluetoothDeviceInfo>
 
+namespace il {
+
 class DeviceInfo: public QObject
 {
     Q_OBJECT
@@ -25,3 +27,4 @@ private:
     QBluetoothDeviceInfo m_device;
 };
 
+} // namespace il

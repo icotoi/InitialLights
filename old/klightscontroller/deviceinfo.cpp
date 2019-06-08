@@ -1,5 +1,7 @@
 #include "deviceinfo.h"
-#include <QBluetoothAddress>
+#include <QBluetoothUuid>
+
+namespace il {
 
 DeviceInfo::DeviceInfo(const QBluetoothDeviceInfo &info, QObject *parent)
     : QObject(parent)
@@ -28,3 +30,4 @@ void DeviceInfo::setDevice(const QBluetoothDeviceInfo &device)
     emit deviceChanged();
 }
 
+}
