@@ -43,21 +43,28 @@
 
 #include <QtEndian>
 
-LightsUart::LightsUart():
-    m_currentDevice(QBluetoothDeviceInfo()), foundUartService(false),
-    m_max(0), m_min(0), calories(0), m_control(0), timer(0),
-    m_service(0)
+LightsUart::LightsUart()
+    : m_currentDevice(QBluetoothDeviceInfo()),
+      m_foundUartService(false),
+      m_max(0),
+      m_min(0),
+      m_calories(0),
+      m_control(nullptr),
+      m_timer(nullptr),
+      m_service(nullptr)
 {
     m_deviceDiscoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
 
-    connect(m_deviceDiscoveryAgent, SIGNAL(deviceDiscovered(const QBluetoothDeviceInfo&)),
-            this, SLOT(addDevice(const QBluetoothDeviceInfo&)));
-    connect(m_deviceDiscoveryAgent, SIGNAL(error(QBluetoothDeviceDiscoveryAgent::Error)),
-            this, SLOT(deviceScanError(QBluetoothDeviceDiscoveryAgent::Error)));
-    connect(m_deviceDiscoveryAgent, SIGNAL(finished()), this, SLOT(scanFinished()));
+    connect(m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
+            this, &LightsUart::addDevice);
+    connect(m_deviceDiscoveryAgent, qOverload<QBluetoothDeviceDiscoveryAgent::Error>(&QBluetoothDeviceDiscoveryAgent::error),
+            this, &LightsUart::deviceScanError);
+    connect(m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished,
+            this, &LightsUart::scanFinished);
 
     // initialize random seed for demo mode
-    qsrand(QTime::currentTime().msec());
+    // FIXME: qsrand is obsolete
+//    qsrand(QTime::currentTime().msec());
 }
 
 LightsUart::~LightsUart()
@@ -76,8 +83,7 @@ void LightsUart::deviceSearch()
 
 void LightsUart::addDevice(const QBluetoothDeviceInfo &device)
 {
-    if (device.serviceUuids().contains(uartServiceUuid))
-    {
+    if (device.serviceUuids().contains(m_uartServiceUuid)) {
         qWarning() << "Discovered LE Device name: " << device.name() << " Address: "
                    << device.address().toString();
         DeviceInfo *dev = new DeviceInfo(device);
@@ -91,28 +97,30 @@ void LightsUart::scanFinished()
 {
     if (m_devices.size() == 0)
         setMessage("No Low Energy devices found");
-    Q_EMIT nameChanged();
+    emit nameChanged();
 }
 
 void LightsUart::deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error)
 {
-    if (error == QBluetoothDeviceDiscoveryAgent::PoweredOffError)
+    switch (error) {
+    case QBluetoothDeviceDiscoveryAgent::PoweredOffError:
         setMessage("The Bluetooth adaptor is powered off, power it on before doing discovery.");
-    else if (error == QBluetoothDeviceDiscoveryAgent::InputOutputError)
+        break;
+    case QBluetoothDeviceDiscoveryAgent::InputOutputError:
         setMessage("Writing or reading from the device resulted in an error.");
-    else
+        break;
+    default:
         setMessage("An unknown error has occurred.");
+    }
 }
 
 void LightsUart::setMessage(QString message)
 {
-    m_info = message;
-    Q_EMIT messageChanged();
-}
+    if (m_info == message)
+        return;
 
-QString LightsUart::message() const
-{
-    return m_info;
+    m_info = message;
+    emit messageChanged();
 }
 
 QVariant LightsUart::name()
@@ -120,68 +128,28 @@ QVariant LightsUart::name()
     return QVariant::fromValue(m_devices);
 }
 
-float LightsUart::getChannel4SliderValue() const
-{
-    return channel4SliderValue;
-}
-
 void LightsUart::setChannel4SliderValue(float value)
 {
-    channel4SliderValue = value;
+    m_channel4SliderValue = value;
     updateUartValueState();
-}
-
-float LightsUart::getChannel3SliderValue() const
-{
-    return channel3SliderValue;
 }
 
 void LightsUart::setChannel3SliderValue(float value)
 {
-    channel3SliderValue = value;
+    m_channel3SliderValue = value;
     updateUartValueState();
-}
-
-float LightsUart::getChannel2SliderValue() const
-{
-    return channel2SliderValue;
 }
 
 void LightsUart::setChannel2SliderValue(float value)
 {
-    channel2SliderValue = value;
+    m_channel2SliderValue = value;
     updateUartValueState();
-}
-
-float LightsUart::getChannel1SliderValue() const
-{
-    return channel1SliderValue;
 }
 
 void LightsUart::setChannel1SliderValue(float value)
 {
-    channel1SliderValue = value;
+    m_channel1SliderValue = value;
     updateUartValueState();
-}
-
-int LightsUart::getChannel4() const
-{
-    return channel4;
-}
-
-int LightsUart::getChannel3() const
-{
-    return channel3;
-}
-
-int LightsUart::getChannel2() const
-{
-    return channel2;
-}
-
-int LightsUart::getChannel1() const
-{
-    return channel1;
 }
 
 void LightsUart::connectToService(const QString &address)
@@ -192,13 +160,14 @@ void LightsUart::connectToService(const QString &address)
 
     bool deviceFound = false;
     for (int i = 0; i < m_devices.size(); i++) {
-        if (((DeviceInfo*)m_devices.at(i))->getAddress() == address ) {
-            m_currentDevice.setDevice(((DeviceInfo*)m_devices.at(i))->getDevice());
+        if (m_devices[i]->getAddress() == address ) {
+            m_currentDevice.setDevice(m_devices[i]->getDevice());
             setMessage("Connecting to device...");
             deviceFound = true;
             break;
         }
     }
+
     // we are running demo mode
     if (!deviceFound) {
         startDemo();
@@ -208,24 +177,24 @@ void LightsUart::connectToService(const QString &address)
     if (m_control) {
         m_control->disconnectFromDevice();
         delete m_control;
-        m_control = 0;
-
+        m_control = nullptr;
     }
+
     m_control = new QLowEnergyController(m_currentDevice.getDevice(), this);
-    connect(m_control, SIGNAL(serviceDiscovered(QBluetoothUuid)),
-            this, SLOT(serviceDiscovered(QBluetoothUuid)));
-    connect(m_control, SIGNAL(discoveryFinished()),
-            this, SLOT(serviceScanDone()));
-    connect(m_control, SIGNAL(error(QLowEnergyController::Error)),
-            this, SLOT(controllerError(QLowEnergyController::Error)));
-    connect(m_control, SIGNAL(connected()),
-            this, SLOT(deviceConnected()));
-    connect(m_control, SIGNAL(disconnected()),
-            this, SLOT(deviceDisconnected()));
+
+    connect(m_control, &QLowEnergyController::serviceDiscovered,
+            this, &LightsUart::serviceDiscovered);
+    connect(m_control, &QLowEnergyController::discoveryFinished,
+            this, &LightsUart::serviceScanDone);
+    connect(m_control, qOverload<QLowEnergyController::Error>(&QLowEnergyController::error),
+            this, &LightsUart::controllerError);
+    connect(m_control, &QLowEnergyController::connected,
+            this, &LightsUart::deviceConnected);
+    connect(m_control, &QLowEnergyController::disconnected,
+            this, &LightsUart::deviceDisconnected);
 
     m_control->connectToDevice();
 }
-
 
 void LightsUart::deviceConnected()
 {
@@ -238,24 +207,23 @@ void LightsUart::deviceDisconnected()
     qWarning() << "Remote device disconnected";
 }
 
-
 void LightsUart::serviceDiscovered(const QBluetoothUuid &gatt)
 {
-    if (gatt == uartServiceUuid) {
+    if (gatt == m_uartServiceUuid) {
         setMessage("UART service discovered. Waiting for service scan to be done...");
         qDebug() << "UART service discovered. Waiting for service scan to be done...";
-        foundUartService = true;
+        m_foundUartService = true;
     }
 }
 
 void LightsUart::serviceScanDone()
 {
     delete m_service;
-    m_service = 0;
+    m_service = nullptr;
 
-    if (foundUartService) {
+    if (m_foundUartService) {
         setMessage("Connecting to service...");
-        m_service = m_control->createServiceObject(uartServiceUuid, this);
+        m_service = m_control->createServiceObject(m_uartServiceUuid, this);
     }
 
     if (!m_service) {
@@ -263,36 +231,36 @@ void LightsUart::serviceScanDone()
         return;
     }
 
-    connect(m_service, SIGNAL(stateChanged(QLowEnergyService::ServiceState)),
-            this, SLOT(serviceStateChanged(QLowEnergyService::ServiceState)));
-    connect(m_service, SIGNAL(characteristicChanged(QLowEnergyCharacteristic,QByteArray)),
-            this, SLOT(receivedUartResponse(QLowEnergyCharacteristic,QByteArray)));
-    connect(m_service, SIGNAL(descriptorWritten(QLowEnergyDescriptor,QByteArray)),
-            this, SLOT(confirmedDescriptorWrite(QLowEnergyDescriptor,QByteArray)));
+    connect(m_service, &QLowEnergyService::stateChanged,
+            this, &LightsUart::serviceStateChanged);
+    connect(m_service, &QLowEnergyService::characteristicChanged,
+            this, &LightsUart::receivedUartResponse);
+    connect(m_service, &QLowEnergyService::descriptorWritten,
+            this, &LightsUart::confirmedDescriptorWrite);
 
     m_service->discoverDetails();
 }
 
 void LightsUart::disconnectService()
 {
-    foundUartService = false;
+    m_foundUartService = false;
     m_stop = QDateTime::currentDateTime();
 
     if (m_devices.isEmpty()) {
-        if (timer)
-            timer->stop();
+        if (m_timer)
+            m_timer->stop();
         return;
     }
 
     //disable notifications before disconnecting
-    if (m_notificationDesc.isValid() && m_service
-            && m_notificationDesc.value() == QByteArray::fromHex("0100"))
-    {
+    if (m_notificationDesc.isValid()
+            && m_service
+            && m_notificationDesc.value() == QByteArray::fromHex("0100")) {
         m_service->writeDescriptor(m_notificationDesc, QByteArray::fromHex("0000"));
     } else {
         m_control->disconnectFromDevice();
         delete m_service;
-        m_service = 0;
+        m_service = nullptr;
     }
 }
 
@@ -306,11 +274,10 @@ void LightsUart::serviceStateChanged(QLowEnergyService::ServiceState s)
 {
     qDebug() << "aici";
     switch (s) {
-    case QLowEnergyService::ServiceDiscovered:
-    {
+    case QLowEnergyService::ServiceDiscovered: {
         qDebug() << "aici 3";
 
-        const QLowEnergyCharacteristic uartChar = m_service->characteristic(uartReadCharUuid);
+        const QLowEnergyCharacteristic uartChar = m_service->characteristic(m_uartReadCharUuid);
         if (!uartChar.isValid()) {
             setMessage("UART Data not found.");
             qDebug() << "UART Data not found.";
@@ -327,11 +294,10 @@ void LightsUart::serviceStateChanged(QLowEnergyService::ServiceState s)
             setMessage("Connected");
             m_start = QDateTime::currentDateTime();
 
-            const QLowEnergyCharacteristic uartWriteChar = m_service->characteristic(uartWriteCharUuid);
+            const QLowEnergyCharacteristic uartWriteChar = m_service->characteristic(m_uartWriteCharUuid);
             m_lastUartCmd = QString("U?\n");
             m_service->writeCharacteristic(uartWriteChar, m_lastUartCmd.toUtf8(),  QLowEnergyService::WriteMode::WriteWithoutResponse);
         }
-
         break;
     }
     default:
@@ -355,7 +321,7 @@ void LightsUart::receivedUartResponse(const QLowEnergyCharacteristic &c,
                                       const QByteArray &value)
 {
     // ignore any other characteristic change -> shouldn't really happen though
-    if (c.uuid() != QBluetoothUuid(uartReadCharUuid))
+    if (c.uuid() != QBluetoothUuid(m_uartReadCharUuid))
         return;
 
     QString uartResponse = QString(value);
@@ -372,7 +338,7 @@ void LightsUart::confirmedDescriptorWrite(const QLowEnergyDescriptor &d,
         //disabled notifications -> assume disconnect intent
         m_control->disconnectFromDevice();
         delete m_service;
-        m_service = 0;
+        m_service = nullptr;
     }
 }
 
@@ -385,7 +351,7 @@ int LightsUart::measurements(int index) const
     if (index > m_measurements.size())
         return 0;
     else
-        return (int)m_measurements.value(index);
+        return m_measurements.value(index);
 }
 
 int LightsUart::measurementsSize() const
@@ -406,21 +372,21 @@ int LightsUart::numDevices() const
 void LightsUart::startDemo()
 {
     m_start = QDateTime::currentDateTime();
-    if (!timer) {
-        timer = new QTimer(this);
-        connect(timer, SIGNAL(timeout()), this, SLOT(receiveDemo()));
+    if (!m_timer) {
+        m_timer = new QTimer(this);
+        connect(m_timer, &QTimer::timeout, this, &LightsUart::receiveDemo);
     }
-    timer->start(1000);
+    m_timer->start(1000);
     setMessage("This is Demo mode");
 }
 
 void LightsUart::receiveDemo()
 {
     m_measurements.append(randomPulse());
-    Q_EMIT lightChannelsValueChanged();
+    emit lightChannelsValueChanged();
 }
 
-int LightsUart::randomPulse() const
+quint16 LightsUart::randomPulse() const
 {
     // random number between 50 and 70
     return qrand() % (70 - 50) + 50;
@@ -428,17 +394,17 @@ int LightsUart::randomPulse() const
 
 void LightsUart::updateUartValueState()
 {
-    channel1 = channel1SliderValue * (float)0x1F;
-    channel2 = channel2SliderValue * (float)0x1F;
-    channel3 = channel3SliderValue * (float)0x1F;
-    channel4 = channel4SliderValue * (float)0x1F;
+    m_channel1 = int(m_channel1SliderValue * 0x1F);
+    m_channel2 = int(m_channel2SliderValue * 0x1F);
+    m_channel3 = int(m_channel3SliderValue * 0x1F);
+    m_channel4 = int(m_channel4SliderValue * 0x1F);
 
     QString toSend = QString("US");
 
-    toSend.append(QString::number(channel1, 16).rightJustified(2, '0'));
-    toSend.append(QString::number(channel2, 16).rightJustified(2, '0'));
-    toSend.append(QString::number(channel3, 16).rightJustified(2, '0'));
-    toSend.append(QString::number(channel4, 16).rightJustified(2, '0'));
+    toSend.append(QString::number(m_channel1, 16).rightJustified(2, '0'));
+    toSend.append(QString::number(m_channel2, 16).rightJustified(2, '0'));
+    toSend.append(QString::number(m_channel3, 16).rightJustified(2, '0'));
+    toSend.append(QString::number(m_channel4, 16).rightJustified(2, '0'));
     toSend.append("03");
     toSend.append("\n");
 
@@ -452,14 +418,14 @@ void LightsUart::updateUartValueState()
 
         m_lastUartCmd = toSend;
 
-        Q_EMIT lightChannelsValueChanged();
+        emit lightChannelsValueChanged();
 
         if(m_lastUartCmd.contains("U?")) {
             m_lastUartCmd = "";
         } else {
             if(m_haveReceivedUartInitialState) {
                 qDebug() << "BLE SENDING:" << toSend;
-                const QLowEnergyCharacteristic uartWriteChar = m_service->characteristic(uartWriteCharUuid);
+                const QLowEnergyCharacteristic uartWriteChar = m_service->characteristic(m_uartWriteCharUuid);
                 m_service->writeCharacteristic(uartWriteChar, toSend.toUtf8(),  QLowEnergyService::WriteMode::WriteWithoutResponse);
             }
         }
@@ -479,34 +445,25 @@ void LightsUart::updateFromUartValues(QString uartStr)
 
             // Current controller values
             QString channel1Str = data.mid(0, 2);
-            channel1 = channel1Str.toInt(nullptr, 16);
-            channel1SliderValue = float(channel1)/31.00F;
+            m_channel1 = channel1Str.toInt(nullptr, 16);
+            m_channel1SliderValue = float(m_channel1)/31.00F;
 
             QString channel2Str = data.mid(2, 2);
-            channel2 = channel2Str.toInt(nullptr, 16);
-            if(channel2 == 0)
-                channel2SliderValue = 0;
-            else
-                channel2SliderValue = float(channel2)/31.00F;
+            m_channel2 = channel2Str.toInt(nullptr, 16);
+            m_channel2SliderValue = (m_channel2 == 0) ? 0 : float(m_channel2)/31.00F;
 
             QString channel3Str = data.mid(4, 2);
-            channel3 = channel3Str.toInt(nullptr, 16);
-            if(channel3 == 0)
-                channel3SliderValue = 0;
-            else
-                channel3SliderValue = float(channel3)/31.00F;
+            m_channel3 = channel3Str.toInt(nullptr, 16);
+            m_channel3SliderValue = (m_channel3 == 0) ? 0 : float(m_channel3)/31.00F;
 
             QString channel4Str = data.mid(6, 2);
-            channel4 = channel4Str.toInt(nullptr, 16);
-            if(channel4 == 0)
-                channel4SliderValue = 0;
-            else
-                channel4SliderValue = float(channel4)/31.00F;
+            m_channel4 = channel4Str.toInt(nullptr, 16);
+            m_channel4SliderValue = (m_channel4 == 0) ? 0 : float(m_channel4)/31.00F;
 
-            qDebug() << "Channels:" << QString::number(channel1) << QString::number(channel2) << QString::number(channel3) << QString::number(channel4);
-            qDebug() << "Sliders:" << channel1SliderValue << channel2SliderValue << channel3SliderValue << channel4SliderValue;
+            qDebug() << "Channels:" << QString::number(m_channel1) << QString::number(m_channel2) << QString::number(m_channel3) << QString::number(m_channel4);
+            qDebug() << "Sliders:" << m_channel1SliderValue << m_channel2SliderValue << m_channel3SliderValue << m_channel4SliderValue;
 
-            Q_EMIT lightChannelsValueChanged();
+            emit lightChannelsValueChanged();
 
         } else if(m_lastUartCmd.startsWith("UV")) {
         } else if(m_lastUartCmd.startsWith("UI")) {

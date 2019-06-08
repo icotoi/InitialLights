@@ -1,18 +1,22 @@
-#include "light_uart_protocol.h"
+#include "lightuartprotocol.h"
 #include <QVectorIterator>
+#include <QDebug>
+#include <QtBluetooth>
 
-QBluetoothUuid LightUartProtocolUUID(QString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E"));
+const QBluetoothUuid LightUartProtocol::UUID(QString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E"));
 
-LightUartProtocol::LightUartProtocol() noexcept {
-    currentState = QVector<uint8_t>(noChannels);
+LightUartProtocol::LightUartProtocol() noexcept
+{
 }
 
-QString LightUartProtocol::setChannelValueAndGetCurrentStateBytes(uint8_t channel, uint8_t value) {
+QString LightUartProtocol::setChannelValueAndGetCurrentStateBytes(uint8_t channel, uint8_t value)
+{
     setChannelCurrentState(channel, value);
     return getCurrentStateBytes();
 }
 
-void LightUartProtocol::setChannelCurrentState(uint8_t channel, uint8_t value) {
+void LightUartProtocol::setChannelCurrentState(uint8_t channel, uint8_t value)
+{
     if(channel > currentState.size()) {
         qDebug() << " [ERROR] Invalid channel: " << QString(channel) << endl;
         return;
@@ -26,8 +30,9 @@ void LightUartProtocol::setChannelCurrentState(uint8_t channel, uint8_t value) {
     qDebug() << " [INFO] Channel: " << QString::number(channel) << " <- " << QString::number(value);
 }
 
-QString LightUartProtocol::getCurrentStateBytes() {
-    QString bytes(QString::null);
+QString LightUartProtocol::getCurrentStateBytes()
+{
+    QString bytes;
 
     bytes.append(startChar);
     bytes.append(setCommandChar);

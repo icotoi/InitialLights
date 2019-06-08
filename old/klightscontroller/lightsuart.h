@@ -39,13 +39,11 @@
 **
 ****************************************************************************/
 
-#ifndef HEARTRATE_H
-#define HEARTRATE_H
+#pragma once
 
 #include "deviceinfo.h"
 
 #include <QString>
-#include <QDebug>
 #include <QDateTime>
 #include <QVector>
 #include <QTimer>
@@ -54,7 +52,6 @@
 #include <QLowEnergyController>
 #include <QLowEnergyService>
 
-QT_USE_NAMESPACE
 class LightsUart: public QObject
 {
     Q_OBJECT
@@ -75,40 +72,33 @@ class LightsUart: public QObject
 public:
     LightsUart();
     ~LightsUart();
-    void setMessage(QString message);
-    QString message() const;
+
     QVariant name();
 
-    int channel1;
-    int channel2;
-    int channel3;
-    int channel4;
+    int getChannel1() const { return m_channel1; }
+    int getChannel2() const { return m_channel2; }
+    int getChannel3() const { return m_channel3; }
+    int getChannel4() const { return m_channel4; }
 
-    float channel1SliderValue;
-    float channel2SliderValue;
-    float channel3SliderValue;
-    float channel4SliderValue;
+    void setMessage(QString message);
+    QString message() const { return m_info; }
 
-    QBluetoothUuid uartServiceUuid = QBluetoothUuid(QStringLiteral("6E400001-B5A3-F393-E0A9-E50E24DCCA9E"));
-    QBluetoothUuid uartWriteCharUuid = QBluetoothUuid(QStringLiteral("6E400002-B5A3-F393-E0A9-E50E24DCCA9E"));
-    QBluetoothUuid uartReadCharUuid = QBluetoothUuid(QStringLiteral("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"));
-
-    int getChannel1() const;
-    int getChannel2() const;
-    int getChannel3() const;
-    int getChannel4() const;
-
-    float getChannel1SliderValue() const;
+    float getChannel1SliderValue() const { return m_channel1SliderValue; }
     void setChannel1SliderValue(float value);
 
-    float getChannel2SliderValue() const;
+    float getChannel2SliderValue() const { return m_channel2SliderValue; }
     void setChannel2SliderValue(float value);
 
-    float getChannel3SliderValue() const;
+    float getChannel3SliderValue() const { return m_channel3SliderValue; }
     void setChannel3SliderValue(float value);
 
-    float getChannel4SliderValue() const;
+    float getChannel4SliderValue() const { return m_channel4SliderValue; }
     void setChannel4SliderValue(float value);
+
+signals:
+    void messageChanged();
+    void nameChanged();
+    void lightChannelsValueChanged();
 
 public slots:
     void deviceSearch();
@@ -122,7 +112,7 @@ public slots:
     QString deviceAddress() const;
     int numDevices() const;
 
-private slots:
+private:
     //QBluetothDeviceDiscoveryAgent
     void addDevice(const QBluetoothDeviceInfo&);
     void scanFinished();
@@ -146,36 +136,40 @@ private slots:
     //DemoMode
     void receiveDemo();
 
-Q_SIGNALS:
-    void messageChanged();
-    void nameChanged();
-    void lightChannelsValueChanged();
+    quint16 randomPulse() const;
+    void updateUartValueState();
+    void updateFromUartValues(QString uartStr);
 
-private:
-    int randomPulse() const;
+    int m_channel1;
+    int m_channel2;
+    int m_channel3;
+    int m_channel4;
+
+    float m_channel1SliderValue;
+    float m_channel2SliderValue;
+    float m_channel3SliderValue;
+    float m_channel4SliderValue;
+
+    const QBluetoothUuid m_uartServiceUuid = QBluetoothUuid(QStringLiteral("6E400001-B5A3-F393-E0A9-E50E24DCCA9E"));
+    const QBluetoothUuid m_uartWriteCharUuid = QBluetoothUuid(QStringLiteral("6E400002-B5A3-F393-E0A9-E50E24DCCA9E"));
+    const QBluetoothUuid m_uartReadCharUuid = QBluetoothUuid(QStringLiteral("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"));
 
     DeviceInfo m_currentDevice;
     QBluetoothDeviceDiscoveryAgent *m_deviceDiscoveryAgent;
     QLowEnergyDescriptor m_notificationDesc;
-    QList<QObject*> m_devices;
+    QList<DeviceInfo*> m_devices;
     QString m_info;
-    bool foundUartService;
+    bool m_foundUartService;
     QVector<quint16> m_measurements;
     QDateTime m_start;
     QDateTime m_stop;
     int m_max;
     int m_min;
-    float calories;
+    float m_calories;
     QLowEnergyController *m_control;
-    QTimer *timer; // for demo application
+    QTimer *m_timer; // for demo application
     QLowEnergyService *m_service;
 
     QString m_lastUartCmd;
     bool m_haveReceivedUartInitialState;
-
-    void updateUartValueState();
-    void updateFromUartValues(QString uartStr);
 };
-
-#endif // HEARTRATE_H
-

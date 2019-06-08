@@ -1,12 +1,7 @@
-#ifndef LIGHT_UART_PROTOCOL_H
-#define LIGHT_UART_PROTOCOL_H
+#pragma once
 
-#include <QDebug>
 #include <QVector>
 #include <QBluetoothUuid>
-
-extern QBluetoothUuid LightUartProtocolUUID;
-
 
 /*
  * Light Controller
@@ -32,6 +27,16 @@ extern QBluetoothUuid LightUartProtocolUUID;
  */
 
 class LightUartProtocol {
+public:
+    static const QBluetoothUuid UUID;
+
+    LightUartProtocol() noexcept;
+
+    QString setChannelValueAndGetCurrentStateBytes(uint8_t channel, uint8_t value);
+    void setChannelCurrentState(uint8_t channel, uint8_t value);
+    QString getCurrentStateBytes();
+
+private:
     const uint8_t noChannels = 4;
     const uint8_t maxAmplitude = 0x1F;
     const uint8_t startChar = 0x55;
@@ -39,17 +44,9 @@ class LightUartProtocol {
     const uint8_t paddingChar = 0x99;
 
     const uint8_t setCommandChar = 'S';
-    const uint8_t getCommandChar = '?';
+//    const uint8_t getCommandChar = '?';
 
-    QVector<uint8_t> currentState;
+    QVector<uint8_t> currentState = QVector<uint8_t>(noChannels);
 
     QString currentStateBytes;
-
-    LightUartProtocol() noexcept;
-
-    QString setChannelValueAndGetCurrentStateBytes(uint8_t channel, uint8_t value);
-    void setChannelCurrentState(uint8_t channel, uint8_t value);
-    QString getCurrentStateBytes();
 };
-
-#endif // LIGHT_UART_PROTOCOL_H
