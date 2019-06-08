@@ -14,11 +14,14 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.left: parent.left
         RowLayout {
+            anchors.fill: parent
             Label {
                 text: "BLE demo"
+                horizontalAlignment: Text.AlignHCenter
+                Layout.fillWidth: true
             }
             ToolButton {
-                text: "Scan"
+                icon.source: "images/material.io--baseline-perm_scan_wifi-24px.svg"
             }
         }
     }

@@ -16,7 +16,7 @@ SOURCES += \
     main.cpp
 
 RESOURCES += \
-    resources.qrc
+    qml/qml.qrc
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

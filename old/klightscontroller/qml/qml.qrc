@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>images/material.io--baseline-perm_scan_wifi-24px.svg</file>
+    </qresource>
+</RCC>
