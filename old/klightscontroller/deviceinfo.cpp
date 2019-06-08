@@ -21,18 +21,23 @@ QString DeviceInfo::getName() const
 
 QString DeviceInfo::getAddress() const
 {
-#if defined(Q_OS_MAC)
-    // workaround for Core Bluetooth:
-    return m_device.deviceUuid().toString();
-#else
-    return m_device.address().toString();
-#endif
+    return getAddress(m_device);
 }
 
 void DeviceInfo::setDevice(const QBluetoothDeviceInfo &device)
 {
     m_device = device;
     emit deviceChanged();
+}
+
+QString DeviceInfo::getAddress(const QBluetoothDeviceInfo &device)
+{
+#if defined(Q_OS_MAC)
+    // workaround for Core Bluetooth:
+    return device.deviceUuid().toString();
+#else
+    return device.address().toString();
+#endif
 }
 
 }

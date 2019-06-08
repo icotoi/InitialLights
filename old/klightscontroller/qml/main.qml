@@ -28,6 +28,27 @@ ApplicationWindow {
         }
     }
 
+    ListView {
+        anchors.fill: parent
+
+        model: lightsUart.devices
+
+        delegate: Item {
+            height: 60
+            ColumnLayout {
+                Label {
+                    text: "<b>Name:</b> " + deviceName
+                }
+                Label {
+                    text: "<b>Address:</b> " + deviceAddress
+                }
+            }
+        }
+
+        highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
+        focus: true
+    }
+
     BusyIndicator {
         id: busyIndicator
         anchors.centerIn: parent

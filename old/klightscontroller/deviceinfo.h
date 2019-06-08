@@ -20,6 +20,8 @@ public:
     QBluetoothDeviceInfo getDevice() const { return m_device; }
     void setDevice(const QBluetoothDeviceInfo &device);
 
+    static QString getAddress(const QBluetoothDeviceInfo &device);
+
 signals:
     void deviceChanged();
 
