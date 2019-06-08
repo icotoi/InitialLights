@@ -2,6 +2,7 @@ TEMPLATE = app
 TARGET = klightscontroller
 
 QT += quick bluetooth
+CONFIG += c++17
 
 HEADERS += \
     deviceinfo.h \
