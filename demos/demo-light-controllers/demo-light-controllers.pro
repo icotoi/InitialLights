@@ -8,13 +8,13 @@ CONFIG += c++17
 HEADERS += \
     deviceinfo.h \
     lightcontroller.h \
-    lightsuart.h \
+    lightcontrollerlist.h \
     lightuartprotocol.h
 
 SOURCES += \
     deviceinfo.cpp \
     lightcontroller.cpp \
-    lightsuart.cpp \
+    lightcontrollerlist.cpp \
     lightuartprotocol.cpp \
     main.cpp
 

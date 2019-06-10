@@ -1,29 +1,29 @@
-#include "lightsuart.h"
+#include "lightcontrollerlist.h"
 
 #include "deviceinfo.h"
 #include "lightcontroller.h"
 
 namespace il {
 
-LightsUart::LightsUart(QObject *parent)
+LightControllerList::LightControllerList(QObject *parent)
     : QObject (parent)
     , m_scanning { false }
     , m_scanningTimeout { 3000 }
     , m_controllers { new QQmlObjectListModel<LightController>(this) }
 {
     connect(&m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
-            this, &LightsUart::deviceDiscovered);
+            this, &LightControllerList::deviceDiscovered);
     connect(&m_deviceDiscoveryAgent, qOverload<QBluetoothDeviceDiscoveryAgent::Error>(&QBluetoothDeviceDiscoveryAgent::error),
-            this, &LightsUart::scanError);
+            this, &LightControllerList::scanError);
     connect(&m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished,
-            this, &LightsUart::scanFinished);
+            this, &LightControllerList::scanFinished);
 }
 
-LightsUart::~LightsUart()
+LightControllerList::~LightControllerList()
 {
 }
 
-void LightsUart::scan()
+void LightControllerList::scan()
 {
     update_scanning(true);
     set_message("Scanning for devices...");
@@ -32,7 +32,7 @@ void LightsUart::scan()
     m_deviceDiscoveryAgent.start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
 }
 
-bool LightsUart::deviceAlreadyScanned(const QBluetoothDeviceInfo &device) const
+bool LightControllerList::deviceAlreadyScanned(const QBluetoothDeviceInfo &device) const
 {
     auto address = DeviceInfo::address(device);
     return std::any_of(m_controllers->begin(), m_controllers->end(), [address](LightController* device){
@@ -40,7 +40,7 @@ bool LightsUart::deviceAlreadyScanned(const QBluetoothDeviceInfo &device) const
     });
 }
 
-void LightsUart::deviceDiscovered(const QBluetoothDeviceInfo &device)
+void LightControllerList::deviceDiscovered(const QBluetoothDeviceInfo &device)
 {
     if (device.serviceUuids().contains(m_uartServiceUuid)) {
         if (!deviceAlreadyScanned(device)) {
@@ -55,7 +55,7 @@ void LightsUart::deviceDiscovered(const QBluetoothDeviceInfo &device)
     //...
 }
 
-void LightsUart::scanError(QBluetoothDeviceDiscoveryAgent::Error error)
+void LightControllerList::scanError(QBluetoothDeviceDiscoveryAgent::Error error)
 {
     switch (error) {
     case QBluetoothDeviceDiscoveryAgent::PoweredOffError:
@@ -69,7 +69,7 @@ void LightsUart::scanError(QBluetoothDeviceDiscoveryAgent::Error error)
     }
 }
 
-void LightsUart::scanFinished()
+void LightControllerList::scanFinished()
 {
     qDebug() << "scan finished";
     update_scanning(false);

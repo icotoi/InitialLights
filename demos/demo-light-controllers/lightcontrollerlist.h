@@ -20,7 +20,7 @@ namespace il {
 class LightController;
 class DeviceInfo;
 
-class LightsUart: public QObject
+class LightControllerList: public QObject
 {
     Q_OBJECT
 
@@ -30,8 +30,8 @@ class LightsUart: public QObject
     QML_OBJMODEL_PROPERTY(il::LightController, controllers)
 
 public:
-    explicit LightsUart(QObject* parent = nullptr);
-    virtual ~LightsUart();
+    explicit LightControllerList(QObject* parent = nullptr);
+    virtual ~LightControllerList();
 
 public slots:
     void scan();

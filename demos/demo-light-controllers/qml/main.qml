@@ -21,8 +21,8 @@ ApplicationWindow {
                 Layout.fillWidth: true
             }
             ToolButton {
-                onClicked: lightsUart.scan()
-                enabled: !lightsUart.scanning
+                onClicked: lightControllers.scan()
+                enabled: !lightControllers.scanning
                 icon.source: "images/material.io--baseline-bluetooth_searching-24px.svg"
             }
         }
@@ -31,7 +31,7 @@ ApplicationWindow {
     ListView {
         anchors.fill: parent
 
-        model: lightsUart.controllers
+        model: lightControllers.controllers
 
         delegate: Item {
             height: 60
@@ -52,13 +52,13 @@ ApplicationWindow {
     BusyIndicator {
         id: busyIndicator
         anchors.centerIn: parent
-        visible: lightsUart.scanning
+        visible: lightControllers.scanning
     }
 
     Label {
         id: messageLabel
-        visible: lightsUart.message !== ""
-        text: lightsUart.message
+        visible: lightControllers.message !== ""
+        text: lightControllers.message
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.bottom: parent.bottom

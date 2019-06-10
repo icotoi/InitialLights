@@ -9,7 +9,7 @@
 #include <QtSvg>
 #endif
 
-#include "lightsuart.h"
+#include "lightcontrollerlist.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,8 +20,8 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    il::LightsUart lightsUart;
-    engine.rootContext()->setContextProperty("lightsUart", &lightsUart);
+    il::LightControllerList lightControllers;
+    engine.rootContext()->setContextProperty("lightControllers", &lightControllers);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
