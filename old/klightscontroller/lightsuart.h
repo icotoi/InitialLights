@@ -1,10 +1,13 @@
 #pragma once
 
+#define QTQMLTRICKS_NO_PREFIX_ON_GETTERS
+
 #include <QBluetoothDeviceDiscoveryAgent>
 #include <QBluetoothUuid>
 #include <QQmlListProperty>
 
 #include "deviceinfo.h"
+
 #include "qt-qml-models/QQmlObjectListModel.h"
 #include "qt-supermacros/QQmlVarPropertyHelpers.h"
 
@@ -31,8 +34,6 @@ class LightsUart: public QObject
 public:
     explicit LightsUart(QObject* parent = nullptr);
     virtual ~LightsUart();
-
-    QString message() const { return m_message; }
 
 public slots:
     void scan();

@@ -31,9 +31,9 @@ void LightsUart::scan()
 
 bool LightsUart::deviceAlreadyScanned(const QBluetoothDeviceInfo &device) const
 {
-    auto address = DeviceInfo::getAddress(device);
+    auto address = DeviceInfo::address(device);
     return std::any_of(m_devices->begin(), m_devices->end(), [address](DeviceInfo* device){
-       return device->getAddress() == address;
+       return device->address() == address;
     });
 }
 
@@ -43,8 +43,8 @@ void LightsUart::deviceDiscovered(const QBluetoothDeviceInfo &device)
         if (!deviceAlreadyScanned(device)) {
             auto dev = new DeviceInfo(device);
             m_devices->append(dev);
-            qWarning() << "LE Device name:" << dev->getName()
-                       << "address:" << dev->getAddress() << "scanned; adding it to the devices list...";
+            qWarning() << "LE Device name:" << dev->name()
+                       << "address:" << dev->address() << "scanned; adding it to the devices list...";
         }
         set_message("Low Energy device found. Scanning for more...");
     }

@@ -1,29 +1,24 @@
 #pragma once
 
+#define QTQMLTRICKS_NO_PREFIX_ON_GETTERS
+
 #include <QObject>
 #include <QBluetoothDeviceInfo>
+
+#include "qt-supermacros/QQmlAutoPropertyHelpers.h"
 
 namespace il {
 
 class DeviceInfo: public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString deviceName READ getName NOTIFY deviceChanged)
-    Q_PROPERTY(QString deviceAddress READ getAddress NOTIFY deviceChanged)
+    QML_READONLY_AUTO_PROPERTY(QString, name)
+    QML_READONLY_AUTO_PROPERTY(QString, address)
 
 public:
     explicit DeviceInfo(const QBluetoothDeviceInfo &device, QObject* parent = nullptr);
 
-    QString getName() const;
-    QString getAddress() const;
-
-    QBluetoothDeviceInfo getDevice() const { return m_device; }
-    void setDevice(const QBluetoothDeviceInfo &device);
-
-    static QString getAddress(const QBluetoothDeviceInfo &device);
-
-signals:
-    void deviceChanged();
+    static QString address(const QBluetoothDeviceInfo &device);
 
 private:
     QBluetoothDeviceInfo m_device;

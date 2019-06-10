@@ -37,10 +37,10 @@ ApplicationWindow {
             height: 60
             ColumnLayout {
                 Label {
-                    text: "<b>Name:</b> " + deviceName
+                    text: "<b>Name:</b> " + name
                 }
                 Label {
-                    text: "<b>Address:</b> " + deviceAddress
+                    text: "<b>Address:</b> " + address
                 }
             }
         }
