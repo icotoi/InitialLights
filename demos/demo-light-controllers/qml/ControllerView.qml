@@ -199,6 +199,12 @@ Item {
         }
     }
 
+    BusyIndicator {
+        id: busyIndicator
+        anchors.centerIn: parent
+        visible: controller.isBusy
+    }
+
     onControllerChanged: {
         if (controller != undefined) {
             controller.connectToController()

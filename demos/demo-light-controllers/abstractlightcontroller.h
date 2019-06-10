@@ -29,6 +29,10 @@ private:
     QML_READONLY_AUTO_PROPERTY(QString, name)
     QML_READONLY_AUTO_PROPERTY(QString, address)
 
+    QML_READONLY_AUTO_PROPERTY(bool, isBusy)
+    QML_READONLY_AUTO_PROPERTY(bool, isConnected)
+    QML_READONLY_AUTO_PROPERTY(QString, message)
+
     QML_OBJMODEL_PROPERTY(il::LightControllerPWMChannel, pwmChannels)
     QML_OBJMODEL_PROPERTY(il::LightControllerRGBChannel, rgbChannels)
     QML_OBJMODEL_PROPERTY(il::LightControllerVoltageChannel, voltageChannels)

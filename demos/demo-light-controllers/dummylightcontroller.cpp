@@ -3,6 +3,8 @@
 #include "lightcontrollerrgbchannel.h"
 #include "lightcontrollervoltagechannel.h"
 
+#include <QTimer>
+
 namespace il {
 
 DummyLightController::DummyLightController(ControllerType controllerType,
@@ -19,7 +21,25 @@ DummyLightController::DummyLightController(ControllerType controllerType,
 void DummyLightController::connectToController()
 {
     clear();
+    update_isBusy(true);
+    QTimer::singleShot(1000, this, &DummyLightController::conectToControllerFinished);
+}
 
+void DummyLightController::disconnectFromController()
+{
+    update_isConnected(false);
+    clear();
+}
+
+void DummyLightController::clear()
+{
+    get_pwmChannels()->clear();
+    get_rgbChannels()->clear();
+    get_voltageChannels()->clear();
+}
+
+void DummyLightController::conectToControllerFinished()
+{
     switch (controllerType()) {
     case V1_4xPWM:
         for (int i = 0; i < 4; ++i) {
@@ -38,18 +58,8 @@ void DummyLightController::connectToController()
     default:
         break;
     }
-}
-
-void DummyLightController::disconnectFromController()
-{
-    clear();
-}
-
-void DummyLightController::clear()
-{
-    get_pwmChannels()->clear();
-    get_rgbChannels()->clear();
-    get_voltageChannels()->clear();
+    update_isBusy(false);
+    update_isConnected(true);
 }
 
 } // namespace il

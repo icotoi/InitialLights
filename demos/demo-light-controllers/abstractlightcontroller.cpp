@@ -8,6 +8,8 @@ namespace il {
 AbstractLightController::AbstractLightController(QObject *parent)
     : QObject(parent)
     , m_controllerType { UndefinedControllerType }
+    , m_isBusy { false }
+    , m_isConnected { false }
     , m_pwmChannels { new QQmlObjectListModel<LightControllerPWMChannel>(this) }
     , m_rgbChannels { new QQmlObjectListModel<LightControllerRGBChannel>(this) }
     , m_voltageChannels { new QQmlObjectListModel<LightControllerVoltageChannel>(this) }

@@ -15,6 +15,7 @@ public slots:
 
 private:
     void clear();
+    void conectToControllerFinished();
 };
 
 } // namespace il
