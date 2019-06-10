@@ -8,6 +8,5 @@
         <file>ControllerListView.qml</file>
         <file>SectionLabel.qml</file>
         <file>ControllerChannel.qml</file>
-        <file>ControllerSimpleChannel.qml</file>
     </qresource>
 </RCC>
