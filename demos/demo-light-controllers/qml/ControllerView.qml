@@ -67,13 +67,60 @@ Item {
                 }
             }
         }
+
+        SectionLabel {
+            id: voltageChannelsLabel
+            text: "Voltage Channels"
+            horizontalAlignment: Text.AlignLeft
+            Layout.fillWidth: true
+            leftPadding: control.subtitleMargin
+        }
+
+        Repeater {
+            id: voltageChannelsRepeater
+
+            model: QtObject {
+                property string version: "voltage.v1"
+                property string name: "1"
+                property int value: 5
+            }
+
+            delegate: ColumnLayout {
+                Layout.fillWidth: true
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 1
+                    color: "gray"
+                    visible: index > 0
+                }
+
+                Label {
+                    Layout.fillWidth: true
+                    Layout.leftMargin: control.channelMargin
+                    property double displayValue: 10.0 * (value - minValue) / (maxValue - minValue)
+                    text: "<b>Channel %1<b>: %2V".arg(name).arg(displayValue)
+                }
+
+                Slider {
+                    Layout.fillWidth: true
+                    Layout.leftMargin: control.channelMargin
+                    from: model.minValue
+                    to: model.maxValue
+                    stepSize: model.valueIncrement
+                    value: model.value
+                    onValueChanged: model.value = value
+                }
+            }
+        }
     }
 
     onControllerChanged: {
         if (controller != undefined) {
             controller.connectToController()
-            titleLabel.text = controller.address
+            titleLabel.text = controller.name === "" ? controller.address : controller.name
             pwmChannelsRepeater.model = controller.pwmChannels
+            voltageChannelsRepeater.model = controller.voltageChannels
         }
     }
 }

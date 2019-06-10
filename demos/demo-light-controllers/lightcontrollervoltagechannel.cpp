@@ -1,8 +1,8 @@
-#include "lightcontrollerpwmchannel.h"
+#include "lightcontrollervoltagechannel.h"
 
 namespace il {
 
-LightControllerPWMChannel::LightControllerPWMChannel(const QString &name, QObject *parent)
+LightControllerVoltageChannel::LightControllerVoltageChannel(const QString& name, QObject *parent)
     : QObject(parent)
     , m_name { name }
     , m_version { "v1" }

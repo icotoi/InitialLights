@@ -1,5 +1,6 @@
 #include "dummylightcontroller.h"
 #include "lightcontrollerpwmchannel.h"
+#include "lightcontrollervoltagechannel.h"
 
 namespace il {
 
@@ -28,6 +29,9 @@ void DummyLightController::connectToController()
         get_pwmChannels()->append(new LightControllerPWMChannel("1", this));
         break;
     case V1_2x10V:
+        for (int i = 0; i < 2; ++i) {
+            get_voltageChannels()->append(new LightControllerVoltageChannel(QString::number(i+1), this));
+        }
         break;
     default:
         break;

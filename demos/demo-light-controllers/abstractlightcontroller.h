@@ -8,6 +8,7 @@
 namespace il {
 
 class LightControllerPWMChannel;
+class LightControllerVoltageChannel;
 
 class AbstractLightController : public QObject
 {
@@ -28,6 +29,7 @@ private:
     QML_READONLY_AUTO_PROPERTY(QString, address)
 
     QML_OBJMODEL_PROPERTY(il::LightControllerPWMChannel, pwmChannels)
+    QML_OBJMODEL_PROPERTY(il::LightControllerVoltageChannel, voltageChannels)
 
 public:
     explicit AbstractLightController(QObject *parent = nullptr);
