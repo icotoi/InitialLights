@@ -5,11 +5,14 @@
 namespace il {
 
 LightController::LightController(DeviceInfo *info, QObject *parent)
-    : QObject(parent)
+    : AbstractLightController (parent)
     , m_info { info }
-    , m_pwmChannels { new QQmlObjectListModel<LightControllerPWMChannel>(this) }
 {
-    m_info->setParent(this);
+    if (m_info) {
+        m_info->setParent(this);
+        update_name(m_info->name());
+        update_address(m_info->address());
+    }
 }
 
 LightController::~LightController()
@@ -18,20 +21,13 @@ LightController::~LightController()
 
 void LightController::connectToController()
 {
-    qDebug() << "connecting to controller" << info()->address() << "...";
-
     // just for safety
-    m_pwmChannels->clear();
-
-    // FIXME: add actual connection code
-    for (int i = 0; i < 4; ++i) {
-        m_pwmChannels->append(new LightControllerPWMChannel(QString::number(i+1), this));
-    }
+    get_pwmChannels()->clear();
 }
 
 void LightController::disconnectFromController()
 {
-    m_pwmChannels->clear();
+    get_pwmChannels()->clear();
 }
 
 } // namespace il

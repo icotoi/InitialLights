@@ -72,7 +72,7 @@ Item {
     onControllerChanged: {
         if (controller != undefined) {
             controller.connectToController()
-            titleLabel.text = controller.info.address
+            titleLabel.text = controller.address
             pwmChannelsRepeater.model = controller.pwmChannels
         }
     }

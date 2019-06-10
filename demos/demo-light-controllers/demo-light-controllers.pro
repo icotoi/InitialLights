@@ -6,14 +6,18 @@ QT += quick bluetooth svg
 CONFIG += c++17
 
 HEADERS += \
+    abstractlightcontroller.h \
     deviceinfo.h \
+    dummylightcontroller.h \
     lightcontroller.h \
     lightcontrollerlist.h \
     lightcontrollerpwmchannel.h \
     lightuartprotocol.h
 
 SOURCES += \
+    abstractlightcontroller.cpp \
     deviceinfo.cpp \
+    dummylightcontroller.cpp \
     lightcontroller.cpp \
     lightcontrollerlist.cpp \
     lightcontrollerpwmchannel.cpp \

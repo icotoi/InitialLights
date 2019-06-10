@@ -17,7 +17,7 @@
 
 namespace il {
 
-class LightController;
+class AbstractLightController;
 class DeviceInfo;
 
 class LightControllerList: public QObject
@@ -27,7 +27,7 @@ class LightControllerList: public QObject
     QML_READONLY_VAR_PROPERTY(bool, scanning)
     QML_WRITABLE_VAR_PROPERTY(int, scanningTimeout)
     QML_WRITABLE_VAR_PROPERTY(QString, message)
-    QML_OBJMODEL_PROPERTY(il::LightController, controllers)
+    QML_OBJMODEL_PROPERTY(il::AbstractLightController, controllers)
 
 public:
     explicit LightControllerList(QObject* parent = nullptr);
@@ -42,6 +42,8 @@ private:
     void deviceDiscovered(const QBluetoothDeviceInfo &device);
     void scanError(QBluetoothDeviceDiscoveryAgent::Error error);
     void scanFinished();
+
+    void createDummyControllers();
 
     const QBluetoothUuid m_uartServiceUuid = QBluetoothUuid(QStringLiteral("6E400001-B5A3-F393-E0A9-E50E24DCCA9E"));
     const QBluetoothUuid m_uartWriteCharUuid = QBluetoothUuid(QStringLiteral("6E400002-B5A3-F393-E0A9-E50E24DCCA9E"));

@@ -1,27 +1,26 @@
 #pragma once
 
-#include <QObject>
-#include "QQmlAutoPropertyHelpers.h"
-#include "QQmlObjectListModel.h"
+#include "abstractlightcontroller.h"
 
 namespace il {
 
 class DeviceInfo;
-class LightControllerPWMChannel;
 
-class LightController : public QObject
+class LightController : public AbstractLightController
 {
     Q_OBJECT
 
-    QML_CONSTANT_AUTO_PROPERTY(il::DeviceInfo*, info)
-    QML_OBJMODEL_PROPERTY(il::LightControllerPWMChannel, pwmChannels)
-
 public:
     explicit LightController(DeviceInfo* info, QObject *parent = nullptr);
-    ~LightController();
+    ~LightController() override;
 
-    Q_INVOKABLE void connectToController();
-    Q_INVOKABLE void disconnectFromController();
+public slots:
+    void connectToController() override;
+    void disconnectFromController() override;
+
+private:
+    DeviceInfo* m_info;
+
 };
 
 } // namespace il

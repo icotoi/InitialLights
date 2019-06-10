@@ -17,19 +17,19 @@ ListView {
                 Layout.fillWidth: true
                 Label {
                     Layout.fillWidth: true
-                    text: "<b>Name:</b> " + model.info.name
+                    text: "<b>Name:</b> " + model.name
                     elide: Text.ElideMiddle
                 }
                 Label {
                     Layout.fillWidth: true
-                    text: "<b>Address:</b> " + model.info.address
+                    text: "<b>Address:</b> " + model.address
                     elide: Text.ElideMiddle
                 }
             }
 
             ToolButton {
                 icon.source: "images/material.io--baseline-arrow_forward_ios-24px.svg"
-                onClicked: showController(delegateItem.index)
+                onClicked: showController(index)
             }
         }
 

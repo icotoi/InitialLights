@@ -45,9 +45,7 @@ ApplicationWindow {
 
         ControllerListView {
             model: lightControllers.controllers
-            onShowController: {
-                stackView.push(controllerView, { controller: lightControllers.controllers.get(index) })
-            }
+            onShowController: stackView.push(controllerView, { controller: lightControllers.controllers.get(index) })
         }
     }
 
