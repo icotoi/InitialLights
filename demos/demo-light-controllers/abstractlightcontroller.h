@@ -44,6 +44,9 @@ public:
 public slots:
     virtual void connectToController() = 0;
     virtual void disconnectFromController() = 0;
+
+protected:
+    virtual void clear();
 };
 
 } // namespace il

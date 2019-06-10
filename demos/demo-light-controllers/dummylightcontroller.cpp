@@ -31,13 +31,6 @@ void DummyLightController::disconnectFromController()
     clear();
 }
 
-void DummyLightController::clear()
-{
-    get_pwmChannels()->clear();
-    get_rgbChannels()->clear();
-    get_voltageChannels()->clear();
-}
-
 void DummyLightController::conectToControllerFinished()
 {
     switch (controllerType()) {

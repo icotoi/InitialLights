@@ -14,12 +14,16 @@ class DeviceInfo: public QObject
     QML_READONLY_AUTO_PROPERTY(QString, address)
 
 public:
-    explicit DeviceInfo(const QBluetoothDeviceInfo &device, QObject* parent = nullptr);
+    explicit DeviceInfo(const QBluetoothDeviceInfo &info, QObject* parent = nullptr);
 
-    static QString address(const QBluetoothDeviceInfo &device);
+    static QString address(const QBluetoothDeviceInfo &info);
+    static bool isValidDevice(const QBluetoothDeviceInfo &info);
+    static bool isValidService(const QBluetoothUuid& uuid);
+
+    const QBluetoothDeviceInfo& info() const { return m_info; }
 
 private:
-    QBluetoothDeviceInfo m_device;
+    QBluetoothDeviceInfo m_info;
 };
 
 } // namespace il

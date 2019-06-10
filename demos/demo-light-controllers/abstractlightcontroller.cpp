@@ -18,6 +18,14 @@ AbstractLightController::AbstractLightController(QObject *parent)
 
 AbstractLightController::~AbstractLightController()
 {
+    clear();
+}
+
+void AbstractLightController::clear()
+{
+    m_pwmChannels->clear();
+    m_rgbChannels->clear();
+    m_voltageChannels->clear();
 }
 
 } // namespace il

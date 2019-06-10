@@ -14,7 +14,6 @@ public slots:
     void disconnectFromController() override;
 
 private:
-    void clear();
     void conectToControllerFinished();
 };
 
