@@ -29,13 +29,15 @@ ApplicationWindow {
     }
 
     ListView {
+        id: controllersView
         anchors.fill: parent
 
         model: lightControllers.controllers
 
-        delegate: Item {
-            height: 60
-            ColumnLayout {
+        delegate: ItemDelegate {
+            width: parent.width
+
+            contentItem: ColumnLayout {
                 Label {
                     text: "<b>Name:</b> " + info.name
                 }
@@ -43,10 +45,10 @@ ApplicationWindow {
                     text: "<b>Address:</b> " + info.address
                 }
             }
-        }
 
-        highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
-        focus: true
+            highlighted: ListView.isCurrentItem
+            onClicked: controllersView.currentIndex = index
+        }
     }
 
     BusyIndicator {
