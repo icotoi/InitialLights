@@ -4,8 +4,9 @@ namespace il {
 
 LightsUart::LightsUart(QObject *parent)
     : QObject (parent)
-    , m_scanning(false)
-    , m_devices(new QQmlObjectListModel<DeviceInfo>(this))
+    , m_scanning { false }
+    , m_scanningTimeout { 3000 }
+    , m_devices { new QQmlObjectListModel<DeviceInfo>(this) }
 {
     connect(&m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
             this, &LightsUart::deviceDiscovered);
@@ -22,18 +23,10 @@ LightsUart::~LightsUart()
 void LightsUart::scan()
 {
     update_scanning(true);
-    setMessage("Scanning for devices...");
+    set_message("Scanning for devices...");
     m_devices->clear();
+    m_deviceDiscoveryAgent.setLowEnergyDiscoveryTimeout(m_scanningTimeout);
     m_deviceDiscoveryAgent.start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
-}
-
-void LightsUart::setMessage(QString message)
-{
-    if (m_message == message)
-        return;
-
-    m_message = message;
-    emit messageChanged(m_message);
 }
 
 bool LightsUart::deviceAlreadyScanned(const QBluetoothDeviceInfo &device) const
@@ -53,7 +46,7 @@ void LightsUart::deviceDiscovered(const QBluetoothDeviceInfo &device)
             qWarning() << "LE Device name:" << dev->getName()
                        << "address:" << dev->getAddress() << "scanned; adding it to the devices list...";
         }
-        setMessage("Low Energy device found. Scanning for more...");
+        set_message("Low Energy device found. Scanning for more...");
     }
     //...
 }
@@ -62,13 +55,13 @@ void LightsUart::scanError(QBluetoothDeviceDiscoveryAgent::Error error)
 {
     switch (error) {
     case QBluetoothDeviceDiscoveryAgent::PoweredOffError:
-        setMessage("The Bluetooth adaptor is powered off, power it on before doing discovery.");
+        set_message("The Bluetooth adaptor is powered off, power it on before doing discovery.");
         break;
     case QBluetoothDeviceDiscoveryAgent::InputOutputError:
-        setMessage("Writing or reading from the device resulted in an error.");
+        set_message("Writing or reading from the device resulted in an error.");
         break;
     default:
-        setMessage("An unknown error has occurred.");
+        set_message("An unknown error has occurred.");
     }
 }
 
@@ -76,7 +69,7 @@ void LightsUart::scanFinished()
 {
     qDebug() << "scan finished";
     update_scanning(false);
-    setMessage(m_devices->size() == 0
+    set_message(m_devices->size() == 0
                ? "No Low Energy devices found"
                : QString("Found %1 device(s)").arg(m_devices->size()));
 }

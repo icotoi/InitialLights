@@ -23,9 +23,9 @@ class LightsUart: public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY messageChanged)
-
     QML_READONLY_VAR_PROPERTY(bool, scanning)
+    QML_WRITABLE_VAR_PROPERTY(int, scanningTimeout)
+    QML_WRITABLE_VAR_PROPERTY(QString, message)
     QML_OBJMODEL_PROPERTY(DeviceInfo, devices)
 
 public:
@@ -37,12 +37,7 @@ public:
 public slots:
     void scan();
 
-signals:
-    void messageChanged(QString message);
-
 private:
-    void setMessage(QString message);
-
     bool deviceAlreadyScanned(const QBluetoothDeviceInfo &device) const;
 
     void deviceDiscovered(const QBluetoothDeviceInfo &device);
@@ -52,8 +47,6 @@ private:
     const QBluetoothUuid m_uartServiceUuid = QBluetoothUuid(QStringLiteral("6E400001-B5A3-F393-E0A9-E50E24DCCA9E"));
     const QBluetoothUuid m_uartWriteCharUuid = QBluetoothUuid(QStringLiteral("6E400002-B5A3-F393-E0A9-E50E24DCCA9E"));
     const QBluetoothUuid m_uartReadCharUuid = QBluetoothUuid(QStringLiteral("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"));
-
-    QString m_message;
 
     QBluetoothDeviceDiscoveryAgent m_deviceDiscoveryAgent;
 };
