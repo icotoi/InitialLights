@@ -1,5 +1,4 @@
 TEMPLATE = app
-TARGET = klightscontroller
 
 DEFINES += QTQMLTRICKS_NO_PREFIX_ON_GETTERS
 
@@ -41,6 +40,7 @@ contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
 }
 
 # QtQmlModels
+
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../3rdparty/release/ -lQtQmlModels
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../3rdparty/debug/ -lQtQmlModels
 else:unix: LIBS += -L$$OUT_PWD/../../3rdparty/ -lQtQmlModels
@@ -55,6 +55,7 @@ else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/
 else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/libQtQmlModels.a
 
 # QtSuperMacros
+
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../3rdparty/release/ -lQtSuperMacros
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../3rdparty/debug/ -lQtSuperMacros
 else:unix: LIBS += -L$$OUT_PWD/../../3rdparty/ -lQtSuperMacros
