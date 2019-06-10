@@ -9,12 +9,14 @@ HEADERS += \
     deviceinfo.h \
     lightcontroller.h \
     lightcontrollerlist.h \
+    lightcontrollerpwmchannel.h \
     lightuartprotocol.h
 
 SOURCES += \
     deviceinfo.cpp \
     lightcontroller.cpp \
     lightcontrollerlist.cpp \
+    lightcontrollerpwmchannel.cpp \
     lightuartprotocol.cpp \
     main.cpp
 

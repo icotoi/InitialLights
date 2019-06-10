@@ -15,6 +15,12 @@ ApplicationWindow {
         anchors.left: parent.left
         RowLayout {
             anchors.fill: parent
+            ToolButton {
+                icon.source: enabled ? "images/material.io--baseline-arrow_back-24px.svg" : ""
+                enabled: stackView.depth > 1
+                onClicked: stackView.pop()
+            }
+
             Label {
                 text: "BLE demo"
                 horizontalAlignment: Text.AlignHCenter
@@ -28,27 +34,26 @@ ApplicationWindow {
         }
     }
 
-    ListView {
-        id: controllersView
+    StackView {
+        id: stackView
         anchors.fill: parent
+        initialItem: controllersListView
+    }
 
-        model: lightControllers.controllers
+    Component {
+        id: controllersListView
 
-        delegate: ItemDelegate {
-            width: parent.width
-
-            contentItem: ColumnLayout {
-                Label {
-                    text: "<b>Name:</b> " + info.name
-                }
-                Label {
-                    text: "<b>Address:</b> " + info.address
-                }
+        ControllerListView {
+            model: lightControllers.controllers
+            onShowController: {
+                stackView.push(controllerView, { controller: lightControllers.controllers.get(index) })
             }
-
-            highlighted: ListView.isCurrentItem
-            onClicked: controllersView.currentIndex = index
         }
+    }
+
+    Component {
+        id: controllerView
+        ControllerView {}
     }
 
     BusyIndicator {

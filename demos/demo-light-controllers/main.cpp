@@ -9,10 +9,15 @@
 #include <QtSvg>
 #endif
 
+#include <QQmlEngine>
+
+#include "deviceinfo.h"
 #include "lightcontrollerlist.h"
 
 int main(int argc, char *argv[])
 {
+    qmlRegisterUncreatableType<il::DeviceInfo>("InitialLights", 1, 0, "DeviceInfo", "can be created only from C++");
+
     //    QLoggingCategory::setFilterRules(QStringLiteral("qt.bluetooth* = true"));
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
