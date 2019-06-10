@@ -1,12 +1,15 @@
 #include "lightsuart.h"
 
+#include "deviceinfo.h"
+#include "lightcontroller.h"
+
 namespace il {
 
 LightsUart::LightsUart(QObject *parent)
     : QObject (parent)
     , m_scanning { false }
     , m_scanningTimeout { 3000 }
-    , m_devices { new QQmlObjectListModel<DeviceInfo>(this) }
+    , m_controllers { new QQmlObjectListModel<LightController>(this) }
 {
     connect(&m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
             this, &LightsUart::deviceDiscovered);
@@ -24,7 +27,7 @@ void LightsUart::scan()
 {
     update_scanning(true);
     set_message("Scanning for devices...");
-    m_devices->clear();
+    m_controllers->clear();
     m_deviceDiscoveryAgent.setLowEnergyDiscoveryTimeout(m_scanningTimeout);
     m_deviceDiscoveryAgent.start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
 }
@@ -32,8 +35,8 @@ void LightsUart::scan()
 bool LightsUart::deviceAlreadyScanned(const QBluetoothDeviceInfo &device) const
 {
     auto address = DeviceInfo::address(device);
-    return std::any_of(m_devices->begin(), m_devices->end(), [address](DeviceInfo* device){
-       return device->address() == address;
+    return std::any_of(m_controllers->begin(), m_controllers->end(), [address](LightController* device){
+       return device->info()->address() == address;
     });
 }
 
@@ -42,7 +45,8 @@ void LightsUart::deviceDiscovered(const QBluetoothDeviceInfo &device)
     if (device.serviceUuids().contains(m_uartServiceUuid)) {
         if (!deviceAlreadyScanned(device)) {
             auto dev = new DeviceInfo(device);
-            m_devices->append(dev);
+            auto controller = new LightController(dev);
+            m_controllers->append(controller);
             qWarning() << "LE Device name:" << dev->name()
                        << "address:" << dev->address() << "scanned; adding it to the devices list...";
         }
@@ -69,9 +73,9 @@ void LightsUart::scanFinished()
 {
     qDebug() << "scan finished";
     update_scanning(false);
-    set_message(m_devices->size() == 0
+    set_message(m_controllers->size() == 0
                ? "No Low Energy devices found"
-               : QString("Found %1 device(s)").arg(m_devices->size()));
+               : QString("Found %1 device(s)").arg(m_controllers->size()));
 }
 
 }

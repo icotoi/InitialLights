@@ -31,16 +31,16 @@ ApplicationWindow {
     ListView {
         anchors.fill: parent
 
-        model: lightsUart.devices
+        model: lightsUart.controllers
 
         delegate: Item {
             height: 60
             ColumnLayout {
                 Label {
-                    text: "<b>Name:</b> " + name
+                    text: "<b>Name:</b> " + info.name
                 }
                 Label {
-                    text: "<b>Address:</b> " + address
+                    text: "<b>Address:</b> " + info.address
                 }
             }
         }

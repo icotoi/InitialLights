@@ -1,7 +1,5 @@
 #pragma once
 
-#define QTQMLTRICKS_NO_PREFIX_ON_GETTERS
-
 #include <QObject>
 #include <QBluetoothDeviceInfo>
 
@@ -17,6 +15,7 @@ class DeviceInfo: public QObject
 
 public:
     explicit DeviceInfo(const QBluetoothDeviceInfo &device, QObject* parent = nullptr);
+    ~DeviceInfo();
 
     static QString address(const QBluetoothDeviceInfo &device);
 

@@ -6,6 +6,8 @@
 #include <QBluetoothAddress>
 #endif
 
+#include <QDebug>
+
 namespace il {
 
 DeviceInfo::DeviceInfo(const QBluetoothDeviceInfo &info, QObject *parent)
@@ -14,6 +16,11 @@ DeviceInfo::DeviceInfo(const QBluetoothDeviceInfo &info, QObject *parent)
     , m_address { address(info) }
     , m_device { info }
 {
+}
+
+DeviceInfo::~DeviceInfo()
+{
+//    qDebug() << "~DeviceInfo";
 }
 
 QString DeviceInfo::address(const QBluetoothDeviceInfo &device)

@@ -1,16 +1,11 @@
 #pragma once
 
-#define QTQMLTRICKS_NO_PREFIX_ON_GETTERS
-
 #include <QBluetoothDeviceDiscoveryAgent>
 #include <QBluetoothUuid>
 #include <QQmlListProperty>
 
-#include "deviceinfo.h"
-
 #include "qt-qml-models/QQmlObjectListModel.h"
 #include "qt-supermacros/QQmlVarPropertyHelpers.h"
-
 
 //#include <QDateTime>
 //#include <QVector>
@@ -22,6 +17,9 @@
 
 namespace il {
 
+class LightController;
+class DeviceInfo;
+
 class LightsUart: public QObject
 {
     Q_OBJECT
@@ -29,7 +27,7 @@ class LightsUart: public QObject
     QML_READONLY_VAR_PROPERTY(bool, scanning)
     QML_WRITABLE_VAR_PROPERTY(int, scanningTimeout)
     QML_WRITABLE_VAR_PROPERTY(QString, message)
-    QML_OBJMODEL_PROPERTY(DeviceInfo, devices)
+    QML_OBJMODEL_PROPERTY(il::LightController, controllers)
 
 public:
     explicit LightsUart(QObject* parent = nullptr);

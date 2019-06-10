@@ -1,16 +1,20 @@
 TEMPLATE = app
 TARGET = klightscontroller
 
+DEFINES += QTQMLTRICKS_NO_PREFIX_ON_GETTERS
+
 QT += quick bluetooth svg
 CONFIG += c++17
 
 HEADERS += \
     deviceinfo.h \
+    lightcontroller.h \
     lightsuart.h \
     lightuartprotocol.h
 
 SOURCES += \
     deviceinfo.cpp \
+    lightcontroller.cpp \
     lightsuart.cpp \
     lightuartprotocol.cpp \
     main.cpp
