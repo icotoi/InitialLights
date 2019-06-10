@@ -15,7 +15,6 @@ class DeviceInfo: public QObject
 
 public:
     explicit DeviceInfo(const QBluetoothDeviceInfo &device, QObject* parent = nullptr);
-    ~DeviceInfo();
 
     static QString address(const QBluetoothDeviceInfo &device);
 

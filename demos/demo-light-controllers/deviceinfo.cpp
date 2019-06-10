@@ -18,11 +18,6 @@ DeviceInfo::DeviceInfo(const QBluetoothDeviceInfo &info, QObject *parent)
 {
 }
 
-DeviceInfo::~DeviceInfo()
-{
-//    qDebug() << "~DeviceInfo";
-}
-
 QString DeviceInfo::address(const QBluetoothDeviceInfo &device)
 {
 #if defined(Q_OS_MAC)
