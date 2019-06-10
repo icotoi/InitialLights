@@ -12,6 +12,7 @@ HEADERS += \
     lightcontroller.h \
     lightcontrollerlist.h \
     lightcontrollerpwmchannel.h \
+    lightcontrollerrgbchannel.h \
     lightcontrollervoltagechannel.h \
     lightuartprotocol.h
 
@@ -22,6 +23,7 @@ SOURCES += \
     lightcontroller.cpp \
     lightcontrollerlist.cpp \
     lightcontrollerpwmchannel.cpp \
+    lightcontrollerrgbchannel.cpp \
     lightcontrollervoltagechannel.cpp \
     lightuartprotocol.cpp \
     main.cpp

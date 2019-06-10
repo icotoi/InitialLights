@@ -7,5 +7,6 @@
         <file>images/material.io--baseline-arrow_forward_ios-24px.svg</file>
         <file>ControllerListView.qml</file>
         <file>SectionLabel.qml</file>
+        <file>ControllerChannel.qml</file>
     </qresource>
 </RCC>

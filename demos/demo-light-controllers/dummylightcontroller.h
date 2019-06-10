@@ -12,6 +12,9 @@ public:
 public slots:
     void connectToController() override;
     void disconnectFromController() override;
+
+private:
+    void clear();
 };
 
 } // namespace il

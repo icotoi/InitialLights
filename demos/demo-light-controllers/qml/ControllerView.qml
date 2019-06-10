@@ -53,7 +53,7 @@ Item {
                     Layout.fillWidth: true
                     Layout.leftMargin: control.channelMargin
                     property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
-                    text: "<b>Channel %1<b>: %2".arg(name).arg(displayValue)
+                    text: "<b>Channel %1<b>: %2%".arg(name).arg(displayValue)
                 }
 
                 Slider {
@@ -64,6 +64,83 @@ Item {
                     stepSize: model.valueIncrement
                     value: model.value
                     onValueChanged: model.value = value
+                }
+            }
+        }
+
+        SectionLabel {
+            id: rgbChannelsLabel
+            text: "RGB Channels"
+            horizontalAlignment: Text.AlignLeft
+            Layout.fillWidth: true
+            leftPadding: control.subtitleMargin
+        }
+
+        Repeater {
+            id: rgbChannelsRepeater
+
+            model: QtObject {
+                property string version: "v1"
+                property string name: "1"
+                property int redValue: 5
+                property int greenValue: 5
+                property int blueValue: 5
+            }
+
+            delegate: ColumnLayout {
+                Layout.fillWidth: true
+
+                property int labelMinimumWidth: 75
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 1
+                    color: "gray"
+                    visible: index > 0
+                }
+
+                Label {
+                    Layout.fillWidth: true
+                    Layout.leftMargin: control.channelMargin
+                    text: "<b>Channel %1<b>".arg(name)
+                }
+
+                ControllerChannel {
+                    Layout.fillWidth: true
+                    Layout.leftMargin: control.channelMargin
+                    labelMinimumWidth: parent.labelMinimumWidth
+                    property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
+                    text: "<b>R<b>: %1%".arg(displayValue)
+                    value: model.redValue
+                    minValue: model.minValue
+                    maxValue: model.maxValue
+                    valueIncrement: model.valueIncrement
+                    onValueChanged: model.redValue = value
+                }
+
+                ControllerChannel {
+                    Layout.fillWidth: true
+                    Layout.leftMargin: control.channelMargin
+                    labelMinimumWidth: parent.labelMinimumWidth
+                    property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
+                    text: "<b>G<b>: %1%".arg(displayValue)
+                    value: model.greenValue
+                    minValue: model.minValue
+                    maxValue: model.maxValue
+                    valueIncrement: model.valueIncrement
+                    onValueChanged: model.greenValue = value
+                }
+                ControllerChannel {
+                    Layout.fillWidth: true
+                    Layout.leftMargin: control.channelMargin
+                    labelMinimumWidth: parent.labelMinimumWidth
+                    property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
+                    text: "<b>B<b>: %1%".arg(displayValue)
+                    value: model.blueValue
+                    minValue: model.minValue
+                    maxValue: model.maxValue
+                    valueIncrement: model.valueIncrement
+                    onValueChanged: model.blueValue = value
                 }
             }
         }
@@ -121,6 +198,7 @@ Item {
             titleLabel.text = controller.name === "" ? controller.address : controller.name
             pwmChannelsRepeater.model = controller.pwmChannels
             voltageChannelsRepeater.model = controller.voltageChannels
+            rgbChannelsRepeater.model = controller.rgbChannels
         }
     }
 }

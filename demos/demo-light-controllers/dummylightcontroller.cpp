@@ -1,5 +1,6 @@
 #include "dummylightcontroller.h"
 #include "lightcontrollerpwmchannel.h"
+#include "lightcontrollerrgbchannel.h"
 #include "lightcontrollervoltagechannel.h"
 
 namespace il {
@@ -17,7 +18,7 @@ DummyLightController::DummyLightController(ControllerType controllerType,
 
 void DummyLightController::connectToController()
 {
-    get_pwmChannels()->clear();
+    clear();
 
     switch (controllerType()) {
     case V1_4xPWM:
@@ -27,6 +28,7 @@ void DummyLightController::connectToController()
         break;
     case V1_1xPWM_1xRGB:
         get_pwmChannels()->append(new LightControllerPWMChannel("1", this));
+        get_rgbChannels()->append(new LightControllerRGBChannel("2", this));
         break;
     case V1_2x10V:
         for (int i = 0; i < 2; ++i) {
@@ -40,7 +42,14 @@ void DummyLightController::connectToController()
 
 void DummyLightController::disconnectFromController()
 {
+    clear();
+}
+
+void DummyLightController::clear()
+{
     get_pwmChannels()->clear();
+    get_rgbChannels()->clear();
+    get_voltageChannels()->clear();
 }
 
 } // namespace il
