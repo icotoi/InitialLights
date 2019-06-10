@@ -36,5 +36,15 @@ contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
         android/res/values/libs.xml
 }
 
-include($$PWD/../../3rdparty/qt-supermacros/QtSuperMacros.pri)
-include($$PWD/../../3rdparty/qt-qml-models/QtQmlModels.pri)
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../3rdparty/release/ -lQtQmlModels
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../3rdparty/debug/ -lQtQmlModels
+else:unix: LIBS += -L$$OUT_PWD/../../3rdparty/ -lQtQmlModels
+
+INCLUDEPATH += $$PWD/../../3rdparty
+DEPENDPATH += $$PWD/../../3rdparty
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/release/libQtQmlModels.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/debug/libQtQmlModels.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/release/QtQmlModels.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/debug/QtQmlModels.lib
+else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/libQtQmlModels.a

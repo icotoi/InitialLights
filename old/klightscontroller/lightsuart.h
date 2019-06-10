@@ -5,7 +5,7 @@
 #include <QQmlListProperty>
 
 #include "deviceinfo.h"
-#include "QQmlObjectListModel.h"
+#include "qt-qml-models/QQmlObjectListModel.h"
 
 //#include <QDateTime>
 //#include <QVector>
