@@ -4,6 +4,7 @@ namespace il {
 
 LightsUart::LightsUart(QObject *parent)
     : QObject (parent)
+    , m_scanning(false)
     , m_devices(new QQmlObjectListModel<DeviceInfo>(this))
 {
     connect(&m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
@@ -20,19 +21,10 @@ LightsUart::~LightsUart()
 
 void LightsUart::scan()
 {
-    setScanning(true);
+    update_scanning(true);
     setMessage("Scanning for devices...");
     m_devices->clear();
     m_deviceDiscoveryAgent.start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
-}
-
-void LightsUart::setScanning(bool scanning)
-{
-    if (m_scanning == scanning)
-        return;
-
-    m_scanning = scanning;
-    emit scanningChanged(m_scanning);
 }
 
 void LightsUart::setMessage(QString message)
@@ -83,7 +75,7 @@ void LightsUart::scanError(QBluetoothDeviceDiscoveryAgent::Error error)
 void LightsUart::scanFinished()
 {
     qDebug() << "scan finished";
-    setScanning(false);
+    update_scanning(false);
     setMessage(m_devices->size() == 0
                ? "No Low Energy devices found"
                : QString("Found %1 device(s)").arg(m_devices->size()));

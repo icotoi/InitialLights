@@ -6,6 +6,8 @@
 
 #include "deviceinfo.h"
 #include "qt-qml-models/QQmlObjectListModel.h"
+#include "qt-supermacros/QQmlVarPropertyHelpers.h"
+
 
 //#include <QDateTime>
 //#include <QVector>
@@ -21,26 +23,24 @@ class LightsUart: public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool scanning READ scanning NOTIFY scanningChanged)
     Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY messageChanged)
+
+    QML_READONLY_VAR_PROPERTY(bool, scanning)
     QML_OBJMODEL_PROPERTY(DeviceInfo, devices)
 
 public:
     explicit LightsUart(QObject* parent = nullptr);
     virtual ~LightsUart();
 
-    bool scanning() const { return m_scanning; }
     QString message() const { return m_message; }
 
 public slots:
     void scan();
 
 signals:
-    void scanningChanged(bool scanning);
     void messageChanged(QString message);
 
 private:
-    void setScanning(bool scanning);
     void setMessage(QString message);
 
     bool deviceAlreadyScanned(const QBluetoothDeviceInfo &device) const;
@@ -53,7 +53,6 @@ private:
     const QBluetoothUuid m_uartWriteCharUuid = QBluetoothUuid(QStringLiteral("6E400002-B5A3-F393-E0A9-E50E24DCCA9E"));
     const QBluetoothUuid m_uartReadCharUuid = QBluetoothUuid(QStringLiteral("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"));
 
-    bool m_scanning = false;
     QString m_message;
 
     QBluetoothDeviceDiscoveryAgent m_deviceDiscoveryAgent;
