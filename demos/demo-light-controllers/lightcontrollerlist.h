@@ -4,8 +4,8 @@
 #include <QBluetoothUuid>
 #include <QQmlListProperty>
 
-#include "qt-qml-models/QQmlObjectListModel.h"
-#include "qt-supermacros/QQmlVarPropertyHelpers.h"
+#include "QQmlObjectListModel.h"
+#include "QQmlVarPropertyHelpers.h"
 
 //#include <QDateTime>
 //#include <QVector>
@@ -54,10 +54,6 @@ private:
 
 //class LightsUart: public QObject
 //{
-//    Q_OBJECT
-//    Q_PROPERTY(QVariant name READ name NOTIFY nameChanged)
-//    Q_PROPERTY(QString message READ message NOTIFY messageChanged)
-
 //    Q_PROPERTY(int channel1 READ getChannel1 NOTIFY lightChannelsValueChanged)
 //    Q_PROPERTY(int channel2 READ getChannel2 NOTIFY lightChannelsValueChanged)
 //    Q_PROPERTY(int channel3 READ getChannel3 NOTIFY lightChannelsValueChanged)
@@ -69,11 +65,6 @@ private:
 //    Q_PROPERTY(float channel4SliderValue READ getChannel4SliderValue WRITE setChannel4SliderValue NOTIFY lightChannelsValueChanged)
 
 //public:
-//    LightsUart();
-//    ~LightsUart();
-
-//    QVariant name();
-
 //    int getChannel1() const { return m_channel1; }
 //    int getChannel2() const { return m_channel2; }
 //    int getChannel3() const { return m_channel3; }

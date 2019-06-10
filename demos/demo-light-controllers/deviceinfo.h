@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QBluetoothDeviceInfo>
 
-#include "qt-supermacros/QQmlAutoPropertyHelpers.h"
+#include "QQmlAutoPropertyHelpers.h"
 
 namespace il {
 

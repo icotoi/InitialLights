@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "qt-supermacros/QQmlAutoPropertyHelpers.h"
+#include "QQmlAutoPropertyHelpers.h"
 
 #include "deviceinfo.h"
 

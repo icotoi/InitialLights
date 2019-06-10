@@ -41,30 +41,30 @@ contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
 
 # QtQmlModels
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../3rdparty/release/ -lQtQmlModels
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../3rdparty/debug/ -lQtQmlModels
-else:unix: LIBS += -L$$OUT_PWD/../../3rdparty/ -lQtQmlModels
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../3rdparty/QtQmlModels/release/ -lQtQmlModels
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../3rdparty/QtQmlModels/debug/ -lQtQmlModels
+else:unix: LIBS += -L$$OUT_PWD/../../3rdparty/QtQmlModels/ -lQtQmlModels
 
-INCLUDEPATH += $$PWD/../../3rdparty
-DEPENDPATH += $$PWD/../../3rdparty
+INCLUDEPATH += $$PWD/../../3rdparty/QtQmlModels
+DEPENDPATH += $$PWD/../../3rdparty/QtQmlModels
 
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/release/libQtQmlModels.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/debug/libQtQmlModels.a
-else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/release/QtQmlModels.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/debug/QtQmlModels.lib
-else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/libQtQmlModels.a
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/QtQmlModels/release/libQtQmlModels.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/QtQmlModels/debug/libQtQmlModels.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/QtQmlModels/release/QtQmlModels.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/QtQmlModels/debug/QtQmlModels.lib
+else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/QtQmlModels/libQtQmlModels.a
 
 # QtSuperMacros
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../3rdparty/release/ -lQtSuperMacros
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../3rdparty/debug/ -lQtSuperMacros
-else:unix: LIBS += -L$$OUT_PWD/../../3rdparty/ -lQtSuperMacros
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../3rdparty/QtSuperMacros/release/ -lQtSuperMacros
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../3rdparty/QtSuperMacros/debug/ -lQtSuperMacros
+else:unix: LIBS += -L$$OUT_PWD/../../3rdparty/QtSuperMacros/ -lQtSuperMacros
 
-INCLUDEPATH += $$PWD/../../3rdparty
-DEPENDPATH += $$PWD/../../3rdparty
+INCLUDEPATH += $$PWD/../../3rdparty/QtSuperMacros
+DEPENDPATH += $$PWD/../../3rdparty/QtSuperMacros
 
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/release/libQtSuperMacros.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/debug/libQtSuperMacros.a
-else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/release/QtSuperMacros.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/debug/QtSuperMacros.lib
-else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/libQtSuperMacros.a
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/QtSuperMacros/release/libQtSuperMacros.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/QtSuperMacros/debug/libQtSuperMacros.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/QtSuperMacros/release/QtSuperMacros.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/QtSuperMacros/debug/QtSuperMacros.lib
+else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/QtSuperMacros/libQtSuperMacros.a
