@@ -8,6 +8,7 @@ Item {
     property var controller: undefined
     property int subtitleMargin: 10
     property int channelMargin: 20
+    property int controllerChannelLabelMinimumWidth: 75
 
     SectionLabel {
         id: titleLabel
@@ -28,6 +29,7 @@ Item {
             horizontalAlignment: Text.AlignLeft
             Layout.fillWidth: true
             leftPadding: control.subtitleMargin
+            visible: controller.pwmChannels.count > 0
         }
 
         Repeater {
@@ -52,17 +54,19 @@ Item {
                 Label {
                     Layout.fillWidth: true
                     Layout.leftMargin: control.channelMargin
-                    property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
-                    text: "<b>Channel %1<b>: %2%".arg(name).arg(displayValue)
+                    text: "<b>Channel %1<b>".arg(name)
                 }
 
-                Slider {
+                ControllerChannel {
                     Layout.fillWidth: true
                     Layout.leftMargin: control.channelMargin
-                    from: model.minValue
-                    to: model.maxValue
-                    stepSize: model.valueIncrement
+                    labelMinimumWidth: control.controllerChannelLabelMinimumWidth
+                    property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
+                    text: displayValue + "%"
                     value: model.value
+                    minValue: model.minValue
+                    maxValue: model.maxValue
+                    valueIncrement: model.valueIncrement
                     onValueChanged: model.value = value
                 }
             }
@@ -74,6 +78,7 @@ Item {
             horizontalAlignment: Text.AlignLeft
             Layout.fillWidth: true
             leftPadding: control.subtitleMargin
+            visible: controller.rgbChannels.count > 0
         }
 
         Repeater {
@@ -89,8 +94,6 @@ Item {
 
             delegate: ColumnLayout {
                 Layout.fillWidth: true
-
-                property int labelMinimumWidth: 75
 
                 Rectangle {
                     Layout.fillWidth: true
@@ -108,9 +111,9 @@ Item {
                 ControllerChannel {
                     Layout.fillWidth: true
                     Layout.leftMargin: control.channelMargin
-                    labelMinimumWidth: parent.labelMinimumWidth
+                    labelMinimumWidth: control.controllerChannelLabelMinimumWidth
                     property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
-                    text: "<b>R<b>: %1%".arg(displayValue)
+                    text: "%1% R".arg(displayValue)
                     value: model.redValue
                     minValue: model.minValue
                     maxValue: model.maxValue
@@ -121,21 +124,22 @@ Item {
                 ControllerChannel {
                     Layout.fillWidth: true
                     Layout.leftMargin: control.channelMargin
-                    labelMinimumWidth: parent.labelMinimumWidth
+                    labelMinimumWidth: control.controllerChannelLabelMinimumWidth
                     property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
-                    text: "<b>G<b>: %1%".arg(displayValue)
+                    text: "%1% G".arg(displayValue)
                     value: model.greenValue
                     minValue: model.minValue
                     maxValue: model.maxValue
                     valueIncrement: model.valueIncrement
                     onValueChanged: model.greenValue = value
                 }
+
                 ControllerChannel {
                     Layout.fillWidth: true
                     Layout.leftMargin: control.channelMargin
-                    labelMinimumWidth: parent.labelMinimumWidth
+                    labelMinimumWidth: control.controllerChannelLabelMinimumWidth
                     property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
-                    text: "<b>B<b>: %1%".arg(displayValue)
+                    text: "%1% B".arg(displayValue)
                     value: model.blueValue
                     minValue: model.minValue
                     maxValue: model.maxValue
@@ -151,6 +155,7 @@ Item {
             horizontalAlignment: Text.AlignLeft
             Layout.fillWidth: true
             leftPadding: control.subtitleMargin
+            visible: controller.voltageChannels.count > 0
         }
 
         Repeater {
@@ -175,17 +180,19 @@ Item {
                 Label {
                     Layout.fillWidth: true
                     Layout.leftMargin: control.channelMargin
-                    property double displayValue: 10.0 * (value - minValue) / (maxValue - minValue)
-                    text: "<b>Channel %1<b>: %2V".arg(name).arg(displayValue)
+                    text: "<b>Channel %1<b>".arg(name)
                 }
 
-                Slider {
+                ControllerChannel {
                     Layout.fillWidth: true
                     Layout.leftMargin: control.channelMargin
-                    from: model.minValue
-                    to: model.maxValue
-                    stepSize: model.valueIncrement
+                    labelMinimumWidth: control.controllerChannelLabelMinimumWidth
+                    property double displayValue: 10.0 * (value - minValue) / (maxValue - minValue)
+                    text: displayValue.toFixed(2) + "V"
                     value: model.value
+                    minValue: model.minValue
+                    maxValue: model.maxValue
+                    valueIncrement: model.valueIncrement
                     onValueChanged: model.value = value
                 }
             }
