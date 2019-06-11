@@ -131,9 +131,11 @@ void LightController::serviceScanDone()
         connect(m_service.get(), qOverload<QLowEnergyService::ServiceError>(&QLowEnergyService::error),
                 this, &LightController::serviceError);
         m_service->discoverDetails();
+        update_message("Connecting to service");
         qDebug() << "connecting to service...";
     } else {
         update_message("No service found");
+        update_isBusy(false);
         qDebug() << "no service found";
     }
 }
