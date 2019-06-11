@@ -31,6 +31,7 @@ LightController::~LightController()
 void LightController::clear()
 {
     AbstractLightController::clear();
+
     m_service.reset();
 
     if (!m_controller.isNull()) {
@@ -108,20 +109,8 @@ void LightController::serviceDiscovered(const QBluetoothUuid & uuid)
     if (uuid == uuidService) {
         if (m_service.isNull()) {
             update_message("Service found");
-            qDebug() << "found service - connecting...";
-
+            qDebug() << "service found";
             m_service.reset(m_controller->createServiceObject(uuid, this));
-
-            connect(m_service.get(), &QLowEnergyService::stateChanged,
-                    this, &LightController::serviceStateChanged);
-            connect(m_service.get(), &QLowEnergyService::characteristicChanged,
-                    this, &LightController::serviceCharacteristicChanged);
-            connect(m_service.get(), &QLowEnergyService::descriptorWritten,
-                    this, &LightController::serviceDescriptorWritten);
-            connect(m_service.get(), qOverload<QLowEnergyService::ServiceError>(&QLowEnergyService::error),
-                    this, &LightController::serviceError);
-
-            m_service->discoverDetails();
         } else {
             qWarning() << "service already found";
         }
@@ -132,7 +121,18 @@ void LightController::serviceScanDone()
 {
     qDebug() <<  "service scan done";
 
-    if (m_service.isNull()) {
+    if (!m_service.isNull()) {
+        connect(m_service.get(), &QLowEnergyService::stateChanged,
+                this, &LightController::serviceStateChanged);
+        connect(m_service.get(), &QLowEnergyService::characteristicChanged,
+                this, &LightController::serviceCharacteristicChanged);
+        connect(m_service.get(), &QLowEnergyService::descriptorWritten,
+                this, &LightController::serviceDescriptorWritten);
+        connect(m_service.get(), qOverload<QLowEnergyService::ServiceError>(&QLowEnergyService::error),
+                this, &LightController::serviceError);
+        m_service->discoverDetails();
+        qDebug() << "connecting to service...";
+    } else {
         update_message("No service found");
         qDebug() << "no service found";
     }
