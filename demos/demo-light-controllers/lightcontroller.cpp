@@ -32,12 +32,20 @@ void LightController::clear()
 {
     AbstractLightController::clear();
 
+    m_hasReceivedInitialState = false;
+
+    m_notificationDescriptor = QLowEnergyDescriptor();
+
     m_service.reset();
 
     if (!m_controller.isNull()) {
         m_controller->disconnectFromDevice();
         m_controller.reset();
     }
+
+    update_isBusy(false);
+
+    qDebug() << "light controller internal state cleared";
 }
 
 QString LightController::address(const QBluetoothDeviceInfo &info)
@@ -57,13 +65,10 @@ bool LightController::isValidDevice(const QBluetoothDeviceInfo &info)
 
 void LightController::connectToController()
 {
-    update_isBusy(true);
-
     // just for safety
     clear();
 
-    //    m_measurements.clear();
-    //    m_haveReceivedUartInitialState = false;
+    update_isBusy(true);
 
     m_controller.reset(new QLowEnergyController(m_info, this));
 
@@ -83,25 +88,14 @@ void LightController::connectToController()
 
 void LightController::disconnectFromController()
 {
-    //    m_stop = QDateTime::currentDateTime();
-
-    //    if (m_devices.isEmpty()) {
-    //        if (m_timer)
-    //            m_timer->stop();
-    //        return;
-    //    }
-
-    //    //disable notifications before disconnecting
-    //    if (m_notificationDesc.isValid()
-    //            && m_service
-    //            && m_notificationDesc.value() == QByteArray::fromHex("0100")) {
-    //        m_service->writeDescriptor(m_notificationDesc, QByteArray::fromHex("0000"));
-    //    } else {
-    //        m_control->disconnectFromDevice();
-    //        delete m_service;
-    //        m_service = nullptr;
-    //    }
-    clear();
+    //disable notifications before disconnecting
+    if (m_notificationDescriptor.isValid()
+            && m_service
+            && m_notificationDescriptor.value() == QByteArray::fromHex("0100")) {
+        m_service->writeDescriptor(m_notificationDescriptor, QByteArray::fromHex("0000"));
+    } else {
+        clear();
+    }
 }
 
 void LightController::serviceDiscovered(const QBluetoothUuid & uuid)
@@ -148,6 +142,7 @@ void LightController::controllerError(QLowEnergyController::Error error)
 
 void LightController::controllerConnected()
 {
+    qDebug() << "connected to controller; discovering services...";
     m_controller->discoverServices();
 }
 
@@ -181,8 +176,6 @@ void LightController::serviceStateChanged(QLowEnergyService::ServiceState state)
         update_message("Connected");
         qDebug() << "connected";
 
-        m_start = QDateTime::currentDateTime();
-
         const QLowEnergyCharacteristic writeCharacteristic = m_service->characteristic(writeCharacteristicUuid);
         if (!writeCharacteristic.isValid()) {
             update_message("Cannot get write characteristic");
@@ -190,8 +183,8 @@ void LightController::serviceStateChanged(QLowEnergyService::ServiceState state)
             break;
         }
 
-        m_currentCommand = "U?\n";
-        m_service->writeCharacteristic(writeCharacteristic, m_currentCommand,  QLowEnergyService::WriteMode::WriteWithoutResponse);
+        m_command = "U?\n";
+        m_service->writeCharacteristic(writeCharacteristic, m_command,  QLowEnergyService::WriteMode::WriteWithoutResponse);
 
         break;
     }
@@ -218,9 +211,7 @@ void LightController::serviceDescriptorWritten(const QLowEnergyDescriptor &descr
                 && descriptor == m_notificationDescriptor
                 && data == QByteArray::fromHex("0000")) {
             // disabled notifications -> assume disconnect intent
-            m_controller->disconnectFromDevice();
-            m_service.reset();
-            m_notificationDescriptor = QLowEnergyDescriptor();
+            clear();
         }
 }
 
@@ -236,42 +227,40 @@ void LightController::serviceError(QLowEnergyService::ServiceError e)
     }
 }
 
-void LightController::updateFromDevice(const QByteArray &/*data*/)
+void LightController::updateFromDevice(const QByteArray &deviceData)
 {
-    //    if(uartStr.startsWith("*")) {
-    //        QString data = uartStr.mid(1);
+        if(deviceData.startsWith("*")) {
+            if(m_command.startsWith("U?")) {
+                QByteArray data = deviceData.mid(1);
 
-    //        if(m_lastUartCmd.startsWith("U?")) {
+                m_hasReceivedInitialState = true;
 
-    //            if(!m_haveReceivedUartInitialState)
-    //                m_haveReceivedUartInitialState = true;
+                // Current controller values
+                QByteArray channel1Str = data.mid(0, 2);
+//                m_channel1 = channel1Str.toInt(nullptr, 16);
+//                m_channel1SliderValue = float(m_channel1)/31.00F;
 
-    //            // Current controller values
-    //            QString channel1Str = data.mid(0, 2);
-    //            m_channel1 = channel1Str.toInt(nullptr, 16);
-    //            m_channel1SliderValue = float(m_channel1)/31.00F;
+//                QString channel2Str = data.mid(2, 2);
+//                m_channel2 = channel2Str.toInt(nullptr, 16);
+//                m_channel2SliderValue = (m_channel2 == 0) ? 0 : float(m_channel2)/31.00F;
 
-    //            QString channel2Str = data.mid(2, 2);
-    //            m_channel2 = channel2Str.toInt(nullptr, 16);
-    //            m_channel2SliderValue = (m_channel2 == 0) ? 0 : float(m_channel2)/31.00F;
+//                QString channel3Str = data.mid(4, 2);
+//                m_channel3 = channel3Str.toInt(nullptr, 16);
+//                m_channel3SliderValue = (m_channel3 == 0) ? 0 : float(m_channel3)/31.00F;
 
-    //            QString channel3Str = data.mid(4, 2);
-    //            m_channel3 = channel3Str.toInt(nullptr, 16);
-    //            m_channel3SliderValue = (m_channel3 == 0) ? 0 : float(m_channel3)/31.00F;
+//                QString channel4Str = data.mid(6, 2);
+//                m_channel4 = channel4Str.toInt(nullptr, 16);
+//                m_channel4SliderValue = (m_channel4 == 0) ? 0 : float(m_channel4)/31.00F;
 
-    //            QString channel4Str = data.mid(6, 2);
-    //            m_channel4 = channel4Str.toInt(nullptr, 16);
-    //            m_channel4SliderValue = (m_channel4 == 0) ? 0 : float(m_channel4)/31.00F;
+//                qDebug() << "Channels:" << QString::number(m_channel1) << QString::number(m_channel2) << QString::number(m_channel3) << QString::number(m_channel4);
+//                qDebug() << "Sliders:" << m_channel1SliderValue << m_channel2SliderValue << m_channel3SliderValue << m_channel4SliderValue;
 
-    //            qDebug() << "Channels:" << QString::number(m_channel1) << QString::number(m_channel2) << QString::number(m_channel3) << QString::number(m_channel4);
-    //            qDebug() << "Sliders:" << m_channel1SliderValue << m_channel2SliderValue << m_channel3SliderValue << m_channel4SliderValue;
+//                emit lightChannelsValueChanged();
 
-    //            emit lightChannelsValueChanged();
-
-    //        } else if(m_lastUartCmd.startsWith("UV")) {
-    //        } else if(m_lastUartCmd.startsWith("UI")) {
-    //        }
-    //    }
+            } else if(m_command.startsWith("UV")) {
+            } else if(m_command.startsWith("UI")) {
+            }
+        }
 }
 
 void LightController::updateDevice()

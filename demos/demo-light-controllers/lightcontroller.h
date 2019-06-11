@@ -4,7 +4,6 @@
 
 #include <QLowEnergyController>
 #include <QLowEnergyService>
-#include <QDateTime>
 
 namespace il {
 
@@ -48,9 +47,8 @@ private:
     QScopedPointer<QLowEnergyController> m_controller;
     QScopedPointer<QLowEnergyService> m_service;
     QLowEnergyDescriptor m_notificationDescriptor;
-    QDateTime m_start;
-    QDateTime m_stop;
-    QByteArray m_currentCommand;
+    QByteArray m_command;
+    bool m_hasReceivedInitialState { false };
 };
 
 } // namespace il
