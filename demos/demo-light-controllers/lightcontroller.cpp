@@ -1,5 +1,7 @@
 #include "lightcontroller.h"
 #include "lightcontrollerpwmchannel.h"
+#include "lightcontrollerrgbchannel.h"
+#include "lightcontrollervoltagechannel.h"
 
 #if defined (Q_OS_MAC)
 #include <QBluetoothUuid>
@@ -227,36 +229,46 @@ void LightController::serviceError(QLowEnergyService::ServiceError e)
     }
 }
 
-void LightController::updateFromDevice(const QByteArray &deviceData)
+void LightController::updateFromDevice(const QByteArray &data)
 {
-        if(deviceData.startsWith("*")) {
+        if(data.startsWith("*")) {
             if(m_command.startsWith("U?")) {
-                QByteArray data = deviceData.mid(1);
-
                 m_hasReceivedInitialState = true;
 
-                // Current controller values
-                QByteArray channel1Str = data.mid(0, 2);
-//                m_channel1 = channel1Str.toInt(nullptr, 16);
-//                m_channel1SliderValue = float(m_channel1)/31.00F;
+                auto controllerType = data.right(2).toInt();
+                switch (controllerType) {
+                case 2:
+                    // 2 x Analogic
+                    update_controllerType(V1_2x10V);
+                    for (int i = 0; i < 2; ++i) {
+                        auto channel = new LightControllerVoltageChannel(QString::number(i+1), this);
+                        channel->set_value(data.mid(1 + i*2, 2).toInt());
+                        get_voltageChannels()->append(channel);
+                    }
+                    break;
+                case 3:
+                    // 4 x PWM
+                    update_controllerType(V1_4xPWM);
+                    for (int i = 0; i < 4; ++i) {
+                        auto channel = new LightControllerPWMChannel(QString::number(i+1), this);
+                        channel->set_value(data.mid(1 + i*2, 2).toInt());
+                        get_pwmChannels()->append(channel);
+                    }
+                    break;
+                default:
+                    // 1 x PWM + 1 x RGB
+                    update_controllerType(V1_4xPWM);
+                    auto pwmChannel = new LightControllerPWMChannel("1", this);
+                    pwmChannel->set_value(data.mid(1, 2).toInt());
+                    get_pwmChannels()->append(pwmChannel);
 
-//                QString channel2Str = data.mid(2, 2);
-//                m_channel2 = channel2Str.toInt(nullptr, 16);
-//                m_channel2SliderValue = (m_channel2 == 0) ? 0 : float(m_channel2)/31.00F;
-
-//                QString channel3Str = data.mid(4, 2);
-//                m_channel3 = channel3Str.toInt(nullptr, 16);
-//                m_channel3SliderValue = (m_channel3 == 0) ? 0 : float(m_channel3)/31.00F;
-
-//                QString channel4Str = data.mid(6, 2);
-//                m_channel4 = channel4Str.toInt(nullptr, 16);
-//                m_channel4SliderValue = (m_channel4 == 0) ? 0 : float(m_channel4)/31.00F;
-
-//                qDebug() << "Channels:" << QString::number(m_channel1) << QString::number(m_channel2) << QString::number(m_channel3) << QString::number(m_channel4);
-//                qDebug() << "Sliders:" << m_channel1SliderValue << m_channel2SliderValue << m_channel3SliderValue << m_channel4SliderValue;
-
-//                emit lightChannelsValueChanged();
-
+                    auto rgbChannel = new LightControllerRGBChannel("2", this);
+                    rgbChannel->set_redValue(data.mid(3, 2).toInt());
+                    rgbChannel->set_greenValue(data.mid(5, 2).toInt());
+                    rgbChannel->set_blueValue(data.mid(7, 2).toInt());
+                    get_rgbChannels()->append(rgbChannel);
+                    break;
+                }
             } else if(m_command.startsWith("UV")) {
             } else if(m_command.startsWith("UI")) {
             }
