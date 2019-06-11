@@ -254,6 +254,7 @@ void LightController::updateFromDevice(const QByteArray &data)
         if(data.startsWith("*")) {
             if(m_command.startsWith("U?")) {
                 m_hasReceivedInitialState = true;
+                clearChannels();
 
                 auto controllerType = data.right(2).toInt();
                 switch (controllerType) {
@@ -293,7 +294,9 @@ void LightController::updateFromDevice(const QByteArray &data)
                     break;
                 }
             } else if(m_command.startsWith("UV")) {
+                // TODO: implement read scene response parser
             } else if(m_command.startsWith("UI")) {
+                // TODO: implement invoke scene response parser
             }
         }
     }

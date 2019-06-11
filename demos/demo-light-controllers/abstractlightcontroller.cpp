@@ -23,6 +23,11 @@ AbstractLightController::~AbstractLightController()
 
 void AbstractLightController::clear()
 {
+    clearChannels();
+}
+
+void AbstractLightController::clearChannels()
+{
     m_pwmChannels->clear();
     m_rgbChannels->clear();
     m_voltageChannels->clear();

@@ -47,6 +47,7 @@ public slots:
 
 protected:
     virtual void clear();
+    void clearChannels();
 };
 
 } // namespace il
