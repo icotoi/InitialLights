@@ -209,12 +209,12 @@ void LightController::serviceCharacteristicChanged(const QLowEnergyCharacteristi
 
 void LightController::serviceDescriptorWritten(const QLowEnergyDescriptor &descriptor, const QByteArray &data)
 {
-        if (descriptor.isValid()
-                && descriptor == m_notificationDescriptor
-                && data == QByteArray::fromHex("0000")) {
-            // disabled notifications -> assume disconnect intent
-            clear();
-        }
+    if (descriptor.isValid()
+            && descriptor == m_notificationDescriptor
+            && data == QByteArray::fromHex("0000")) {
+        // disabled notifications -> assume disconnect intent
+        clear();
+    }
 }
 
 void LightController::serviceError(QLowEnergyService::ServiceError e)
@@ -231,48 +231,50 @@ void LightController::serviceError(QLowEnergyService::ServiceError e)
 
 void LightController::updateFromDevice(const QByteArray &data)
 {
-        if(data.startsWith("*")) {
-            if(m_command.startsWith("U?")) {
-                m_hasReceivedInitialState = true;
+    if(data.startsWith("*")) {
+        if(m_command.startsWith("U?")) {
+            m_hasReceivedInitialState = true;
 
-                auto controllerType = data.right(2).toInt();
-                switch (controllerType) {
-                case 2:
-                    // 2 x Analogic
-                    update_controllerType(V1_2x10V);
-                    for (int i = 0; i < 2; ++i) {
-                        auto channel = new LightControllerVoltageChannel(QString::number(i+1), this);
-                        channel->set_value(data.mid(1 + i*2, 2).toInt());
-                        get_voltageChannels()->append(channel);
-                    }
-                    break;
-                case 3:
-                    // 4 x PWM
-                    update_controllerType(V1_4xPWM);
-                    for (int i = 0; i < 4; ++i) {
-                        auto channel = new LightControllerPWMChannel(QString::number(i+1), this);
-                        channel->set_value(data.mid(1 + i*2, 2).toInt());
-                        get_pwmChannels()->append(channel);
-                    }
-                    break;
-                default:
-                    // 1 x PWM + 1 x RGB
-                    update_controllerType(V1_4xPWM);
-                    auto pwmChannel = new LightControllerPWMChannel("1", this);
-                    pwmChannel->set_value(data.mid(1, 2).toInt());
-                    get_pwmChannels()->append(pwmChannel);
-
-                    auto rgbChannel = new LightControllerRGBChannel("2", this);
-                    rgbChannel->set_redValue(data.mid(3, 2).toInt());
-                    rgbChannel->set_greenValue(data.mid(5, 2).toInt());
-                    rgbChannel->set_blueValue(data.mid(7, 2).toInt());
-                    get_rgbChannels()->append(rgbChannel);
-                    break;
+            auto controllerType = data.right(2).toInt();
+            switch (controllerType) {
+            case 2:
+                // 2 x Analogic
+                update_controllerType(V1_2x10V);
+                for (int i = 0; i < 2; ++i) {
+                    auto channel = new LightControllerVoltageChannel(QString::number(i+1), this);
+                    get_voltageChannels()->append(channel);
+                    channel->set_value(data.mid(1 + i*2, 2).toInt());
                 }
-            } else if(m_command.startsWith("UV")) {
-            } else if(m_command.startsWith("UI")) {
+                break;
+            case 3:
+                // 4 x PWM
+                update_controllerType(V1_4xPWM);
+                for (int i = 0; i < 4; ++i) {
+                    auto channel = new LightControllerPWMChannel(QString::number(i+1), this);
+                    get_pwmChannels()->append(channel);
+                    channel->set_value(data.mid(1 + i*2, 2).toInt());
+                }
+                break;
+            default:
+                // 1 x PWM + 1 x RGB
+                update_controllerType(V1_4xPWM);
+                auto pwmChannel = new LightControllerPWMChannel("1", this);
+                get_pwmChannels()->append(pwmChannel);
+                pwmChannel->set_value(data.mid(1, 2).toInt());
+
+                auto rgbChannel = new LightControllerRGBChannel("2", this);
+                get_rgbChannels()->append(rgbChannel);
+                rgbChannel->set_redValue(data.mid(3, 2).toInt());
+                rgbChannel->set_greenValue(data.mid(5, 2).toInt());
+                rgbChannel->set_blueValue(data.mid(7, 2).toInt());
+                break;
             }
+        } else if(m_command.startsWith("UV")) {
+        } else if(m_command.startsWith("UI")) {
         }
+    }
+
+    update_isBusy(false);
 }
 
 void LightController::updateDevice()
