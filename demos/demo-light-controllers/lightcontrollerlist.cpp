@@ -1,6 +1,5 @@
 #include "lightcontrollerlist.h"
 
-#include "deviceinfo.h"
 #include "lightcontroller.h"
 #include "dummylightcontroller.h"
 
@@ -38,7 +37,7 @@ void LightControllerList::scan()
 
 bool LightControllerList::deviceAlreadyScanned(const QBluetoothDeviceInfo &info) const
 {
-    auto address = DeviceInfo::address(info);
+    auto address = LightController::address(info);
     return std::any_of(m_controllers->begin(), m_controllers->end(), [address](AbstractLightController* controller){
        return controller->address() == address;
     });
@@ -46,13 +45,12 @@ bool LightControllerList::deviceAlreadyScanned(const QBluetoothDeviceInfo &info)
 
 void LightControllerList::deviceDiscovered(const QBluetoothDeviceInfo &info)
 {
-    if (DeviceInfo::isValidDevice(info)) {
+    if (LightController::isValidDevice(info)) {
         if (!deviceAlreadyScanned(info)) {
-            auto deviceInfo = new DeviceInfo(info);
-            auto controller = new LightController(deviceInfo);
+            AbstractLightController* controller = new LightController(info);
             m_controllers->append(controller);
-            qWarning() << "LE Device name:" << deviceInfo->name()
-                       << "address:" << deviceInfo->address() << "scanned; adding it to the devices list...";
+            qWarning() << "LE Device name:" << controller->name()
+                       << "address:" << controller->address() << "scanned; adding it to the devices list...";
         }
         set_message("Low Energy device found. Scanning for more...");
     }

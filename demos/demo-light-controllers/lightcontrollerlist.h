@@ -1,18 +1,9 @@
 #pragma once
 
 #include <QBluetoothDeviceDiscoveryAgent>
-#include <QQmlListProperty>
 
 #include "QQmlObjectListModel.h"
 #include "QQmlVarPropertyHelpers.h"
-
-//#include <QDateTime>
-//#include <QVector>
-//#include <QTimer>
-//#include <QBluetoothDeviceDiscoveryAgent>
-//#include <QBluetoothDeviceInfo>
-//#include <QLowEnergyController>
-//#include <QLowEnergyService>
 
 namespace il {
 

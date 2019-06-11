@@ -8,15 +8,16 @@
 
 namespace il {
 
-class DeviceInfo;
-
 class LightController : public AbstractLightController
 {
     Q_OBJECT
 
 public:
-    explicit LightController(DeviceInfo* info, QObject *parent = nullptr);
+    explicit LightController(const QBluetoothDeviceInfo &info, QObject *parent = nullptr);
     ~LightController() override;
+
+    static QString address(const QBluetoothDeviceInfo &info);
+    static bool isValidDevice(const QBluetoothDeviceInfo &info);
 
     void clear() override;
 
@@ -43,7 +44,7 @@ private:
     void updateFromDevice(const QByteArray& data);
     void updateDevice();
 
-    DeviceInfo* m_info;
+    QBluetoothDeviceInfo m_info;
     QScopedPointer<QLowEnergyController> m_controller;
     QScopedPointer<QLowEnergyService> m_service;
     QLowEnergyDescriptor m_notificationDescriptor;

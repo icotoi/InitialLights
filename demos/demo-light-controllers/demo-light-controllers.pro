@@ -1,13 +1,11 @@
 TEMPLATE = app
 
-DEFINES += QTQMLTRICKS_NO_PREFIX_ON_GETTERS
-
 QT += quick bluetooth svg
 CONFIG += c++17
+DEFINES += QTQMLTRICKS_NO_PREFIX_ON_GETTERS
 
 HEADERS += \
     abstractlightcontroller.h \
-    deviceinfo.h \
     dummylightcontroller.h \
     lightcontroller.h \
     lightcontrollerlist.h \
@@ -18,7 +16,6 @@ HEADERS += \
 
 SOURCES += \
     abstractlightcontroller.cpp \
-    deviceinfo.cpp \
     dummylightcontroller.cpp \
     lightcontroller.cpp \
     lightcontrollerlist.cpp \

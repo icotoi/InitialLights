@@ -1,25 +1,26 @@
 #include "lightcontroller.h"
-#include "deviceinfo.h"
 #include "lightcontrollerpwmchannel.h"
 
-#include <QLowEnergyController>
+#if defined (Q_OS_MAC)
+#include <QBluetoothUuid>
+#else
+#include <QBluetoothAddress>
+#endif
 
 namespace il {
 
 namespace  {
-const QBluetoothUuid uartWriteCharacteristicUuid = QBluetoothUuid(QStringLiteral("6E400002-B5A3-F393-E0A9-E50E24DCCA9E"));
-const QBluetoothUuid uartReadCharacteristicUuid = QBluetoothUuid(QStringLiteral("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"));
+const QBluetoothUuid uuidService(QStringLiteral("6E400001-B5A3-F393-E0A9-E50E24DCCA9E"));
+const QBluetoothUuid writeCharacteristicUuid(QStringLiteral("6E400002-B5A3-F393-E0A9-E50E24DCCA9E"));
+const QBluetoothUuid readCharacteristicUuid(QStringLiteral("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"));
 }
 
-LightController::LightController(DeviceInfo *info, QObject *parent)
+LightController::LightController(const QBluetoothDeviceInfo &info, QObject *parent)
     : AbstractLightController (parent)
     , m_info { info }
 {
-    if (m_info) {
-        m_info->setParent(this);
-        update_name(m_info->name());
-        update_address(m_info->address());
-    }
+    update_name(m_info.name());
+    update_address(address(m_info));
 }
 
 LightController::~LightController()
@@ -38,6 +39,21 @@ void LightController::clear()
     }
 }
 
+QString LightController::address(const QBluetoothDeviceInfo &info)
+{
+#if defined(Q_OS_MAC)
+    // workaround for Core Bluetooth:
+    return info.deviceUuid().toString();
+#else
+    return info.address().toString();
+#endif
+}
+
+bool LightController::isValidDevice(const QBluetoothDeviceInfo &info)
+{
+    return info.serviceUuids().contains(uuidService);
+}
+
 void LightController::connectToController()
 {
     update_isBusy(true);
@@ -48,7 +64,7 @@ void LightController::connectToController()
     //    m_measurements.clear();
     //    m_haveReceivedUartInitialState = false;
 
-    m_controller.reset(new QLowEnergyController(m_info->info(), this));
+    m_controller.reset(new QLowEnergyController(m_info, this));
 
     connect(m_controller.get(), &QLowEnergyController::serviceDiscovered,
             this, &LightController::serviceDiscovered);
@@ -89,7 +105,7 @@ void LightController::disconnectFromController()
 
 void LightController::serviceDiscovered(const QBluetoothUuid & uuid)
 {
-    if (DeviceInfo::isValidService(uuid)) {
+    if (uuid == uuidService) {
         if (m_service.isNull()) {
             update_message("Service found");
             qDebug() << "found service - connecting...";
@@ -145,7 +161,7 @@ void LightController::serviceStateChanged(QLowEnergyService::ServiceState state)
 
     switch (state) {
     case QLowEnergyService::ServiceDiscovered: {
-        const QLowEnergyCharacteristic readCharacteristic = m_service->characteristic(uartReadCharacteristicUuid);
+        const QLowEnergyCharacteristic readCharacteristic = m_service->characteristic(readCharacteristicUuid);
         if (!readCharacteristic.isValid()) {
             update_message("Cannot get read characteristic");
             qDebug() << "cannot get read characteristic";
@@ -165,7 +181,7 @@ void LightController::serviceStateChanged(QLowEnergyService::ServiceState state)
 
         m_start = QDateTime::currentDateTime();
 
-        const QLowEnergyCharacteristic writeCharacteristic = m_service->characteristic(uartWriteCharacteristicUuid);
+        const QLowEnergyCharacteristic writeCharacteristic = m_service->characteristic(writeCharacteristicUuid);
         if (!writeCharacteristic.isValid()) {
             update_message("Cannot get write characteristic");
             qDebug() << "cannot get write characteristic";
@@ -186,7 +202,7 @@ void LightController::serviceStateChanged(QLowEnergyService::ServiceState state)
 void LightController::serviceCharacteristicChanged(const QLowEnergyCharacteristic &characteristic, const QByteArray &data)
 {
     // ignore any other characteristic change -> shouldn't really happen though
-    if (characteristic.uuid() != QBluetoothUuid(uartReadCharacteristicUuid))
+    if (characteristic.uuid() != QBluetoothUuid(readCharacteristicUuid))
         return;
 
     qDebug() << "received response: " << data;
@@ -218,7 +234,7 @@ void LightController::serviceError(QLowEnergyService::ServiceError e)
     }
 }
 
-void LightController::updateFromDevice(const QByteArray &data)
+void LightController::updateFromDevice(const QByteArray &/*data*/)
 {
     //    if(uartStr.startsWith("*")) {
     //        QString data = uartStr.mid(1);
