@@ -3,6 +3,9 @@
 #include "lightcontrollerrgbchannel.h"
 #include "lightcontrollervoltagechannel.h"
 
+//#include <QRandomGenerator>
+//#include <QTimer>
+
 #if defined (Q_OS_MAC)
 #include <QBluetoothUuid>
 #else
@@ -15,6 +18,19 @@ namespace  {
 const QBluetoothUuid uuidService(QStringLiteral("6E400001-B5A3-F393-E0A9-E50E24DCCA9E"));
 const QBluetoothUuid writeCharacteristicUuid(QStringLiteral("6E400002-B5A3-F393-E0A9-E50E24DCCA9E"));
 const QBluetoothUuid readCharacteristicUuid(QStringLiteral("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"));
+
+//void setRandomValue(int msec, LightControllerVoltageChannel* channel)
+//{
+//    QTimer::singleShot(msec, [=](){
+//        auto rand = QRandomGenerator::global();
+//        double value = double(rand->generate())
+//                / rand->max()
+//                * (channel->maxValue() - channel->minValue())
+//                + (channel->minValue());
+//        qDebug() << "new value from timer:" << value;
+//        channel->set_value(int(value));
+//    });
+//}
 }
 
 LightController::LightController(const QBluetoothDeviceInfo &info, QObject *parent)
@@ -243,7 +259,10 @@ void LightController::updateFromDevice(const QByteArray &data)
                 for (int i = 0; i < 2; ++i) {
                     auto channel = new LightControllerVoltageChannel(QString::number(i+1), this);
                     get_voltageChannels()->append(channel);
-                    channel->set_value(data.mid(1 + i*2, 2).toInt());
+                    channel->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
+                    // for testing, to make sure we don't break signal-slot connections from ui
+                    // setRandomValue(3000, channel);
+                    // setRandomValue(6000, channel);
                 }
                 break;
             case 3:
@@ -252,7 +271,7 @@ void LightController::updateFromDevice(const QByteArray &data)
                 for (int i = 0; i < 4; ++i) {
                     auto channel = new LightControllerPWMChannel(QString::number(i+1), this);
                     get_pwmChannels()->append(channel);
-                    channel->set_value(data.mid(1 + i*2, 2).toInt());
+                    channel->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
                 }
                 break;
             default:
@@ -260,13 +279,13 @@ void LightController::updateFromDevice(const QByteArray &data)
                 update_controllerType(V1_4xPWM);
                 auto pwmChannel = new LightControllerPWMChannel("1", this);
                 get_pwmChannels()->append(pwmChannel);
-                pwmChannel->set_value(data.mid(1, 2).toInt());
+                pwmChannel->set_value(data.mid(1, 2).toInt(nullptr, 16));
 
                 auto rgbChannel = new LightControllerRGBChannel("2", this);
                 get_rgbChannels()->append(rgbChannel);
-                rgbChannel->set_redValue(data.mid(3, 2).toInt());
-                rgbChannel->set_greenValue(data.mid(5, 2).toInt());
-                rgbChannel->set_blueValue(data.mid(7, 2).toInt());
+                rgbChannel->set_redValue(data.mid(3, 2).toInt(nullptr, 16));
+                rgbChannel->set_greenValue(data.mid(5, 2).toInt(nullptr, 16));
+                rgbChannel->set_blueValue(data.mid(7, 2).toInt(nullptr, 16));
                 break;
             }
         } else if(m_command.startsWith("UV")) {
