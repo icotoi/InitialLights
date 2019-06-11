@@ -53,7 +53,6 @@ ApplicationWindow {
 
             ToolButton {
                 icon.source: "Images/material.io-baseline-more_vert-24px.svg"
-//                onClicked: menu.open()
             }
         }
     }
