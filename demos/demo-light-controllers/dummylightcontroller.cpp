@@ -12,6 +12,7 @@ DummyLightController::DummyLightController(ControllerType controllerType,
                                            const QString &address,
                                            QObject *parent)
     : AbstractLightController (parent)
+    , m_connectDelay { 1000 }
 {
     update_controllerType(controllerType);
     update_name(name);
@@ -22,7 +23,11 @@ void DummyLightController::connectToController()
 {
     clear();
     update_isBusy(true);
-    QTimer::singleShot(1000, this, &DummyLightController::conectToControllerFinished);
+    if (m_connectDelay > 0) {
+        QTimer::singleShot(m_connectDelay, this, &DummyLightController::connectToControllerFinished);
+    } else {
+        connectToControllerFinished();
+    }
 }
 
 void DummyLightController::disconnectFromController()
@@ -31,7 +36,7 @@ void DummyLightController::disconnectFromController()
     clear();
 }
 
-void DummyLightController::conectToControllerFinished()
+void DummyLightController::connectToControllerFinished()
 {
     switch (controllerType()) {
     case V1_4xPWM:

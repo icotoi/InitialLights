@@ -194,15 +194,7 @@ void LightController::serviceStateChanged(QLowEnergyService::ServiceState state)
         update_message("Connected");
         qDebug() << "connected";
 
-        const QLowEnergyCharacteristic writeCharacteristic = m_service->characteristic(writeCharacteristicUuid);
-        if (!writeCharacteristic.isValid()) {
-            update_message("Cannot get write characteristic");
-            qDebug() << "cannot get write characteristic";
-            break;
-        }
-
-        m_command = "U?\n";
-        m_service->writeCharacteristic(writeCharacteristic, m_command,  QLowEnergyService::WriteMode::WriteWithoutResponse);
+        writeToDevice("U?\n");
 
         break;
     }
@@ -249,7 +241,7 @@ void LightController::updateFromDevice(const QByteArray &data)
 {
     if (data.length() != 11) {
         update_message("Received invalid data");
-        qWarning() << "received invalid data received from controller" << data;
+        qWarning() << "received invalid data received from controller: 11 !=" << data.length() << "data:" << data;
     } else {
         if(data.startsWith("*")) {
             if(m_command.startsWith("U?")) {
@@ -265,6 +257,7 @@ void LightController::updateFromDevice(const QByteArray &data)
                         auto channel = new LightControllerVoltageChannel(QString::number(i+1), this);
                         get_voltageChannels()->append(channel);
                         channel->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
+                        connect(channel, &LightControllerVoltageChannel::valueChanged, this, &LightController::updateDevice);
                         // for testing, to make sure we don't break signal-slot connections from ui
                         // setRandomValue(3000, channel);
                         // setRandomValue(6000, channel);
@@ -277,20 +270,25 @@ void LightController::updateFromDevice(const QByteArray &data)
                         auto channel = new LightControllerPWMChannel(QString::number(i+1), this);
                         get_pwmChannels()->append(channel);
                         channel->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
+                        connect(channel, &LightControllerPWMChannel::valueChanged, this, &LightController::updateDevice);
                     }
                     break;
                 default:
                     // 1 x PWM + 1 x RGB
-                    update_controllerType(V1_4xPWM);
+                    update_controllerType(V1_1xPWM_1xRGB);
                     auto pwmChannel = new LightControllerPWMChannel("1", this);
                     get_pwmChannels()->append(pwmChannel);
                     pwmChannel->set_value(data.mid(1, 2).toInt(nullptr, 16));
+                    connect(pwmChannel, &LightControllerPWMChannel::valueChanged, this, &LightController::updateDevice);
 
                     auto rgbChannel = new LightControllerRGBChannel("2", this);
                     get_rgbChannels()->append(rgbChannel);
                     rgbChannel->set_redValue(data.mid(3, 2).toInt(nullptr, 16));
                     rgbChannel->set_greenValue(data.mid(5, 2).toInt(nullptr, 16));
                     rgbChannel->set_blueValue(data.mid(7, 2).toInt(nullptr, 16));
+                    connect(rgbChannel, &LightControllerRGBChannel::redValueChanged, this, &LightController::updateDevice);
+                    connect(rgbChannel, &LightControllerRGBChannel::greenValueChanged, this, &LightController::updateDevice);
+                    connect(rgbChannel, &LightControllerRGBChannel::blueValueChanged, this, &LightController::updateDevice);
                     break;
                 }
             } else if(m_command.startsWith("UV")) {
@@ -306,42 +304,32 @@ void LightController::updateFromDevice(const QByteArray &data)
 
 void LightController::updateDevice()
 {
-    //    m_channel1 = int(m_channel1SliderValue * 0x1F);
-    //    m_channel2 = int(m_channel2SliderValue * 0x1F);
-    //    m_channel3 = int(m_channel3SliderValue * 0x1F);
-    //    m_channel4 = int(m_channel4SliderValue * 0x1F);
+    QByteArray command = updateDeviceCommand();
 
-    //    QString toSend = QString("US");
+    if(command.length() != 13) {
+        qCritical() << "ERROR: invalid command length: 13 !=" << command.length() << "command:" << command;
+        return;
+    }
 
-    //    toSend.append(QString::number(m_channel1, 16).rightJustified(2, '0'));
-    //    toSend.append(QString::number(m_channel2, 16).rightJustified(2, '0'));
-    //    toSend.append(QString::number(m_channel3, 16).rightJustified(2, '0'));
-    //    toSend.append(QString::number(m_channel4, 16).rightJustified(2, '0'));
-    //    toSend.append("03");
-    //    toSend.append("\n");
+    if (m_command != command) {
+        qDebug() << "sending update to device:" << command;
+        writeToDevice(command);
+    }
+}
 
-    //    if(toSend.length() != 13) {
-    //        qDebug() << "ERROR: BLE SET CMD TO LONG!!!";
-    //        return;
-    //    }
+bool LightController::writeToDevice(const QByteArray &data)
+{
+    auto writeCharacteristic = m_service->characteristic(writeCharacteristicUuid);
+    if (!writeCharacteristic.isValid()) {
+        update_message("Cannot get write characteristic");
+        qDebug() << "cannot get write characteristic";
+        return false;
+    }
 
-    //    if (m_lastUartCmd.compare(toSend) != 0) {
-    //        qDebug() << "toSend:" << toSend;
+    m_command = data;
+    m_service->writeCharacteristic(writeCharacteristic, m_command,  QLowEnergyService::WriteMode::WriteWithoutResponse);
 
-    //        m_lastUartCmd = toSend;
-
-    //        emit lightChannelsValueChanged();
-
-    //        if(m_lastUartCmd.contains("U?")) {
-    //            m_lastUartCmd = "";
-    //        } else {
-    //            if(m_haveReceivedUartInitialState) {
-    //                qDebug() << "BLE SENDING:" << toSend;
-    //                const QLowEnergyCharacteristic uartWriteChar = m_service->characteristic(m_uartWriteCharUuid);
-    //                m_service->writeCharacteristic(uartWriteChar, toSend.toUtf8(),  QLowEnergyService::WriteMode::WriteWithoutResponse);
-    //            }
-    //        }
-    //    }
+    return true;
 }
 
 } // namespace il

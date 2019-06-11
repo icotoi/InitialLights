@@ -45,6 +45,8 @@ public slots:
     virtual void connectToController() = 0;
     virtual void disconnectFromController() = 0;
 
+    virtual QByteArray updateDeviceCommand() const;
+
 protected:
     virtual void clear();
     void clearChannels();

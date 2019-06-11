@@ -42,6 +42,7 @@ private:
 
     void updateFromDevice(const QByteArray& data);
     void updateDevice();
+    bool writeToDevice(const QByteArray& data);
 
     QBluetoothDeviceInfo m_info;
     QScopedPointer<QLowEnergyController> m_controller;
