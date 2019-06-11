@@ -26,6 +26,7 @@ ApplicationWindow {
                 horizontalAlignment: Text.AlignHCenter
                 Layout.fillWidth: true
             }
+
             ToolButton {
                 onClicked: lightControllers.scan()
                 enabled: !lightControllers.scanning
@@ -45,6 +46,8 @@ ApplicationWindow {
 
         ControllerListView {
             model: lightControllers.controllers
+            busy: lightControllers.scanning
+            message: lightControllers.message
             onShowController: stackView.push(controllerView, { controller: lightControllers.controllers.get(index) })
         }
     }
@@ -52,26 +55,5 @@ ApplicationWindow {
     Component {
         id: controllerView
         ControllerView {}
-    }
-
-    BusyIndicator {
-        id: busyIndicator
-        anchors.centerIn: parent
-        visible: lightControllers.scanning
-    }
-
-    Label {
-        id: messageLabel
-        visible: lightControllers.message !== ""
-        text: lightControllers.message
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        horizontalAlignment: Text.AlignHCenter
-
-        background: Rectangle {
-            color: "black"
-            opacity: 0.2
-        }
     }
 }
