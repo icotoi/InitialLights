@@ -29,7 +29,7 @@ Item {
             horizontalAlignment: Text.AlignLeft
             Layout.fillWidth: true
             leftPadding: control.subtitleMargin
-            visible: controller.pwmChannels.count > 0
+            visible: controller !== null && controller.pwmChannels.count > 0
         }
 
         Repeater {
@@ -78,7 +78,7 @@ Item {
             horizontalAlignment: Text.AlignLeft
             Layout.fillWidth: true
             leftPadding: control.subtitleMargin
-            visible: controller.rgbChannels.count > 0
+            visible: controller !== null && controller.rgbChannels.count > 0
         }
 
         Repeater {
@@ -155,7 +155,7 @@ Item {
             horizontalAlignment: Text.AlignLeft
             Layout.fillWidth: true
             leftPadding: control.subtitleMargin
-            visible: controller.voltageChannels.count > 0
+            visible: controller !== null && controller.voltageChannels.count > 0
         }
 
         Repeater {
@@ -202,7 +202,7 @@ Item {
     BusyIndicator {
         id: busyIndicator
         anchors.centerIn: parent
-        visible: controller.isBusy
+        visible: controller !== null && controller.isBusy
     }
 
     onControllerChanged: {

@@ -3,17 +3,10 @@ import QtQuick.Controls 2.12
 import QtQuick.Window 2.12
 import QtMultimedia 5.12
 
-P2RoomForm {
+PageRoomForm {
     id: root
 
-    property var title: "Room"
-
-    property var extraToolbarItems: [
-        deleteLightButton,
-        addLightButton,
-        cameraButton,
-        photosButton,
-    ]
+    property var room: undefined
 
     property bool isCameraAvailable: QtMultimedia.availableCameras.length > 0
     property bool capturingImage: false

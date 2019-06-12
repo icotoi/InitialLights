@@ -6,6 +6,10 @@ namespace il {
 
 class DummyLightController : public AbstractLightController
 {
+    Q_OBJECT
+
+    QML_WRITABLE_AUTO_PROPERTY(int, connectDelay)
+
 public:
     DummyLightController(ControllerType controllerType, const QString& name, const QString& address, QObject* parent = nullptr);
 
@@ -14,8 +18,7 @@ public slots:
     void disconnectFromController() override;
 
 private:
-    void clear();
-    void conectToControllerFinished();
+    void connectToControllerFinished();
 };
 
 } // namespace il

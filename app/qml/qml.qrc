@@ -12,8 +12,8 @@
         <file>DemoColorWheel.qml</file>
         <file>DemoColorWheelForm.ui.qml</file>
         <file>Controls/ColorWheel.qml</file>
-        <file>P1Main.qml</file>
-        <file>P1MainForm.ui.qml</file>
+        <file>PageMain.qml</file>
+        <file>PageMainForm.ui.qml</file>
         <file>Controls/ILMainPowerButton.qml</file>
         <file>Images/power_off.png</file>
         <file>Images/power_off@2x.png</file>
@@ -21,15 +21,15 @@
         <file>Images/power_on.png</file>
         <file>Images/power_on@2x.png</file>
         <file>Images/power_on@3x.png</file>
-        <file>P2Room.qml</file>
-        <file>P2RoomForm.ui.qml</file>
+        <file>PageRoom.qml</file>
+        <file>PageRoomForm.ui.qml</file>
         <file>Images/pixabay_illumination-lights-bulbs-731494_1920.jpg</file>
         <file>Controls/ILRoomView.qml</file>
         <file>Controls/ILRoomLight.qml</file>
         <file>Images/material.io-sharp-delete-24px.svg</file>
         <file>Images/material.io-sharp-add-24px.svg</file>
-        <file>P0Drawer.qml</file>
-        <file>P0DrawerForm.ui.qml</file>
+        <file>PageDrawer.qml</file>
+        <file>PageDrawerForm.ui.qml</file>
         <file>LightColorChooserPopup.qml</file>
         <file>LightColorChooserPopupForm.ui.qml</file>
         <file>Images/material.io-baseline-photo_camera-24px.svg</file>
@@ -37,5 +37,10 @@
         <file>Images/material.io-baseline-arrow_back-24px.svg</file>
         <file>Images/material.io-baseline-menu-24px.svg</file>
         <file>Images/material.io-baseline-more_vert-24px.svg</file>
+        <file>Images/material.io-sharp-home-24px.svg</file>
+        <file>Images/material.io-sharp-settings-24px.svg</file>
+        <file>PageControllerList.qml</file>
+        <file>Images/material.io-sharp-bluetooth_searching-24px.svg</file>
+        <file>Images/material.io-baseline-arrow_forward_ios-24px.svg</file>
     </qresource>
 </RCC>

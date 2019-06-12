@@ -11,6 +11,43 @@ ApplicationWindow {
 
     property bool onStartPage: stackView.depth == 1
 
+    function updateToolbarForCurrentItem() {
+        if (onStartPage) {
+            extraToolbarItems.children = []
+            toolbarLabel.text = window.title
+        } else {
+            extraToolbarItems.children = stackView.currentItem.extraToolbarItems
+                    ? stackView.currentItem.extraToolbarItems
+                    : []
+            toolbarLabel.text = stackView.currentItem.title
+                    ? stackView.currentItem.title
+                    : window.title
+        }
+    }
+
+    function showHome() {
+        stackView.pop(null)
+        updateToolbarForCurrentItem()
+    }
+
+    function showPage(view, options) {
+        switch (stackView.depth) {
+        case 0:
+        case 1:
+            stackView.push(view, options)
+            break
+        case 2:
+            stackView.replace(view, options)
+            break
+        default:
+            stackView.pop(null)
+            stackView.push(view, options)
+            break
+        }
+        updateToolbarForCurrentItem()
+    }
+
+
     header: ToolBar {
         RowLayout {
             anchors.fill: parent
@@ -51,31 +88,10 @@ ApplicationWindow {
                 id: extraToolbarItems
             }
 
-            ToolButton {
-                icon.source: "Images/material.io-baseline-more_vert-24px.svg"
-            }
+//            ToolButton {
+//                icon.source: "Images/material.io-baseline-more_vert-24px.svg"
+//            }
         }
-    }
-
-    function updateToolbarForCurrentItem() {
-        if (onStartPage) {
-            extraToolbarItems.children = []
-            toolbarLabel.text = window.title
-        } else {
-            extraToolbarItems.children = stackView.currentItem.extraToolbarItems
-                    ? stackView.currentItem.extraToolbarItems
-                    : []
-            toolbarLabel.text = stackView.currentItem.title
-                    ? stackView.currentItem.title
-                    : window.title
-        }
-    }
-
-    function showRoom(roomName) {
-        toolbarLabel.text = roomName
-        stackView.push(roomView)
-        stackView.currentItem.title = roomName
-        updateToolbarForCurrentItem()
     }
 
     Drawer {
@@ -83,11 +99,26 @@ ApplicationWindow {
         y: header.height
         width: window.width * 0.6
         height: window.height - header.height
-        P0Drawer {
+        PageDrawer {
+            rooms: backend.rooms
             anchors.fill: parent
+
+            onHomeClicked: {
+                drawer.close()
+                showHome()
+            }
+
             onRoomClicked: {
                 drawer.close()
-                showRoom(room.text)
+                showPage(roomView, {
+                             room: room,
+                             title: room.name
+                         })
+            }
+
+            onSettingsClicked: {
+                drawer.close()
+                showPage(controllerListView, {})
             }
         }
     }
@@ -100,15 +131,45 @@ ApplicationWindow {
 
     Component {
         id: mainView
-        P1Main {}
+        PageMain {}
     }
 
     Component {
         id: roomView
-        P2Room {}
+        PageRoom {
+            property string title: "Room"
+            property var extraToolbarItems: [
+                deleteLightButton,
+                addLightButton,
+                cameraButton,
+                photosButton,
+            ]
+        }
+    }
+
+    Component {
+        id: controllerListView
+        PageControllerList {
+            property string title: qsTr("Controllers")
+
+            property var extraToolbarItems: [
+                bluetoothScanButton
+            ]
+
+            ToolButton {
+                id: bluetoothScanButton
+                icon.source: "Images/material.io-sharp-bluetooth_searching-24px.svg"
+                onClicked: backend.controllerList.scan()
+                enabled: !backend.controllerList.isBusy
+            }
+
+            model: backend.controllerList.controllers
+            isBusy: backend.controllerList.isBusy
+            message: backend.controllerList.message
+        }
     }
 
     Component.onCompleted: {
-//        showRoom("Test")
+//        showPage(controllerListView, {})
     }
 }

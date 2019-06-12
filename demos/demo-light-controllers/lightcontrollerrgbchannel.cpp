@@ -7,7 +7,7 @@ LightControllerRGBChannel::LightControllerRGBChannel(const QString &name, QObjec
     , m_name { name }
     , m_version { "v1" }
     , m_minValue { 0 }
-    , m_maxValue { 31 }
+    , m_maxValue { 255 }
     , m_valueIncrement { 1 }
     , m_redValue { 0 }
     , m_greenValue { 0 }

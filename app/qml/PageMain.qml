@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.12
 import "Controls"
 import "Constants"
 
-P1MainForm {
+PageMainForm {
 
     topGridLayout.children: [
         // row 1
