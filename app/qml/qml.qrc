@@ -39,5 +39,8 @@
         <file>Images/material.io-baseline-more_vert-24px.svg</file>
         <file>Images/material.io-sharp-home-24px.svg</file>
         <file>Images/material.io-sharp-settings-24px.svg</file>
+        <file>PageSettings.qml</file>
+        <file>PageSettingsForm.ui.qml</file>
+        <file>Images/material.io-sharp-bluetooth_searching-24px.svg</file>
     </qresource>
 </RCC>

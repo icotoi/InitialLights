@@ -8,13 +8,6 @@ PageRoomForm {
 
     property var room: undefined
 
-    property var extraToolbarItems: [
-        deleteLightButton,
-        addLightButton,
-        cameraButton,
-        photosButton,
-    ]
-
     property bool isCameraAvailable: QtMultimedia.availableCameras.length > 0
     property bool capturingImage: false
 

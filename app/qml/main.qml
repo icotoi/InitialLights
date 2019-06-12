@@ -27,36 +27,26 @@ ApplicationWindow {
 
     function showHome() {
         stackView.pop(null)
-    }
-
-    function showRoom(room) {
-        toolbarLabel.text = room.name
-
-        var options = {
-            room: room,
-            title: room.name
-        }
-
-        switch (stackView.depth) {
-        case 0:
-        case 1:
-            stackView.push(roomView, options)
-            break
-        case 2:
-            stackView.replace(roomView, options)
-            break
-        default:
-            stackView.pop(null)
-            stackView.push(roomView, options)
-            break
-        }
-
         updateToolbarForCurrentItem()
     }
 
-    function showSettings() {
-
+    function showPage(view, options) {
+        switch (stackView.depth) {
+        case 0:
+        case 1:
+            stackView.push(view, options)
+            break
+        case 2:
+            stackView.replace(view, options)
+            break
+        default:
+            stackView.pop(null)
+            stackView.push(view, options)
+            break
+        }
+        updateToolbarForCurrentItem()
     }
+
 
     header: ToolBar {
         RowLayout {
@@ -112,14 +102,23 @@ ApplicationWindow {
         PageDrawer {
             rooms: backend.rooms
             anchors.fill: parent
-            onRoomClicked: {
-                drawer.close()
-                showRoom(room)
-            }
 
             onHomeClicked: {
                 drawer.close()
                 showHome()
+            }
+
+            onRoomClicked: {
+                drawer.close()
+                showPage(roomView, {
+                             room: room,
+                             title: room.name
+                         })
+            }
+
+            onSettingsClicked: {
+                drawer.close()
+                showPage(settingsView, {})
             }
         }
     }
@@ -139,6 +138,22 @@ ApplicationWindow {
         id: roomView
         PageRoom {
             property string title: "Room"
+            property var extraToolbarItems: [
+                deleteLightButton,
+                addLightButton,
+                cameraButton,
+                photosButton,
+            ]
+        }
+    }
+
+    Component {
+        id: settingsView
+        PageSettings {
+            property string title: qsTr("Settings")
+            property var extraToolbarItems: [
+                bluetoothScanButton
+            ]
         }
     }
 
