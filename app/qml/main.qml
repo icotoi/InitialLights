@@ -29,25 +29,33 @@ ApplicationWindow {
         stackView.pop(null)
     }
 
-    function showRoom(roomName) {
-        toolbarLabel.text = roomName
+    function showRoom(room) {
+        toolbarLabel.text = room.name
+
+        var options = {
+            room: room,
+            title: room.name
+        }
 
         switch (stackView.depth) {
         case 0:
         case 1:
-            stackView.push(roomView)
+            stackView.push(roomView, options)
             break
         case 2:
-            stackView.replace(roomView)
+            stackView.replace(roomView, options)
             break
         default:
             stackView.pop(null)
-            stackView.push(roomView)
+            stackView.push(roomView, options)
             break
         }
 
-        stackView.currentItem.title = roomName
         updateToolbarForCurrentItem()
+    }
+
+    function showSettings() {
+
     }
 
     header: ToolBar {
@@ -90,9 +98,9 @@ ApplicationWindow {
                 id: extraToolbarItems
             }
 
-            ToolButton {
-                icon.source: "Images/material.io-baseline-more_vert-24px.svg"
-            }
+//            ToolButton {
+//                icon.source: "Images/material.io-baseline-more_vert-24px.svg"
+//            }
         }
     }
 
@@ -106,7 +114,7 @@ ApplicationWindow {
             anchors.fill: parent
             onRoomClicked: {
                 drawer.close()
-                showRoom(room.name)
+                showRoom(room)
             }
 
             onHomeClicked: {
@@ -129,7 +137,9 @@ ApplicationWindow {
 
     Component {
         id: roomView
-        P2Room {}
+        P2Room {
+            property string title: "Room"
+        }
     }
 
     Component.onCompleted: {

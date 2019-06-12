@@ -6,7 +6,7 @@ import QtMultimedia 5.12
 P2RoomForm {
     id: root
 
-    property var title: "Room"
+    property var room: undefined
 
     property var extraToolbarItems: [
         deleteLightButton,
