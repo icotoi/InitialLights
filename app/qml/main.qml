@@ -40,7 +40,7 @@ ApplicationWindow {
 
             Label {
                 id: toolbarLabel
-                text: window.title
+                text: window.title + " V: " + backend.version
                 elide: Label.ElideRight
                 horizontalAlignment: Qt.AlignLeading
                 verticalAlignment: Qt.AlignVCenter
