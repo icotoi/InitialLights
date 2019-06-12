@@ -118,7 +118,7 @@ ApplicationWindow {
 
             onSettingsClicked: {
                 drawer.close()
-                showPage(settingsView, {})
+                showPage(controllerListView, {})
             }
         }
     }
@@ -148,16 +148,28 @@ ApplicationWindow {
     }
 
     Component {
-        id: settingsView
-        PageSettings {
-            property string title: qsTr("Settings")
+        id: controllerListView
+        PageControllerList {
+            property string title: qsTr("Controllers")
+
             property var extraToolbarItems: [
                 bluetoothScanButton
             ]
+
+            ToolButton {
+                id: bluetoothScanButton
+                icon.source: "Images/material.io-sharp-bluetooth_searching-24px.svg"
+                onClicked: backend.controllerList.scan()
+                enabled: !backend.controllerList.isBusy
+            }
+
+            model: backend.controllerList.controllers
+            isBusy: backend.controllerList.isBusy
+            message: backend.controllerList.message
         }
     }
 
     Component.onCompleted: {
-//        showRoom("Test")
+//        showPage(controllerListView, {})
     }
 }

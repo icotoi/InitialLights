@@ -11,6 +11,7 @@
 
 #include "il/backend.h"
 #include "il/room.h"
+#include "il/controllerlist.h"
 
 void configureDemoBackend(il::BackEnd& backend) {
     auto livingroom = new il::Room;
@@ -24,8 +25,9 @@ void configureDemoBackend(il::BackEnd& backend) {
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    qmlRegisterUncreatableType<il::ControllerList>("InitialLights", 1, 0, "ControllerList", "Type cannot be created in QML");
 
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;

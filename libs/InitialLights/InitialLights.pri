@@ -1,4 +1,4 @@
-QT += qml
+QT += qml bluetooth
 CONFIG += c++17
 
 DEFINES += QTQMLTRICKS_NO_PREFIX_ON_GETTERS
