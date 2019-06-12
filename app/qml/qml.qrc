@@ -37,5 +37,7 @@
         <file>Images/material.io-baseline-arrow_back-24px.svg</file>
         <file>Images/material.io-baseline-menu-24px.svg</file>
         <file>Images/material.io-baseline-more_vert-24px.svg</file>
+        <file>Images/material.io-sharp-home-24px.svg</file>
+        <file>Images/material.io-sharp-settings-24px.svg</file>
     </qresource>
 </RCC>

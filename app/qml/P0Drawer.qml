@@ -1,29 +1,41 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
+import QtQuick.Controls.Material 2.12
 
 P0DrawerForm {
-    id: form
+    property var rooms: undefined
 
+    Material.theme: Material.Light
+    backgroundColor: Material.accentColor
+
+    signal homeClicked()
     signal roomClicked(var room)
+    signal settingsClicked()
 
-    Component {
-        id: roomButton
-        Button {
-            flat: true
+    homeMenu.onClicked: homeClicked()
+
+    roomsRepeater {
+        model: rooms
+        delegate: MenuItem {
             Layout.fillWidth: true
+            text: name
+            onClicked: roomClicked(model)
         }
     }
 
-    function addRoom(label) {
-        var button = roomButton.createObject(form, {"text": label})
-        button.clicked.connect(function() { roomClicked(button) })
-        roomsLayout.children.push(button)
-    }
-
-    Component.onCompleted: {
-        for(var i = 0; i < 20; ++i) {
-            addRoom("Room %1".arg(i))
+    scenesRepeater {
+        model: ListModel {
+            ListElement { name: "Scene 1" }
+            ListElement { name: "Scene 2" }
+            ListElement { name: "Scene 3" }
+        }
+        delegate: MenuItem {
+            enabled: false
+            Layout.fillWidth: true
+            text: name
         }
     }
+
+    settingsMenu.onClicked: settingsClicked()
 }

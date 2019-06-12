@@ -84,10 +84,11 @@ ApplicationWindow {
         width: window.width * 0.6
         height: window.height - header.height
         P0Drawer {
+            rooms: backend.rooms
             anchors.fill: parent
             onRoomClicked: {
                 drawer.close()
-                showRoom(room.text)
+                showRoom(room.name)
             }
         }
     }
