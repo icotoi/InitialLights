@@ -109,7 +109,7 @@ ApplicationWindow {
         y: header.height
         width: window.width * 0.6
         height: window.height - header.height
-        P0Drawer {
+        PageDrawer {
             rooms: backend.rooms
             anchors.fill: parent
             onRoomClicked: {
@@ -132,12 +132,12 @@ ApplicationWindow {
 
     Component {
         id: mainView
-        P1Main {}
+        PageMain {}
     }
 
     Component {
         id: roomView
-        P2Room {
+        PageRoom {
             property string title: "Room"
         }
     }
