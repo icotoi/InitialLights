@@ -1,6 +1,6 @@
 TEMPLATE = lib
 
-QT += qml
+QT += qml bluetooth
 QT -= gui
 
 TARGET = InitialLights
@@ -25,11 +25,25 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        il/abstractchannel.cpp \
+        il/abstractcontroller.cpp \
+        il/analogicchannel.cpp \
         il/backend.cpp \
+        il/controller.cpp \
+        il/controllerlist.cpp \
+        il/pwmchannel.cpp \
+        il/rgbchannel.cpp \
         il/room.cpp
 
 HEADERS += \
+        il/abstractchannel.h \
+        il/abstractcontroller.h \
+        il/analogicchannel.h \
         il/backend.h \
+        il/controller.h \
+        il/controllerlist.h \
+        il/pwmchannel.h \
+        il/rgbchannel.h \
         il/room.h \
         initiallights_global.h
 
