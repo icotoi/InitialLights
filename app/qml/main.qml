@@ -11,6 +11,45 @@ ApplicationWindow {
 
     property bool onStartPage: stackView.depth == 1
 
+    function updateToolbarForCurrentItem() {
+        if (onStartPage) {
+            extraToolbarItems.children = []
+            toolbarLabel.text = window.title
+        } else {
+            extraToolbarItems.children = stackView.currentItem.extraToolbarItems
+                    ? stackView.currentItem.extraToolbarItems
+                    : []
+            toolbarLabel.text = stackView.currentItem.title
+                    ? stackView.currentItem.title
+                    : window.title
+        }
+    }
+
+    function showHome() {
+        stackView.pop(null)
+    }
+
+    function showRoom(roomName) {
+        toolbarLabel.text = roomName
+
+        switch (stackView.depth) {
+        case 0:
+        case 1:
+            stackView.push(roomView)
+            break
+        case 2:
+            stackView.replace(roomView)
+            break
+        default:
+            stackView.pop(null)
+            stackView.push(roomView)
+            break
+        }
+
+        stackView.currentItem.title = roomName
+        updateToolbarForCurrentItem()
+    }
+
     header: ToolBar {
         RowLayout {
             anchors.fill: parent
@@ -57,27 +96,6 @@ ApplicationWindow {
         }
     }
 
-    function updateToolbarForCurrentItem() {
-        if (onStartPage) {
-            extraToolbarItems.children = []
-            toolbarLabel.text = window.title
-        } else {
-            extraToolbarItems.children = stackView.currentItem.extraToolbarItems
-                    ? stackView.currentItem.extraToolbarItems
-                    : []
-            toolbarLabel.text = stackView.currentItem.title
-                    ? stackView.currentItem.title
-                    : window.title
-        }
-    }
-
-    function showRoom(roomName) {
-        toolbarLabel.text = roomName
-        stackView.push(roomView)
-        stackView.currentItem.title = roomName
-        updateToolbarForCurrentItem()
-    }
-
     Drawer {
         id: drawer
         y: header.height
@@ -89,6 +107,11 @@ ApplicationWindow {
             onRoomClicked: {
                 drawer.close()
                 showRoom(room.name)
+            }
+
+            onHomeClicked: {
+                drawer.close()
+                showHome()
             }
         }
     }
