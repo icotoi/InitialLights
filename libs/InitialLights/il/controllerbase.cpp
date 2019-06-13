@@ -13,10 +13,17 @@ namespace  {
 const QString jsonNameTag { "name" };
 const QString jsonAddressTag { "address" };
 const QString jsonControllerTypeTag { "type" };
-const QString jsonControllerType_V1_2x10V_Tag { "v1_2x10V" };
-const QString jsonControllerType_V1_4xPWM_Tag { "v1_4xPWM" };
-const QString jsonControllerType_V1_1xPWM_1xRGB_Tag { "v1_1xPWM_1xRGB" };
+const QString jsonControllerType_V1_2x10V_Value { "v1_2x10V" };
+const QString jsonControllerType_V1_4xPWM_Value { "v1_4xPWM" };
+const QString jsonControllerType_V1_1xPWM_1xRGB_Value { "v1_1xPWM_1xRGB" };
 const QString jsonChannelsTag { "channels" };
+
+const QMap<ControllerBase::ControllerType, QString> controllerTypeRepresentation {
+    { ControllerBase::V1_2x10V, jsonControllerType_V1_2x10V_Value },
+    { ControllerBase::V1_4xPWM, jsonControllerType_V1_4xPWM_Value },
+    { ControllerBase::V1_1xPWM_1xRGB, jsonControllerType_V1_1xPWM_1xRGB_Value },
+};
+
 }
 
 ControllerBase::ControllerBase(QObject *parent)
@@ -100,12 +107,20 @@ void ControllerBase::read(const QJsonObject &json)
 {
     safeRead(json, jsonNameTag, [&](const QString& s) { update_name(s); });
     safeRead(json, jsonAddressTag, [&](const QString& s) { update_address(s); });
+    safeRead(json, jsonControllerTypeTag, [&](const QString& s) {
+        ControllerType ct = controllerTypeRepresentation.key(s, UndefinedControllerType);
+        if (ct != UndefinedControllerType) {
+            qDebug() << "restoring type as:" << ct;
+            update_controllerType(ct);
+        }
+    });
 }
 
 void ControllerBase::write(QJsonObject &json) const
 {
     json[jsonNameTag] = m_name;
     json[jsonAddressTag] = m_address;
+    json[jsonControllerTypeTag] = controllerTypeRepresentation[m_controllerType];
 }
 
 void ControllerBase::clearChannels()
