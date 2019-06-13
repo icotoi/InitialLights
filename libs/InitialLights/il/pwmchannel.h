@@ -1,10 +1,10 @@
 #pragma once
 
-#include "abstractchannel.h"
+#include "channelbase.h"
 
 namespace il {
 
-class INITIALLIGHTSSHARED_EXPORT PWMChannel : public AbstractChannel
+class INITIALLIGHTSSHARED_EXPORT PWMChannel : public ChannelBase
 {
     Q_OBJECT
 

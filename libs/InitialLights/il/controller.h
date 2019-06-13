@@ -1,24 +1,28 @@
 #pragma once
 
-#include "abstractcontroller.h"
+#include "controllerbase.h"
 
 #include <QLowEnergyController>
 #include <QLowEnergyService>
 
 namespace il {
 
-class INITIALLIGHTSSHARED_EXPORT Controller : public AbstractController
+class INITIALLIGHTSSHARED_EXPORT Controller : public ControllerBase
 {
     Q_OBJECT
 
 public:
+    explicit Controller(QObject *parent = nullptr);
     explicit Controller(const QBluetoothDeviceInfo &info, QObject *parent = nullptr);
     ~Controller() override;
 
-    static QString address(const QBluetoothDeviceInfo &info);
+    // NOTE: when I try to use 'address' instead of 'safeAddress',
+    //       the compiler fails to distinguish between this and the address() getter
+    static QString safeAddress(const QBluetoothDeviceInfo &info);
     static bool isValidDevice(const QBluetoothDeviceInfo &info);
 
     void clear() override;
+    void read(const QJsonObject& json) override;
 
 public slots:
     void connectToController() override;

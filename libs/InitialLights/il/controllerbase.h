@@ -12,7 +12,7 @@ class PWMChannel;
 class RGBChannel;
 class AnalogicChannel;
 
-class INITIALLIGHTSSHARED_EXPORT AbstractController : public QObject
+class INITIALLIGHTSSHARED_EXPORT ControllerBase : public QObject
 {
 public:
     enum ControllerType {
@@ -26,7 +26,7 @@ public:
 private:
     Q_OBJECT
 
-    QML_READONLY_AUTO_PROPERTY(il::AbstractController::ControllerType, controllerType)
+    QML_READONLY_AUTO_PROPERTY(il::ControllerBase::ControllerType, controllerType)
     QML_READONLY_AUTO_PROPERTY(QString, name)
     QML_READONLY_AUTO_PROPERTY(QString, address)
 
@@ -39,7 +39,11 @@ private:
     QML_OBJMODEL_PROPERTY(il::RGBChannel, rgbChannels)
 
 public:
-    ~AbstractController();
+    ~ControllerBase();
+
+    virtual void clear();
+    virtual void read(const QJsonObject& json);
+    virtual void write(QJsonObject& json) const;
 
 public slots:
     virtual void connectToController() = 0;
@@ -47,9 +51,8 @@ public slots:
     virtual QByteArray updateDeviceCommand() const;
 
 protected:
-    explicit AbstractController(QObject *parent = nullptr);
+    explicit ControllerBase(QObject *parent = nullptr);
 
-    virtual void clear();
     void clearChannels();
 };
 

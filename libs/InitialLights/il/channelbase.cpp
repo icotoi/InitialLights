@@ -1,8 +1,8 @@
-#include "abstractchannel.h"
+#include "channelbase.h"
 
 namespace il {
 
-AbstractChannel::AbstractChannel(const QString& name,
+ChannelBase::ChannelBase(const QString& name,
                                  const QString& version,
                                  int minValue,
                                  int maxValue,
@@ -17,7 +17,7 @@ AbstractChannel::AbstractChannel(const QString& name,
 {
 }
 
-AbstractChannel::~AbstractChannel()
+ChannelBase::~ChannelBase()
 {
 }
 

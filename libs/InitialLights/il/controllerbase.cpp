@@ -1,11 +1,23 @@
-#include "abstractcontroller.h"
+#include "controllerbase.h"
 #include "pwmchannel.h"
 #include "rgbchannel.h"
 #include "analogicchannel.h"
 
+#include <QJsonObject>
+
 namespace il {
 
-AbstractController::AbstractController(QObject *parent)
+namespace  {
+const QString jsonNameTag { "name" };
+const QString jsonAddressTag { "address" };
+const QString jsonControllerTypeTag { "type" };
+const QString jsonControllerType_V1_2x10V_Tag { "v1_2x10V" };
+const QString jsonControllerType_V1_4xPWM_Tag { "v1_4xPWM" };
+const QString jsonControllerType_V1_1xPWM_1xRGB_Tag { "v1_1xPWM_1xRGB" };
+const QString jsonChannelsTag { "channels" };
+}
+
+ControllerBase::ControllerBase(QObject *parent)
     : QObject(parent)
     , m_controllerType { UndefinedControllerType }
     , m_isBusy { false }
@@ -16,12 +28,12 @@ AbstractController::AbstractController(QObject *parent)
 {
 }
 
-AbstractController::~AbstractController()
+ControllerBase::~ControllerBase()
 {
     clear();
 }
 
-QByteArray AbstractController::updateDeviceCommand() const
+QByteArray ControllerBase::updateDeviceCommand() const
 {
     QString command;
 
@@ -77,12 +89,27 @@ QByteArray AbstractController::updateDeviceCommand() const
     return command.toUpper().toUtf8();
 }
 
-void AbstractController::clear()
+void ControllerBase::clear()
 {
     clearChannels();
 }
 
-void AbstractController::clearChannels()
+void ControllerBase::read(const QJsonObject &json)
+{
+    if (json.contains(jsonNameTag) && json[jsonNameTag].isString())
+        update_name(json[jsonNameTag].toString());
+
+    if (json.contains(jsonAddressTag) && json[jsonAddressTag].isString())
+        update_address(json[jsonAddressTag].toString());
+}
+
+void ControllerBase::write(QJsonObject &json) const
+{
+    json[jsonNameTag] = m_name;
+    json[jsonAddressTag] = m_address;
+}
+
+void ControllerBase::clearChannels()
 {
     m_analogicChannels->clear();
     m_pwmChannels->clear();

@@ -6,7 +6,7 @@
 
 namespace il {
 
-class AbstractChannel : public QObject
+class ChannelBase : public QObject
 {
     Q_OBJECT
 
@@ -18,10 +18,10 @@ class AbstractChannel : public QObject
     QML_CONSTANT_AUTO_PROPERTY(int, valueIncrement)
 
 public:
-    virtual ~AbstractChannel();
+    virtual ~ChannelBase();
 
 protected:
-    explicit AbstractChannel(const QString& name,
+    explicit ChannelBase(const QString& name,
                              const QString& version,
                              int minValue,
                              int maxValue,

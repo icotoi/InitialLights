@@ -9,7 +9,7 @@
 
 namespace il {
 
-class AbstractController;
+class ControllerBase;
 class DeviceInfo;
 
 class INITIALLIGHTSSHARED_EXPORT ControllerList: public QObject
@@ -19,7 +19,7 @@ class INITIALLIGHTSSHARED_EXPORT ControllerList: public QObject
     QML_READONLY_VAR_PROPERTY(bool, isBusy)
     QML_WRITABLE_VAR_PROPERTY(int, scanningTimeout)
     QML_WRITABLE_VAR_PROPERTY(QString, message)
-    QML_OBJMODEL_PROPERTY(il::AbstractController, controllers)
+    QML_OBJMODEL_PROPERTY(il::ControllerBase, controllers)
 
 public:
     explicit ControllerList(QObject* parent = nullptr);

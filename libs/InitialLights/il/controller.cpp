@@ -20,12 +20,17 @@ const QBluetoothUuid writeCharacteristicUuid(QStringLiteral("6E400002-B5A3-F393-
 const QBluetoothUuid readCharacteristicUuid(QStringLiteral("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"));
 }
 
+Controller::Controller(QObject *parent)
+    : ControllerBase (parent)
+{
+}
+
 Controller::Controller(const QBluetoothDeviceInfo &info, QObject *parent)
-    : AbstractController (parent)
+    : ControllerBase (parent)
     , m_info { info }
 {
     update_name(m_info.name());
-    update_address(address(m_info));
+    update_address(safeAddress(m_info));
 }
 
 Controller::~Controller()
@@ -35,7 +40,7 @@ Controller::~Controller()
 
 void Controller::clear()
 {
-    AbstractController::clear();
+    ControllerBase::clear();
 
     m_hasReceivedInitialState = false;
 
@@ -53,7 +58,17 @@ void Controller::clear()
     qDebug() << "light controller internal state cleared";
 }
 
-QString Controller::address(const QBluetoothDeviceInfo &info)
+void Controller::read(const QJsonObject &json)
+{
+    ControllerBase::read(json);
+#if defined(Q_OS_MAC)
+    m_info = QBluetoothDeviceInfo(QBluetoothUuid(address()), name(), 0);
+#else
+    m_info = QBluetoothDeviceInfo(QBluetoothAddress(address()), name(), 0);
+#endif
+}
+
+QString Controller::safeAddress(const QBluetoothDeviceInfo &info)
 {
 #if defined(Q_OS_MAC)
     // workaround for Core Bluetooth:
