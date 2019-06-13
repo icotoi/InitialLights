@@ -27,6 +27,10 @@ void ControllerList::clear()
     m_controllers->clear();
 }
 
+void ControllerList::read(const QJsonObject &/*json*/)
+{
+}
+
 void ControllerList::write(QJsonObject &/*json*/) const
 {
 }

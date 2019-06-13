@@ -15,6 +15,7 @@ class INITIALLIGHTSSHARED_EXPORT Room : public QObject
 public:
     explicit Room(QObject *parent = nullptr);
 
+    void read(const QJsonObject& json);
     void write(QJsonObject& json) const;
 };
 

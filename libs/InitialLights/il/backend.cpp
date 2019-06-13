@@ -15,6 +15,10 @@ namespace il {
 
 namespace  {
 
+const QString jsonControllersTag { "controllers" };
+const QString jsonRoomsTag { "rooms" };
+const QString jsonScenesTag { "scenes" };
+
 QString localDataDirName()
 {
     return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
@@ -52,21 +56,34 @@ void BackEnd::loadLocalData()
 {
     auto loadFileName = localDataFileName();
 
+    QFile loadFile(loadFileName);
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+        qWarning() << "Couldn't open save file:" << loadFileName;
+
+        // add some dummy/demo data
+        auto livingroom = new il::Room;
+        livingroom->set_name("Livingroom");
+        m_rooms->append(livingroom);
+
+        auto bedroom = new il::Room;
+        bedroom->set_name("Bedroom");
+        m_rooms->append(bedroom);
+
+        for (int i=0; i < 3; ++i) {
+            auto scene = new il::Scene;
+            scene->set_name(QStringLiteral("Scene %1").arg(i));
+            m_scenes->append(scene);
+        }
+
+        return;
+    }
+
     qDebug() << "loading local data from:" << loadFileName;
 
-    auto livingroom = new il::Room;
-    livingroom->set_name("Livingroom");
-    m_rooms->append(livingroom);
+    QByteArray saveData { loadFile.readAll() };
+    QJsonDocument loadDoc { QJsonDocument::fromJson(saveData) };
 
-    auto bedroom = new il::Room;
-    bedroom->set_name("Bedroom");
-    m_rooms->append(bedroom);
-
-    for (int i=0; i < 3; ++i) {
-        auto scene = new il::Scene;
-        scene->set_name(QStringLiteral("Scene %1").arg(i));
-        m_scenes->append(scene);
-    }
+    read(loadDoc.object());
 }
 
 void BackEnd::saveLocalData()
@@ -89,11 +106,39 @@ void BackEnd::saveLocalData()
     saveFile.write(saveDoc.toJson());
 }
 
+void BackEnd::read(const QJsonObject &json)
+{
+    if (json.contains(jsonControllersTag) && json[jsonControllersTag].isObject())
+        m_controllerList->read(json[jsonControllersTag].toObject());
+
+    if (json.contains(jsonRoomsTag) && json[jsonRoomsTag].isArray()) {
+        QJsonArray roomArray { json[jsonRoomsTag].toArray() };
+        m_rooms->clear();
+        for (int i = 0; i < roomArray.size(); ++i) {
+            QJsonObject roomObject = roomArray[i].toObject();
+            auto room = new il::Room;
+            room->read(roomObject);
+            m_rooms->append(room);
+        }
+    }
+
+    if (json.contains(jsonScenesTag) && json[jsonScenesTag].isArray()) {
+        QJsonArray scenesArray { json[jsonScenesTag].toArray() };
+        m_scenes->clear();
+        for (int i = 0; i < scenesArray.size(); ++i) {
+            QJsonObject sceneObject { scenesArray[i].toObject() };
+            auto scene = new il::Scene;
+            scene->read(sceneObject);
+            m_scenes->append(scene);
+        }
+    }
+}
+
 void BackEnd::write(QJsonObject &json) const
 {
     QJsonObject controllerListObject;
     m_controllerList->write(controllerListObject);
-    json["controllers"] = controllerListObject;
+    json[jsonControllersTag] = controllerListObject;
 
     QJsonArray roomArray;
     std::for_each (m_rooms->constBegin(), m_rooms->constEnd(), [&roomArray](const Room* room) {
@@ -101,7 +146,7 @@ void BackEnd::write(QJsonObject &json) const
         room->write(roomObject);
         roomArray.append(roomObject);
     });
-    json["rooms"] = roomArray;
+    json[jsonRoomsTag] = roomArray;
 
     QJsonArray sceneArray;
     std::for_each (m_scenes->constBegin(), m_scenes->constEnd(), [&sceneArray](const Scene* scene) {
@@ -109,7 +154,7 @@ void BackEnd::write(QJsonObject &json) const
         scene->write(sceneObject);
         sceneArray.append(sceneObject);
     });
-    json["scenes"] = sceneArray;
+    json[jsonScenesTag] = sceneArray;
 }
 
 } // namespace il

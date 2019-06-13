@@ -26,6 +26,8 @@ public:
     virtual ~ControllerList();
 
     void clear();
+
+    void read(const QJsonObject& json);
     void write(QJsonObject& json) const;
 
 public slots:

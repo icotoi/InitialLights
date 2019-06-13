@@ -15,6 +15,7 @@ class INITIALLIGHTSSHARED_EXPORT Scene : public QObject
 public:
     explicit Scene(QObject *parent = nullptr);
 
+    void read(const QJsonObject& json);
     void write(QJsonObject& json) const;
 };
 
