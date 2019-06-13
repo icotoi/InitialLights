@@ -2,12 +2,16 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
+import "Constants"
+
 Item {
     property string backgroundColor: "Orange"
     property alias roomsRepeater: roomsRepeater
-    property alias settingsMenu: settingsMenu
-    property alias homeMenu: homeMenu
     property alias scenesRepeater: scenesRepeater
+    property alias home: home
+    property alias settings: settings
+    property alias controllerList: controllerList
+    property alias channelList: channelList
 
     Rectangle {
         color: backgroundColor
@@ -26,9 +30,9 @@ Item {
             spacing: 0
 
             MenuItem {
-                id: homeMenu
+                id: home
                 text: qsTr("Home")
-                icon.source: "Images/material.io-sharp-home-24px.svg"
+                icon.source: ILStyle.homeIconSource
                 Layout.fillWidth: true
             }
 
@@ -75,10 +79,24 @@ Item {
             }
 
             MenuItem {
-                id: settingsMenu
-                text: "Settings"
+                id: settings
+                text: qsTr("Settings")
                 Layout.fillWidth: true
-                icon.source: "Images/material.io-sharp-settings-24px.svg"
+                icon.source: ILStyle.settingsIconSource
+            }
+
+            MenuItem {
+                id: controllerList
+                text: qsTr("Controllers")
+                Layout.fillWidth: true
+                icon.source: ILStyle.controllersIconSource
+            }
+
+            MenuItem {
+                id: channelList
+                text: qsTr("Channels")
+                Layout.fillWidth: true
+                icon.source: ILStyle.channelsIconSource
             }
         }
     }

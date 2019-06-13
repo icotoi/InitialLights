@@ -43,4 +43,14 @@ QtObject {
         property int borderWidth: 2
         property color borderColor: root.borderColor
     }
+
+    // Icons
+    property string hamburgerIconSource: "Images/material.io-baseline-menu-24px.svg"
+    property string backIconSource: "Images/material.io-baseline-arrow_back-24px.svg"
+    property string homeIconSource: "Images/material.io-sharp-home-24px.svg"
+    property string settingsIconSource: "Images/material.io-sharp-settings-24px.svg"
+    property string controllersIconSource: "Images/material.io-baseline-settings_input_svideo-24px.svg"
+    property string lightsIconSource: "Images/material.io-baseline-wb_incandescent-24px.svg"
+    property string bluetoothScanIconSource: "Images/material.io-sharp-bluetooth_searching-24px.svg"
+    property string channelsIconSource: "Images/material.io-baseline-tune-24px.svg"
 }

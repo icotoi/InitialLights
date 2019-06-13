@@ -45,5 +45,10 @@
         <file>PageController.qml</file>
         <file>Controls/ILControllerChannel.qml</file>
         <file>Controls/ILControllerChannelSectionLabel.qml</file>
+        <file>Images/material.io-baseline-wb_incandescent-24px.svg</file>
+        <file>Images/material.io-baseline-settings_input_svideo-24px.svg</file>
+        <file>PageSettings.qml</file>
+        <file>PageSettingsForm.ui.qml</file>
+        <file>Images/material.io-baseline-tune-24px.svg</file>
     </qresource>
 </RCC>

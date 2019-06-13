@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
+import "Constants"
+
 ApplicationWindow {
     id: window
     visible: true
@@ -55,9 +57,7 @@ ApplicationWindow {
             // a hamburger button that rotates
             ToolButton {
                 id: hamburgerButton
-                icon.source: onStartPage
-                             ? "Images/material.io-baseline-menu-24px.svg"
-                             : "Images/material.io-baseline-arrow_back-24px.svg"
+                icon.source: onStartPage ? ILStyle.hamburgerIconSource : ILStyle.backIconSource
                 onClicked: {
                     if (onStartPage) {
                         drawer.visible ? drawer.close() : drawer.open()
@@ -103,7 +103,7 @@ ApplicationWindow {
             rooms: backend.rooms
             anchors.fill: parent
 
-            onHomeClicked: {
+            home.onClicked: {
                 drawer.close()
                 showHome()
             }
@@ -116,9 +116,18 @@ ApplicationWindow {
                          })
             }
 
-            onSettingsClicked: {
+            settings.onClicked: {
+                drawer.close()
+                showPage(settingsView, {})
+            }
+
+            controllerList.onClicked: {
                 drawer.close()
                 showPage(controllerListView, {})
+            }
+
+            channelList.onClicked: {
+                drawer.close()
             }
         }
     }
@@ -148,6 +157,20 @@ ApplicationWindow {
     }
 
     Component {
+        id: settingsView
+        PageSettings {
+            property string title: qsTr("Settings")
+            controllerList.onClicked: {
+                stackView.push(controllerListView)
+                updateToolbarForCurrentItem()
+            }
+
+            channelList.onClicked: {
+            }
+        }
+    }
+
+    Component {
         id: controllerListView
         PageControllerList {
             property string title: qsTr("Controllers")
@@ -157,7 +180,7 @@ ApplicationWindow {
 
             ToolButton {
                 id: bluetoothScanButton
-                icon.source: "Images/material.io-sharp-bluetooth_searching-24px.svg"
+                icon.source: ILStyle.bluetoothScanIconSource
                 onClicked: backend.controllerList.scan()
                 enabled: !backend.controllerList.isBusy
             }
@@ -179,6 +202,6 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        showPage(controllerListView, {})
+        showPage(settingsView, {})
     }
 }

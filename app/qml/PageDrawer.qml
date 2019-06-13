@@ -9,11 +9,7 @@ PageDrawerForm {
     Material.theme: Material.Light
     backgroundColor: Material.accentColor
 
-    signal homeClicked()
     signal roomClicked(var room)
-    signal settingsClicked()
-
-    homeMenu.onClicked: homeClicked()
 
     roomsRepeater {
         model: rooms
@@ -36,6 +32,4 @@ PageDrawerForm {
             text: name
         }
     }
-
-    settingsMenu.onClicked: settingsClicked()
 }
