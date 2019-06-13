@@ -14,6 +14,8 @@ class INITIALLIGHTSSHARED_EXPORT Room : public QObject
 
 public:
     explicit Room(QObject *parent = nullptr);
+
+    void write(QJsonObject& json) const;
 };
 
 } // namespace il

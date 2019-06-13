@@ -27,6 +27,9 @@ public slots:
     void clearLocalData();
     void loadLocalData();
     void saveLocalData();
+
+private:
+    void write(QJsonObject& json) const;
 };
 
 } // namespace il

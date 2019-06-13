@@ -18,6 +18,11 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<il::ControllerList>("InitialLights", 1, 0, "ControllerList", "Type cannot be created in QML");
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    QCoreApplication::setApplicationName("InitialLights");
+    QCoreApplication::setOrganizationName("DeviceHub");
+    QCoreApplication::setOrganizationDomain("net.devicehub");
+
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;

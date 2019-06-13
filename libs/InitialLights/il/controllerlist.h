@@ -26,6 +26,7 @@ public:
     virtual ~ControllerList();
 
     void clear();
+    void write(QJsonObject& json) const;
 
 public slots:
     void scan();

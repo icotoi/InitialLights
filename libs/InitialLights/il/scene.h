@@ -15,9 +15,7 @@ class INITIALLIGHTSSHARED_EXPORT Scene : public QObject
 public:
     explicit Scene(QObject *parent = nullptr);
 
-signals:
-
-public slots:
+    void write(QJsonObject& json) const;
 };
 
 } // namespace il

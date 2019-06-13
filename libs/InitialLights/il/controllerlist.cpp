@@ -27,6 +27,10 @@ void ControllerList::clear()
     m_controllers->clear();
 }
 
+void ControllerList::write(QJsonObject &/*json*/) const
+{
+}
+
 void ControllerList::scan()
 {
     update_isBusy(true);
