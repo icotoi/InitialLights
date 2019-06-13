@@ -4,3 +4,5 @@ ILMainPowerButton 1.0 ILMainPowerButton.qml
 ILRoomLight 1.0 ILRoomLight.qml
 ILRoomView 1.0 ILRoomView.qml
 ILToggleLedButton 1.0 ILToggleLedButton.qml
+ILControllerChannel 1.0 ILControllerChannel.qml
+ILControllerChannelSectionLabel 1.0 ILControllerChannelSectionLabel.qml

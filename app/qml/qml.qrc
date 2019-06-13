@@ -42,5 +42,8 @@
         <file>PageControllerList.qml</file>
         <file>Images/material.io-sharp-bluetooth_searching-24px.svg</file>
         <file>Images/material.io-baseline-arrow_forward_ios-24px.svg</file>
+        <file>PageController.qml</file>
+        <file>Controls/ILControllerChannel.qml</file>
+        <file>Controls/ILControllerChannelSectionLabel.qml</file>
     </qresource>
 </RCC>

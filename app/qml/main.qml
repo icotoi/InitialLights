@@ -151,7 +151,6 @@ ApplicationWindow {
         id: controllerListView
         PageControllerList {
             property string title: qsTr("Controllers")
-
             property var extraToolbarItems: [
                 bluetoothScanButton
             ]
@@ -166,10 +165,20 @@ ApplicationWindow {
             model: backend.controllerList.controllers
             isBusy: backend.controllerList.isBusy
             message: backend.controllerList.message
+
+            onShowController: {
+                stackView.push(controllerView, { controller: backend.controllerList.controllers.get(index) })
+                updateToolbarForCurrentItem()
+            }
         }
     }
 
+    Component {
+        id: controllerView
+        PageController {}
+    }
+
     Component.onCompleted: {
-//        showPage(controllerListView, {})
+        showPage(controllerListView, {})
     }
 }
