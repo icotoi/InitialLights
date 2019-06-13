@@ -31,6 +31,7 @@ SOURCES += \
         il/controller.cpp \
         il/controllerbase.cpp \
         il/controllerlist.cpp \
+        il/jsonhelpers.cpp \
         il/pwmchannel.cpp \
         il/rgbchannel.cpp \
         il/room.cpp \
@@ -43,6 +44,7 @@ HEADERS += \
         il/controller.h \
         il/controllerbase.h \
         il/controllerlist.h \
+        il/jsonhelpers.h \
         il/pwmchannel.h \
         il/rgbchannel.h \
         il/room.h \

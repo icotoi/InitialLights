@@ -3,6 +3,8 @@
 #include "rgbchannel.h"
 #include "analogicchannel.h"
 
+#include "jsonhelpers.h"
+
 #include <QJsonObject>
 
 namespace il {
@@ -96,11 +98,8 @@ void ControllerBase::clear()
 
 void ControllerBase::read(const QJsonObject &json)
 {
-    if (json.contains(jsonNameTag) && json[jsonNameTag].isString())
-        update_name(json[jsonNameTag].toString());
-
-    if (json.contains(jsonAddressTag) && json[jsonAddressTag].isString())
-        update_address(json[jsonAddressTag].toString());
+    safeRead(json, jsonNameTag, [&](const QString& s) { update_name(s); });
+    safeRead(json, jsonAddressTag, [&](const QString& s) { update_address(s); });
 }
 
 void ControllerBase::write(QJsonObject &json) const

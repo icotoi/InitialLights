@@ -1,5 +1,7 @@
 #include "room.h"
 
+#include "jsonhelpers.h"
+
 #include <QJsonObject>
 
 namespace il {
@@ -8,15 +10,14 @@ namespace  {
 const QString jsonNameTag { "name" };
 }
 
-Room::Room(QObject *parent) : QObject(parent)
+Room::Room(QObject *parent)
+    : QObject(parent)
 {
-
 }
 
 void Room::read(const QJsonObject &json)
 {
-    if (json.contains(jsonNameTag) && json[jsonNameTag].isString())
-        set_name(json[jsonNameTag].toString());
+    safeRead(json, jsonNameTag, [&](const QString& s) { set_name(s); });
 }
 
 void Room::write(QJsonObject &json) const

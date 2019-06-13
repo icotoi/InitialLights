@@ -1,5 +1,7 @@
 #include "scene.h"
 
+#include "jsonhelpers.h"
+
 #include <QJsonObject>
 
 namespace il {
@@ -15,8 +17,7 @@ Scene::Scene(QObject *parent)
 
 void Scene::read(const QJsonObject &json)
 {
-    if (json.contains(jsonNameTag) && json[jsonNameTag].isString())
-        set_name(json[jsonNameTag].toString());
+    safeRead(json, jsonNameTag, [&](const QString& s) { set_name(s); });
 }
 
 void Scene::write(QJsonObject &json) const
