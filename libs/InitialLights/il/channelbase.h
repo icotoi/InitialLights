@@ -3,7 +3,6 @@
 #include "initiallights_global.h"
 
 #include "QQmlAutoPropertyHelpers.h"
-#include "QQmlEnumClassHelper.h"
 
 namespace il {
 
@@ -21,13 +20,13 @@ public:
 private:
     Q_OBJECT
 
-    QML_CONSTANT_AUTO_PROPERTY(QString, name)
-    QML_CONSTANT_AUTO_PROPERTY(QString, version)
-    QML_CONSTANT_AUTO_PROPERTY(il::ChannelBase::ChannelType, channelType)
+    QML_READONLY_AUTO_PROPERTY(QString, name)
+    QML_READONLY_AUTO_PROPERTY(QString, version)
+    QML_READONLY_AUTO_PROPERTY(il::ChannelBase::ChannelType, channelType)
 
-    QML_CONSTANT_AUTO_PROPERTY(int, minValue)
-    QML_CONSTANT_AUTO_PROPERTY(int, maxValue)
-    QML_CONSTANT_AUTO_PROPERTY(int, valueIncrement)
+    QML_READONLY_AUTO_PROPERTY(int, minValue)
+    QML_READONLY_AUTO_PROPERTY(int, maxValue)
+    QML_READONLY_AUTO_PROPERTY(int, valueIncrement)
 
 public:
     virtual ~ChannelBase();

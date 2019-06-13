@@ -5,7 +5,9 @@
 
 #include "jsonhelpers.h"
 
+#include <QJsonArray>
 #include <QJsonObject>
+#include <QMetaEnum>
 
 namespace il {
 
@@ -13,17 +15,35 @@ namespace  {
 const QString jsonNameTag { "name" };
 const QString jsonAddressTag { "address" };
 const QString jsonControllerTypeTag { "type" };
-const QString jsonControllerType_V1_2x10V_Value { "v1_2x10V" };
-const QString jsonControllerType_V1_4xPWM_Value { "v1_4xPWM" };
-const QString jsonControllerType_V1_1xPWM_1xRGB_Value { "v1_1xPWM_1xRGB" };
-const QString jsonChannelsTag { "channels" };
 
-const QMap<ControllerBase::ControllerType, QString> controllerTypeRepresentation {
-    { ControllerBase::V1_2x10V, jsonControllerType_V1_2x10V_Value },
-    { ControllerBase::V1_4xPWM, jsonControllerType_V1_4xPWM_Value },
-    { ControllerBase::V1_1xPWM_1xRGB, jsonControllerType_V1_1xPWM_1xRGB_Value },
-};
+const QString jsonAnalogicChannelsTag { "analogicChannels" };
+const QString jsonPWMChannelsTag { "pwmChannels" };
+const QString jsonRGBChannelsTag { "rgbChannels" };
 
+template <typename T>
+void writeChannels(QJsonObject& json, const QString& tag, const T* channels) {
+    QJsonArray channelArray;
+    std::for_each (channels->constBegin(), channels->constEnd(), [&channelArray](const ChannelBase* channel) {
+        QJsonObject channelObject;
+        channel->write(channelObject);
+        channelArray.append(channelObject);
+    });
+    json[tag] = channelArray;
+}
+
+template <typename T>
+void readChannels(const QJsonObject& json, const QString& tag, QQmlObjectListModel<T>* channels) {
+    if (json.contains(tag) && json[tag].isArray()) {
+        QJsonArray channelArray { json[tag].toArray() };
+        channels->clear();
+        for (int i = 0; i < channelArray.size(); ++i) {
+            QJsonObject channelObject = channelArray[i].toObject();
+            auto channel = new T;
+            channel->read(channelObject);
+            channels->append(channel);
+        }
+    }
+}
 }
 
 ControllerBase::ControllerBase(QObject *parent)
@@ -108,19 +128,27 @@ void ControllerBase::read(const QJsonObject &json)
     safeRead(json, jsonNameTag, [&](const QString& s) { update_name(s); });
     safeRead(json, jsonAddressTag, [&](const QString& s) { update_address(s); });
     safeRead(json, jsonControllerTypeTag, [&](const QString& s) {
-        ControllerType ct = controllerTypeRepresentation.key(s, UndefinedControllerType);
-        if (ct != UndefinedControllerType) {
-            qDebug() << "restoring type as:" << ct;
+        int value = QMetaEnum::fromType<ControllerType>().keyToValue(s.toStdString().c_str());
+        if (value >= 0) {
+            ControllerType ct { ControllerType(value) };
             update_controllerType(ct);
         }
     });
+
+    readChannels(json, jsonAnalogicChannelsTag, m_analogicChannels);
+    readChannels(json, jsonPWMChannelsTag, m_pwmChannels);
+    readChannels(json, jsonRGBChannelsTag, m_rgbChannels);
 }
 
 void ControllerBase::write(QJsonObject &json) const
 {
     json[jsonNameTag] = m_name;
     json[jsonAddressTag] = m_address;
-    json[jsonControllerTypeTag] = controllerTypeRepresentation[m_controllerType];
+    json[jsonControllerTypeTag] = QMetaEnum::fromType<ControllerType>().valueToKey(m_controllerType);
+
+    writeChannels(json, jsonAnalogicChannelsTag, m_analogicChannels);
+    writeChannels(json, jsonPWMChannelsTag, m_pwmChannels);
+    writeChannels(json, jsonRGBChannelsTag, m_rgbChannels);
 }
 
 void ControllerBase::clearChannels()

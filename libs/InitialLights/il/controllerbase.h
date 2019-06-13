@@ -3,7 +3,6 @@
 #include "initiallights_global.h"
 
 #include "QQmlAutoPropertyHelpers.h"
-#include "QQmlEnumClassHelper.h"
 #include "QQmlObjectListModel.h"
 
 namespace il {

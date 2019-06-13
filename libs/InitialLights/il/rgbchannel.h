@@ -13,7 +13,10 @@ class INITIALLIGHTSSHARED_EXPORT RGBChannel : public ChannelBase
     QML_WRITABLE_AUTO_PROPERTY(int, blueValue)
 
 public:
-    explicit RGBChannel(const QString& name, QObject* parent = nullptr);
+    explicit RGBChannel(const QString& name = QString(), QObject* parent = nullptr);
+
+    void read(const QJsonObject& json) override;
+    void write(QJsonObject& json) const override;
 };
 
 } // namespace il

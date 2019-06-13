@@ -1,6 +1,7 @@
 #include "jsonhelpers.h"
 
 #include <QJsonObject>
+#include <QDebug>
 
 namespace il {
 
@@ -10,22 +11,10 @@ void safeRead(const QJsonObject &json, const QString &tag, std::function<void(co
         functor(json[tag].toString());
 }
 
-void safeRead(const QJsonObject &json, const QString &tag, QString &output)
-{
-    if (json.contains(tag) && json[tag].isString())
-        output = json[tag].toString();
-}
-
 void safeRead(const QJsonObject &json, const QString &tag, std::function<void(int)> functor)
 {
-    if (json.contains(tag) && json[tag].isString())
+    if (json.contains(tag) && json[tag].isDouble())
         functor(json[tag].toInt());
-}
-
-void safeRead(const QJsonObject &json, const QString &tag, int &output)
-{
-    if (json.contains(tag) && json[tag].isString())
-        output = json[tag].toInt();
 }
 
 } // namespace il
