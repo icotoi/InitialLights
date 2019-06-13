@@ -53,4 +53,5 @@ QtObject {
     property string lightsIconSource: "Images/material.io-baseline-wb_incandescent-24px.svg"
     property string bluetoothScanIconSource: "Images/material.io-sharp-bluetooth_searching-24px.svg"
     property string channelsIconSource: "Images/material.io-baseline-tune-24px.svg"
+    property string clearLocalDataIconSource: "Images/material.io-baseline-delete-24px.svg"
 }

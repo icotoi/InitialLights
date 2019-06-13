@@ -25,6 +25,8 @@ public:
     explicit ControllerList(QObject* parent = nullptr);
     virtual ~ControllerList();
 
+    void clear();
+
 public slots:
     void scan();
 

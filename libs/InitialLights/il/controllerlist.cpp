@@ -22,6 +22,11 @@ ControllerList::~ControllerList()
 {
 }
 
+void ControllerList::clear()
+{
+    m_controllers->clear();
+}
+
 void ControllerList::scan()
 {
     update_isBusy(true);

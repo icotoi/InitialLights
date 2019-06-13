@@ -11,6 +11,7 @@ Item {
 
     property alias controllerList: controllerList
     property alias channelList: channelList
+    property alias clearLocalData: clearLocalData
 
     ColumnLayout {
         anchors.right: parent.right
@@ -31,6 +32,14 @@ Item {
             flat: true
             Layout.fillWidth: true
             icon.source: ILStyle.channelsIconSource
+        }
+
+        Button {
+            id: clearLocalData
+            text: qsTr("Clear Local Data")
+            flat: true
+            Layout.fillWidth: true
+            icon.source: ILStyle.clearLocalDataIconSource
         }
     }
 }

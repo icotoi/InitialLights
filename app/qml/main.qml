@@ -101,6 +101,7 @@ ApplicationWindow {
         height: window.height - header.height
         PageDrawer {
             rooms: backend.rooms
+            scenes: backend.scenes
             anchors.fill: parent
 
             home.onClicked: {
@@ -167,6 +168,10 @@ ApplicationWindow {
 
             channelList.onClicked: {
             }
+
+            clearLocalData.onClicked: {
+                backend.clearLocalData()
+            }
         }
     }
 
@@ -199,9 +204,5 @@ ApplicationWindow {
     Component {
         id: controllerView
         PageController {}
-    }
-
-    Component.onCompleted: {
-        showPage(settingsView, {})
     }
 }

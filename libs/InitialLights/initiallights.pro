@@ -33,7 +33,8 @@ SOURCES += \
         il/controllerlist.cpp \
         il/pwmchannel.cpp \
         il/rgbchannel.cpp \
-        il/room.cpp
+        il/room.cpp \
+        il/scene.cpp
 
 HEADERS += \
         il/abstractchannel.h \
@@ -45,6 +46,7 @@ HEADERS += \
         il/pwmchannel.h \
         il/rgbchannel.h \
         il/room.h \
+        il/scene.h \
         initiallights_global.h
 
 unix {

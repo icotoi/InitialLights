@@ -4,7 +4,8 @@ import QtQuick.Layouts 1.12
 import QtQuick.Controls.Material 2.12
 
 PageDrawerForm {
-    property var rooms: undefined
+    property var rooms: null
+    property var scenes: null
 
     Material.theme: Material.Light
     backgroundColor: Material.accentColor
@@ -21,11 +22,7 @@ PageDrawerForm {
     }
 
     scenesRepeater {
-        model: ListModel {
-            ListElement { name: "Scene 1" }
-            ListElement { name: "Scene 2" }
-            ListElement { name: "Scene 3" }
-        }
+        model: scenes
         delegate: MenuItem {
             enabled: false
             Layout.fillWidth: true
