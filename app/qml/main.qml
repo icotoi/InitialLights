@@ -232,8 +232,8 @@ ApplicationWindow {
         }
     }
 
-    Component.onCompleted: {
-        showPage(settingsView, {})
+//    Component.onCompleted: {
+//        showPage(settingsView, {})
 //        showPage(lightsListView, {})
-    }
+//    }
 }
