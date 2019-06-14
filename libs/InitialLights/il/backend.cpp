@@ -60,27 +60,16 @@ void BackEnd::loadLocalData()
 
     QFile loadFile(loadFileName);
     if (!loadFile.open(QIODevice::ReadOnly)) {
-        qWarning() << "Couldn't open save file:" << loadFileName;
+        qWarning() << "Couldn't open save file:" << loadFile.fileName();
 
-        // add some dummy/demo data
-        auto livingroom = new il::Room;
-        livingroom->set_name("Livingroom");
-        m_rooms->append(livingroom);
-
-        auto bedroom = new il::Room;
-        bedroom->set_name("Bedroom");
-        m_rooms->append(bedroom);
-
-        for (int i=0; i < 3; ++i) {
-            auto scene = new il::Scene;
-            scene->set_name(QStringLiteral("Scene %1").arg(i));
-            m_scenes->append(scene);
+        loadFile.setFileName(":/DemoConfig.json");
+        if(!loadFile.open(QIODevice::ReadOnly)) {
+            qWarning() << "Couldn't open demo config file:" << loadFile.fileName();
+            return;
         }
-
-        return;
     }
 
-    qDebug() << "loading local data from:" << loadFileName;
+    qDebug() << "loading local data from:" << loadFile.fileName();
 
     QByteArray saveData { loadFile.readAll() };
     QJsonDocument loadDoc { QJsonDocument::fromJson(saveData) };

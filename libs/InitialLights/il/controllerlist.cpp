@@ -130,6 +130,12 @@ void ControllerList::onControllersInserted(const QModelIndex &/*parent*/, int fi
 
         qDebug() << "inserted controller:" << controller->address()
                  << "with" << controller->get_lights()->count() << "lights";
+        auto lights = controller->get_lights();
+        for(auto it = lights->begin(); it != lights->end(); ++it) {
+            auto light = *it;
+            qDebug() << "inserted light:" << light->lightTypeName();
+            m_lights->append(light);
+        }
 
         connect(controller->get_lights(), &QAbstractListModel::rowsInserted, this, &ControllerList::onLightsInserted);
         connect(controller->get_lights(), &QAbstractListModel::rowsAboutToBeRemoved, this, &ControllerList::onLightsAboutToBeRemoved);
@@ -151,6 +157,7 @@ void ControllerList::onControllersAboutToBeRemoved(const QModelIndex &/*parent*/
         for(auto it = lights->begin(); it != lights->end(); ++it) {
             auto light = *it;
             qDebug() << "removing light:" << light->lightTypeName();
+            m_lights->remove(light);
         }
     }
 }
@@ -172,6 +179,7 @@ void ControllerList::onLightsInserted(const QModelIndex &/*parent*/, int first, 
         }
 
         qDebug() << "inserted light:" << light->lightTypeName();
+        m_lights->append(light);
     }
 }
 
@@ -191,6 +199,7 @@ void ControllerList::onLightsAboutToBeRemoved(const QModelIndex &/*parent*/, int
         }
 
         qDebug() << "removing light:" << light->lightTypeName();
+        m_lights->remove(light);
     }
 }
 
