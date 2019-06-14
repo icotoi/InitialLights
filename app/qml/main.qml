@@ -166,11 +166,12 @@ ApplicationWindow {
                 updateToolbarForCurrentItem()
             }
 
-            channelList.onClicked: {
-            }
-
             clearLocalData.onClicked: {
                 backend.clearLocalData()
+            }
+            reloadDemoData.onClicked: {
+                backend.clearLocalData()
+                backend.loadLocalData()
             }
         }
     }

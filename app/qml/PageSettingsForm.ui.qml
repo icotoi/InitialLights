@@ -12,6 +12,7 @@ Item {
     property alias controllerList: controllerList
     property alias channelList: channelList
     property alias clearLocalData: clearLocalData
+    property alias reloadDemoData: reloadDemoData
 
     ColumnLayout {
         anchors.right: parent.right
@@ -40,6 +41,14 @@ Item {
             flat: true
             Layout.fillWidth: true
             icon.source: ILStyle.clearLocalDataIconSource
+        }
+
+        Button {
+            id: reloadDemoData
+            text: qsTr("Reload Demo Data")
+            flat: true
+            Layout.fillWidth: true
+            icon.source: ILStyle.reloadDemoDataIconSource
         }
     }
 }

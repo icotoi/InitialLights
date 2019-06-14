@@ -51,5 +51,6 @@
         <file>PageSettingsForm.ui.qml</file>
         <file>Images/material.io-baseline-tune-24px.svg</file>
         <file>Images/material.io-baseline-delete-24px.svg</file>
+        <file>Images/material.io-baseline-refresh-24px.svg</file>
     </qresource>
 </RCC>

@@ -50,6 +50,8 @@ void BackEnd::clearLocalData()
     m_rooms->clear();
     m_scenes->clear();
     m_controllerList->clear();
+
+    QFile::remove(localDataFileName());
 }
 
 void BackEnd::loadLocalData()
