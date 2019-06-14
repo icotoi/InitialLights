@@ -1,7 +1,7 @@
 #include "controllerbase.h"
-#include "pwmchannel.h"
-#include "rgbchannel.h"
-#include "analogicchannel.h"
+#include "pwmlight.h"
+#include "rgblight.h"
+#include "analogiclight.h"
 
 #include "jsonhelpers.h"
 
@@ -16,31 +16,31 @@ const QString jsonNameTag { "name" };
 const QString jsonAddressTag { "address" };
 const QString jsonControllerTypeTag { "type" };
 
-const QString jsonAnalogicChannelsTag { "analogicChannels" };
-const QString jsonPWMChannelsTag { "pwmChannels" };
-const QString jsonRGBChannelsTag { "rgbChannels" };
+const QString jsonAnalogicLightsTag { "analogicLights" };
+const QString jsonPWMLightsTag { "pwmLights" };
+const QString jsonRGBLightsTag { "rgbLights" };
 
 template <typename T>
-void writeChannels(QJsonObject& json, const QString& tag, const T* channels) {
-    QJsonArray channelArray;
-    std::for_each (channels->constBegin(), channels->constEnd(), [&channelArray](const ChannelBase* channel) {
-        QJsonObject channelObject;
-        channel->write(channelObject);
-        channelArray.append(channelObject);
+void writeLights(QJsonObject& json, const QString& tag, const T* lights) {
+    QJsonArray lightArray;
+    std::for_each (lights->constBegin(), lights->constEnd(), [&lightArray](const LightBase* light) {
+        QJsonObject lightObject;
+        light->write(lightObject);
+        lightArray.append(lightObject);
     });
-    json[tag] = channelArray;
+    json[tag] = lightArray;
 }
 
 template <typename T>
-void readChannels(const QJsonObject& json, const QString& tag, QQmlObjectListModel<T>* channels) {
+void readLights(const QJsonObject& json, const QString& tag, QQmlObjectListModel<T>* lights) {
     if (json.contains(tag) && json[tag].isArray()) {
-        QJsonArray channelArray { json[tag].toArray() };
-        channels->clear();
-        for (int i = 0; i < channelArray.size(); ++i) {
-            QJsonObject channelObject = channelArray[i].toObject();
-            auto channel = new T;
-            channel->read(channelObject);
-            channels->append(channel);
+        QJsonArray lightArray { json[tag].toArray() };
+        lights->clear();
+        for (int i = 0; i < lightArray.size(); ++i) {
+            QJsonObject lightObject = lightArray[i].toObject();
+            auto light = new T;
+            light->read(lightObject);
+            lights->append(light);
         }
     }
 }
@@ -51,9 +51,9 @@ ControllerBase::ControllerBase(QObject *parent)
     , m_controllerType { UndefinedControllerType }
     , m_isBusy { false }
     , m_isConnected { false }
-    , m_analogicChannels { new QQmlObjectListModel<AnalogicChannel>(this) }
-    , m_pwmChannels { new QQmlObjectListModel<PWMChannel>(this) }
-    , m_rgbChannels { new QQmlObjectListModel<RGBChannel>(this) }
+    , m_analogicLights { new QQmlObjectListModel<AnalogicLight>(this) }
+    , m_pwmLights { new QQmlObjectListModel<PWMLight>(this) }
+    , m_rgbLights { new QQmlObjectListModel<RGBLight>(this) }
 {
 }
 
@@ -69,44 +69,44 @@ QByteArray ControllerBase::updateDeviceCommand() const
     switch (controllerType()) {
     case V1_2x10V:
     {
-        Q_ASSERT(m_analogicChannels->size() == 2);
-        Q_ASSERT(m_pwmChannels->size() == 0);
-        Q_ASSERT(m_rgbChannels->size() == 0);
+        Q_ASSERT(m_analogicLights->size() == 2);
+        Q_ASSERT(m_pwmLights->size() == 0);
+        Q_ASSERT(m_rgbLights->size() == 0);
 
-        auto channels = m_analogicChannels;
+        auto lights = m_analogicLights;
         command = QStringLiteral(u"US%1%2%3\n")
-                .arg(channels->at(0)->value(), 2, 16, QChar('0'))
-                .arg(channels->at(1)->value(), 2, 16, QChar('0'))
+                .arg(lights->at(0)->value(), 2, 16, QChar('0'))
+                .arg(lights->at(1)->value(), 2, 16, QChar('0'))
                 .arg(2, 6, 16, QChar('0'))
                 ;
         break;
     }
     case V1_4xPWM: {
-        Q_ASSERT(m_analogicChannels->size() == 0);
-        Q_ASSERT(m_pwmChannels->size() == 4);
-        Q_ASSERT(m_rgbChannels->size() == 0);
+        Q_ASSERT(m_analogicLights->size() == 0);
+        Q_ASSERT(m_pwmLights->size() == 4);
+        Q_ASSERT(m_rgbLights->size() == 0);
 
-        auto channels = m_pwmChannels;
+        auto lights = m_pwmLights;
         command = QString("US%1%2%3%4%5\n")
-                .arg(channels->at(0)->value(), 2, 16, QChar('0'))
-                .arg(channels->at(1)->value(), 2, 16, QChar('0'))
-                .arg(channels->at(2)->value(), 2, 16, QChar('0'))
-                .arg(channels->at(3)->value(), 2, 16, QChar('0'))
+                .arg(lights->at(0)->value(), 2, 16, QChar('0'))
+                .arg(lights->at(1)->value(), 2, 16, QChar('0'))
+                .arg(lights->at(2)->value(), 2, 16, QChar('0'))
+                .arg(lights->at(3)->value(), 2, 16, QChar('0'))
                 .arg(3, 2, 16, QChar('0'));
         break;
     }
     case V1_1xPWM_1xRGB: {
-        Q_ASSERT(m_analogicChannels->size() == 0);
-        Q_ASSERT(m_pwmChannels->size() == 1);
-        Q_ASSERT(m_rgbChannels->size() == 1);
+        Q_ASSERT(m_analogicLights->size() == 0);
+        Q_ASSERT(m_pwmLights->size() == 1);
+        Q_ASSERT(m_rgbLights->size() == 1);
 
-        auto pwmChannel = m_pwmChannels->at(0);
-        auto rgbChannel = m_rgbChannels->at(0);
+        auto pwmLight = m_pwmLights->at(0);
+        auto rgbLight = m_rgbLights->at(0);
         command = QString("US%1%2%3%4%5\n")
-                .arg(pwmChannel->value(), 2, 16, QChar('0'))
-                .arg(rgbChannel->redValue(), 2, 16, QChar('0'))
-                .arg(rgbChannel->greenValue(), 2, 16, QChar('0'))
-                .arg(rgbChannel->blueValue(), 2, 16, QChar('0'))
+                .arg(pwmLight->value(), 2, 16, QChar('0'))
+                .arg(rgbLight->redValue(), 2, 16, QChar('0'))
+                .arg(rgbLight->greenValue(), 2, 16, QChar('0'))
+                .arg(rgbLight->blueValue(), 2, 16, QChar('0'))
                 .arg(1, 2, 16, QChar('0'));
         break;
     }
@@ -120,7 +120,7 @@ QByteArray ControllerBase::updateDeviceCommand() const
 
 void ControllerBase::clear()
 {
-    clearChannels();
+    clearLights();
 }
 
 void ControllerBase::read(const QJsonObject &json)
@@ -135,9 +135,9 @@ void ControllerBase::read(const QJsonObject &json)
         }
     });
 
-    readChannels(json, jsonAnalogicChannelsTag, m_analogicChannels);
-    readChannels(json, jsonPWMChannelsTag, m_pwmChannels);
-    readChannels(json, jsonRGBChannelsTag, m_rgbChannels);
+    readLights(json, jsonAnalogicLightsTag, m_analogicLights);
+    readLights(json, jsonPWMLightsTag, m_pwmLights);
+    readLights(json, jsonRGBLightsTag, m_rgbLights);
 }
 
 void ControllerBase::write(QJsonObject &json) const
@@ -146,16 +146,16 @@ void ControllerBase::write(QJsonObject &json) const
     json[jsonAddressTag] = m_address;
     json[jsonControllerTypeTag] = QMetaEnum::fromType<ControllerType>().valueToKey(m_controllerType);
 
-    writeChannels(json, jsonAnalogicChannelsTag, m_analogicChannels);
-    writeChannels(json, jsonPWMChannelsTag, m_pwmChannels);
-    writeChannels(json, jsonRGBChannelsTag, m_rgbChannels);
+    writeLights(json, jsonAnalogicLightsTag, m_analogicLights);
+    writeLights(json, jsonPWMLightsTag, m_pwmLights);
+    writeLights(json, jsonRGBLightsTag, m_rgbLights);
 }
 
-void ControllerBase::clearChannels()
+void ControllerBase::clearLights()
 {
-    m_analogicChannels->clear();
-    m_pwmChannels->clear();
-    m_rgbChannels->clear();
+    m_analogicLights->clear();
+    m_pwmLights->clear();
+    m_rgbLights->clear();
 }
 
 } // namespace il

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "channelbase.h"
+#include "lightbase.h"
 
 namespace il {
 
-class INITIALLIGHTSSHARED_EXPORT RGBChannel : public ChannelBase
+class INITIALLIGHTSSHARED_EXPORT RGBLight : public LightBase
 {
     Q_OBJECT
 
@@ -13,7 +13,7 @@ class INITIALLIGHTSSHARED_EXPORT RGBChannel : public ChannelBase
     QML_WRITABLE_AUTO_PROPERTY(int, blueValue)
 
 public:
-    explicit RGBChannel(const QString& name = QString(), QObject* parent = nullptr);
+    explicit RGBLight(const QString& name = QString(), QObject* parent = nullptr);
 
     void read(const QJsonObject& json) override;
     void write(QJsonObject& json) const override;

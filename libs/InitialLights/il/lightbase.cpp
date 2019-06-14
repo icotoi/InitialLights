@@ -1,4 +1,4 @@
-#include "channelbase.h"
+#include "lightbase.h"
 
 #include "jsonhelpers.h"
 
@@ -10,16 +10,16 @@ namespace il {
 namespace  {
 const QString jsonNameTag { "name" };
 const QString jsonVersionTag { "version" };
-const QString jsonChannelTypeTag { "channelType" };
+const QString jsonLightTypeTag { "lightType" };
 const QString jsonMinValueTag { "minValue" };
 const QString jsonMaxValueTag { "maxValue" };
 const QString jsonValueIncrementTag { "valueIncrementTag" };
 
 }
 
-ChannelBase::ChannelBase(const QString& name,
+LightBase::LightBase(const QString& name,
                          const QString& version,
-                         ChannelType channelType,
+                         LightType lightType,
                          int minValue,
                          int maxValue,
                          int valueIncrement,
@@ -27,26 +27,26 @@ ChannelBase::ChannelBase(const QString& name,
     : QObject(parent)
     , m_name { name }
     , m_version { version }
-    , m_channelType { channelType }
+    , m_lightType { lightType }
     , m_minValue { minValue }
     , m_maxValue { maxValue }
     , m_valueIncrement { valueIncrement }
 {
 }
 
-ChannelBase::~ChannelBase()
+LightBase::~LightBase()
 {
 }
 
-void ChannelBase::read(const QJsonObject &json)
+void LightBase::read(const QJsonObject &json)
 {
     safeRead(json, jsonNameTag, [&](const QString& s) { update_name(s); });
     safeRead(json, jsonVersionTag, [&](const QString& s) { update_version(s); });
-    safeRead(json, jsonChannelTypeTag, [&](const QString& s) {
-        int value = QMetaEnum::fromType<ChannelType>().keyToValue(s.toStdString().c_str());
+    safeRead(json, jsonLightTypeTag, [&](const QString& s) {
+        int value = QMetaEnum::fromType<LightType>().keyToValue(s.toStdString().c_str());
         if (value >= 0) {
-            ChannelType ct { ChannelType(value) };
-            update_channelType(ct);
+            LightType ct { LightType(value) };
+            update_lightType(ct);
         }
     });
     safeRead(json, jsonMinValueTag, [&](int v) { update_minValue(v); });
@@ -54,11 +54,11 @@ void ChannelBase::read(const QJsonObject &json)
     safeRead(json, jsonValueIncrementTag, [&](int v) { update_valueIncrement(v); });
 }
 
-void ChannelBase::write(QJsonObject &json) const
+void LightBase::write(QJsonObject &json) const
 {
     json[jsonNameTag] = m_name;
     json[jsonVersionTag] = m_version;
-    json[jsonChannelTypeTag] = QMetaEnum::fromType<ChannelType>().valueToKey(m_channelType);
+    json[jsonLightTypeTag] = QMetaEnum::fromType<LightType>().valueToKey(m_lightType);
     json[jsonMinValueTag] = m_minValue;
     json[jsonMaxValueTag] = m_maxValue;
     json[jsonValueIncrementTag] = m_valueIncrement;

@@ -10,7 +10,7 @@ Item {
     id: element
 
     property alias controllerList: controllerList
-    property alias channelList: channelList
+    property alias lightList: lightList
     property alias clearLocalData: clearLocalData
     property alias reloadDemoData: reloadDemoData
 
@@ -28,11 +28,11 @@ Item {
         }
 
         Button {
-            id: channelList
-            text: qsTr("Channels")
+            id: lightList
+            text: qsTr("Lights")
             flat: true
             Layout.fillWidth: true
-            icon.source: ILStyle.channelsIconSource
+            icon.source: ILStyle.lightsIconSource
         }
 
         Button {

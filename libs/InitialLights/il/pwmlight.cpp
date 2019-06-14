@@ -1,4 +1,4 @@
-#include "pwmchannel.h"
+#include "pwmlight.h"
 
 #include "jsonhelpers.h"
 
@@ -11,24 +11,24 @@ namespace  {
 const QString jsonValueTag { "value" };
 }
 
-PWMChannel::PWMChannel(const QString &name, QObject *parent)
-    : ChannelBase (name, "v1", PWM, 0, 255, 1, parent)
+PWMLight::PWMLight(const QString &name, QObject *parent)
+    : LightBase (name, "v1", PWM, 0, 255, 1, parent)
     , m_value { 0 }
 {
 }
 
-void PWMChannel::read(const QJsonObject &json)
+void PWMLight::read(const QJsonObject &json)
 {
-    ChannelBase::read(json);
+    LightBase::read(json);
 
     safeRead(json, jsonValueTag, [&](int v) {
         set_value(v);
     });
 }
 
-void PWMChannel::write(QJsonObject &json) const
+void PWMLight::write(QJsonObject &json) const
 {
-    ChannelBase::write(json);
+    LightBase::write(json);
     json[jsonValueTag] = m_value;
 }
 

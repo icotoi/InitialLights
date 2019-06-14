@@ -127,7 +127,7 @@ ApplicationWindow {
                 showPage(controllerListView, {})
             }
 
-            channelList.onClicked: {
+            lightList.onClicked: {
                 drawer.close()
             }
         }

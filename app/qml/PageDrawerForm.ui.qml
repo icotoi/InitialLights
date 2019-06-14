@@ -11,7 +11,7 @@ Item {
     property alias home: home
     property alias settings: settings
     property alias controllerList: controllerList
-    property alias channelList: channelList
+    property alias lightList: lightList
 
     Rectangle {
         color: backgroundColor
@@ -93,10 +93,10 @@ Item {
             }
 
             MenuItem {
-                id: channelList
-                text: qsTr("Channels")
+                id: lightList
+                text: qsTr("Lights")
                 Layout.fillWidth: true
-                icon.source: ILStyle.channelsIconSource
+                icon.source: ILStyle.lightsIconSource
             }
         }
     }

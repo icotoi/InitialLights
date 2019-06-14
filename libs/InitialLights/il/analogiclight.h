@@ -1,17 +1,17 @@
 #pragma once
 
-#include "channelbase.h"
+#include "lightbase.h"
 
 namespace il {
 
-class INITIALLIGHTSSHARED_EXPORT AnalogicChannel : public ChannelBase
+class INITIALLIGHTSSHARED_EXPORT AnalogicLight : public LightBase
 {
     Q_OBJECT
 
     QML_WRITABLE_AUTO_PROPERTY(int, value)
 
 public:
-    explicit AnalogicChannel(const QString& name = QString(), QObject *parent = nullptr);
+    explicit AnalogicLight(const QString& name = QString(), QObject *parent = nullptr);
 
     void read(const QJsonObject& json) override;
     void write(QJsonObject& json) const override;

@@ -11,8 +11,8 @@ Item {
 
     property var controller: null
     property int subtitleMargin: 10
-    property int channelMargin: 20
-    property int controllerChannelLabelMinimumWidth: 75
+    property int lightMargin: 20
+    property int controllerLightLabelMinimumWidth: 75
 
     property string title: controller !== null
                            ? (controller.name !== ""
@@ -37,16 +37,16 @@ Item {
             id: contentColumn
             width: parent.width
 
-            ILControllerChannelSectionLabel {
-                text: "PWM Channels"
+            ILControllerLightSectionLabel {
+                text: "PWM Lights"
                 horizontalAlignment: Text.AlignLeft
                 Layout.fillWidth: true
                 leftPadding: root.subtitleMargin
-                visible: root.controller !== null && root.controller.pwmChannels.count > 0
+                visible: root.controller !== null && root.controller.pwmLights.count > 0
             }
 
             Repeater {
-                model: root.controller !== null ? root.controller.pwmChannels : undefined
+                model: root.controller !== null ? root.controller.pwmLights : undefined
 
                 delegate: ColumnLayout {
                     Layout.fillWidth: true
@@ -60,33 +60,33 @@ Item {
 
                     Label {
                         Layout.fillWidth: true
-                        Layout.leftMargin: root.channelMargin
-                        text: "<b>Channel %1<b>".arg(name)
+                        Layout.leftMargin: root.lightMargin
+                        text: "<b>Light %1<b>".arg(name)
                     }
 
-                    ILControllerChannel {
+                    ILControllerLight {
                         Layout.fillWidth: true
-                        Layout.leftMargin: root.channelMargin
-                        labelMinimumWidth: root.controllerChannelLabelMinimumWidth
+                        Layout.leftMargin: root.lightMargin
+                        labelMinimumWidth: root.controllerLightLabelMinimumWidth
                         property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
                         text: displayValue + "%"
-                        channel: model
+                        light: model
                         value: model.value
                         onValueChanged: model.value = value
                     }
                 }
             }
 
-            ILControllerChannelSectionLabel {
-                text: "RGB Channels"
+            ILControllerLightSectionLabel {
+                text: "RGB Lights"
                 horizontalAlignment: Text.AlignLeft
                 Layout.fillWidth: true
                 leftPadding: root.subtitleMargin
-                visible: root.controller !== null && root.controller.rgbChannels.count > 0
+                visible: root.controller !== null && root.controller.rgbLights.count > 0
             }
 
             Repeater {
-                model: root.controller !== null ? root.controller.rgbChannels : null
+                model: root.controller !== null ? root.controller.rgbLights : null
 
                 delegate: ColumnLayout {
                     Layout.fillWidth: true
@@ -100,55 +100,55 @@ Item {
 
                     Label {
                         Layout.fillWidth: true
-                        Layout.leftMargin: root.channelMargin
-                        text: "<b>Channel %1<b>".arg(name)
+                        Layout.leftMargin: root.lightMargin
+                        text: "<b>Light %1<b>".arg(name)
                     }
 
-                    ILControllerChannel {
+                    ILControllerLight {
                         Layout.fillWidth: true
-                        Layout.leftMargin: root.channelMargin
-                        labelMinimumWidth: root.controllerChannelLabelMinimumWidth
+                        Layout.leftMargin: root.lightMargin
+                        labelMinimumWidth: root.controllerLightLabelMinimumWidth
                         property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
                         text: "%1% R".arg(displayValue)
                         value: model.redValue
-                        channel: model
+                        light: model
                         onValueChanged: model.redValue = value
                     }
 
-                    ILControllerChannel {
+                    ILControllerLight {
                         Layout.fillWidth: true
-                        Layout.leftMargin: root.channelMargin
-                        labelMinimumWidth: root.controllerChannelLabelMinimumWidth
+                        Layout.leftMargin: root.lightMargin
+                        labelMinimumWidth: root.controllerLightLabelMinimumWidth
                         property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
                         text: "%1% G".arg(displayValue)
                         value: model.greenValue
-                        channel: model
+                        light: model
                         onValueChanged: model.greenValue = value
                     }
 
-                    ILControllerChannel {
+                    ILControllerLight {
                         Layout.fillWidth: true
-                        Layout.leftMargin: root.channelMargin
-                        labelMinimumWidth: root.controllerChannelLabelMinimumWidth
+                        Layout.leftMargin: root.lightMargin
+                        labelMinimumWidth: root.controllerLightLabelMinimumWidth
                         property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
                         text: "%1% B".arg(displayValue)
                         value: model.blueValue
-                        channel: model
+                        light: model
                         onValueChanged: model.blueValue = value
                     }
                 }
             }
 
-            ILControllerChannelSectionLabel {
-                text: "Analogic Channels"
+            ILControllerLightSectionLabel {
+                text: "Analogic Lights"
                 horizontalAlignment: Text.AlignLeft
                 Layout.fillWidth: true
                 leftPadding: root.subtitleMargin
-                visible: root.controller !== null && root.controller.analogicChannels.count > 0
+                visible: root.controller !== null && root.controller.analogicLights.count > 0
             }
 
             Repeater {
-                model: root.controller !== null ? root.controller.analogicChannels : null
+                model: root.controller !== null ? root.controller.analogicLights : null
 
                 delegate: ColumnLayout {
                     Layout.fillWidth: true
@@ -162,18 +162,18 @@ Item {
 
                     Label {
                         Layout.fillWidth: true
-                        Layout.leftMargin: root.channelMargin
-                        text: "<b>Channel %1<b>".arg(name)
+                        Layout.leftMargin: root.lightMargin
+                        text: "<b>Light %1<b>".arg(name)
                     }
 
-                    ILControllerChannel {
+                    ILControllerLight {
                         Layout.fillWidth: true
-                        Layout.leftMargin: root.channelMargin
-                        labelMinimumWidth: root.controllerChannelLabelMinimumWidth
+                        Layout.leftMargin: root.lightMargin
+                        labelMinimumWidth: root.controllerLightLabelMinimumWidth
                         property double displayValue: 10.0 * (value - minValue) / (maxValue - minValue)
                         text: displayValue.toFixed(2) + "V"
                         value: model.value
-                        channel: model
+                        light: model
                         onValueChanged: model.value = value
                     }
                 }

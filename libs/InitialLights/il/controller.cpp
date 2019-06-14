@@ -1,7 +1,7 @@
 #include "controller.h"
-#include "pwmchannel.h"
-#include "rgbchannel.h"
-#include "analogicchannel.h"
+#include "pwmlight.h"
+#include "rgblight.h"
+#include "analogiclight.h"
 
 //#include <QRandomGenerator>
 //#include <QTimer>
@@ -248,7 +248,7 @@ void Controller::updateFromDevice(const QByteArray &data)
         if(data.startsWith("*")) {
             if(m_command.startsWith("U?")) {
                 m_hasReceivedInitialState = true;
-                clearChannels();
+                clearLights();
 
                 auto controllerType = data.right(2).toInt();
                 switch (controllerType) {
@@ -256,38 +256,38 @@ void Controller::updateFromDevice(const QByteArray &data)
                     // 2 x Analogic
                     update_controllerType(V1_2x10V);
                     for (int i = 0; i < 2; ++i) {
-                        auto channel = new AnalogicChannel(QString::number(i+1), this);
-                        get_analogicChannels()->append(channel);
-                        channel->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
-                        connect(channel, &AnalogicChannel::valueChanged, this, &Controller::updateDevice);
+                        auto light = new AnalogicLight(QString::number(i+1), this);
+                        get_analogicLights()->append(light);
+                        light->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
+                        connect(light, &AnalogicLight::valueChanged, this, &Controller::updateDevice);
                     }
                     break;
                 case 3:
                     // 4 x PWM
                     update_controllerType(V1_4xPWM);
                     for (int i = 0; i < 4; ++i) {
-                        auto channel = new PWMChannel(QString::number(i+1), this);
-                        get_pwmChannels()->append(channel);
-                        channel->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
-                        connect(channel, &PWMChannel::valueChanged, this, &Controller::updateDevice);
+                        auto light = new PWMLight(QString::number(i+1), this);
+                        get_pwmLights()->append(light);
+                        light->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
+                        connect(light, &PWMLight::valueChanged, this, &Controller::updateDevice);
                     }
                     break;
                 default:
                     // 1 x PWM + 1 x RGB
                     update_controllerType(V1_1xPWM_1xRGB);
-                    auto pwmChannel = new PWMChannel("1", this);
-                    get_pwmChannels()->append(pwmChannel);
-                    pwmChannel->set_value(data.mid(1, 2).toInt(nullptr, 16));
-                    connect(pwmChannel, &PWMChannel::valueChanged, this, &Controller::updateDevice);
+                    auto pwmLight = new PWMLight("1", this);
+                    get_pwmLights()->append(pwmLight);
+                    pwmLight->set_value(data.mid(1, 2).toInt(nullptr, 16));
+                    connect(pwmLight, &PWMLight::valueChanged, this, &Controller::updateDevice);
 
-                    auto rgbChannel = new RGBChannel("2", this);
-                    get_rgbChannels()->append(rgbChannel);
-                    rgbChannel->set_redValue(data.mid(3, 2).toInt(nullptr, 16));
-                    rgbChannel->set_greenValue(data.mid(5, 2).toInt(nullptr, 16));
-                    rgbChannel->set_blueValue(data.mid(7, 2).toInt(nullptr, 16));
-                    connect(rgbChannel, &RGBChannel::redValueChanged, this, &Controller::updateDevice);
-                    connect(rgbChannel, &RGBChannel::greenValueChanged, this, &Controller::updateDevice);
-                    connect(rgbChannel, &RGBChannel::blueValueChanged, this, &Controller::updateDevice);
+                    auto rgbLight = new RGBLight("2", this);
+                    get_rgbLights()->append(rgbLight);
+                    rgbLight->set_redValue(data.mid(3, 2).toInt(nullptr, 16));
+                    rgbLight->set_greenValue(data.mid(5, 2).toInt(nullptr, 16));
+                    rgbLight->set_blueValue(data.mid(7, 2).toInt(nullptr, 16));
+                    connect(rgbLight, &RGBLight::redValueChanged, this, &Controller::updateDevice);
+                    connect(rgbLight, &RGBLight::greenValueChanged, this, &Controller::updateDevice);
+                    connect(rgbLight, &RGBLight::blueValueChanged, this, &Controller::updateDevice);
                     break;
                 }
             } else if(m_command.startsWith("UV")) {

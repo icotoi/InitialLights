@@ -43,8 +43,6 @@
         <file>Images/material.io-sharp-bluetooth_searching-24px.svg</file>
         <file>Images/material.io-baseline-arrow_forward_ios-24px.svg</file>
         <file>PageController.qml</file>
-        <file>Controls/ILControllerChannel.qml</file>
-        <file>Controls/ILControllerChannelSectionLabel.qml</file>
         <file>Images/material.io-baseline-wb_incandescent-24px.svg</file>
         <file>Images/material.io-baseline-settings_input_svideo-24px.svg</file>
         <file>PageSettings.qml</file>
@@ -52,5 +50,7 @@
         <file>Images/material.io-baseline-tune-24px.svg</file>
         <file>Images/material.io-baseline-delete-24px.svg</file>
         <file>Images/material.io-baseline-refresh-24px.svg</file>
+        <file>Controls/ILControllerLight.qml</file>
+        <file>Controls/ILControllerLightSectionLabel.qml</file>
     </qresource>
 </RCC>
