@@ -31,6 +31,8 @@ private:
 public:
     virtual ~LightBase();
 
+    static LightBase* fromJson(const QJsonObject& json);
+
     virtual void read(const QJsonObject& json);
     virtual void write(QJsonObject& json) const;
 
@@ -42,6 +44,9 @@ protected:
                          int maxValue,
                          int valueIncrement,
                          QObject *parent = nullptr);
+
+private:
+    static LightType readLightTypeFrom(const QJsonObject& json);
 };
 
 } // namespace il

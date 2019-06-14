@@ -15,35 +15,7 @@ namespace  {
 const QString jsonNameTag { "name" };
 const QString jsonAddressTag { "address" };
 const QString jsonControllerTypeTag { "type" };
-
-const QString jsonAnalogicLightsTag { "analogicLights" };
-const QString jsonPWMLightsTag { "pwmLights" };
-const QString jsonRGBLightsTag { "rgbLights" };
-
-template <typename T>
-void writeLights(QJsonObject& json, const QString& tag, const T* lights) {
-    QJsonArray lightArray;
-    std::for_each (lights->constBegin(), lights->constEnd(), [&lightArray](const LightBase* light) {
-        QJsonObject lightObject;
-        light->write(lightObject);
-        lightArray.append(lightObject);
-    });
-    json[tag] = lightArray;
-}
-
-template <typename T>
-void readLights(const QJsonObject& json, const QString& tag, QQmlObjectListModel<T>* lights) {
-    if (json.contains(tag) && json[tag].isArray()) {
-        QJsonArray lightArray { json[tag].toArray() };
-        lights->clear();
-        for (int i = 0; i < lightArray.size(); ++i) {
-            QJsonObject lightObject = lightArray[i].toObject();
-            auto light = new T;
-            light->read(lightObject);
-            lights->append(light);
-        }
-    }
-}
+const QString jsonLightsTag { "lights" };
 }
 
 ControllerBase::ControllerBase(QObject *parent)
@@ -51,9 +23,7 @@ ControllerBase::ControllerBase(QObject *parent)
     , m_controllerType { UndefinedControllerType }
     , m_isBusy { false }
     , m_isConnected { false }
-    , m_analogicLights { new QQmlObjectListModel<AnalogicLight>(this) }
-    , m_pwmLights { new QQmlObjectListModel<PWMLight>(this) }
-    , m_rgbLights { new QQmlObjectListModel<RGBLight>(this) }
+    , m_lights { new QQmlObjectListModel<LightBase>(this) }
 {
 }
 
@@ -69,45 +39,64 @@ QByteArray ControllerBase::updateDeviceCommand() const
     switch (controllerType()) {
     case V1_2x10V:
     {
-        Q_ASSERT(m_analogicLights->size() == 2);
-        Q_ASSERT(m_pwmLights->size() == 0);
-        Q_ASSERT(m_rgbLights->size() == 0);
+        Q_ASSERT(m_lights->size() == 2);
 
-        auto lights = m_analogicLights;
-        command = QStringLiteral(u"US%1%2%3\n")
-                .arg(lights->at(0)->value(), 2, 16, QChar('0'))
-                .arg(lights->at(1)->value(), 2, 16, QChar('0'))
-                .arg(2, 6, 16, QChar('0'))
-                ;
+        auto light0 = qobject_cast<AnalogicLight*>(m_lights->at(0));
+        auto light1 = qobject_cast<AnalogicLight*>(m_lights->at(1));
+
+        if (light0 && light1) {
+            command = QStringLiteral(u"US%1%2%3\n")
+                    .arg(light0->value(), 2, 16, QChar('0'))
+                    .arg(light1->value(), 2, 16, QChar('0'))
+                    .arg(2, 6, 16, QChar('0'))
+                    ;
+        } else {
+            qWarning() << "invalid data: expected 2 analogic lights - got:" << m_lights->at(0) << m_lights->at(1);
+        }
         break;
     }
     case V1_4xPWM: {
-        Q_ASSERT(m_analogicLights->size() == 0);
-        Q_ASSERT(m_pwmLights->size() == 4);
-        Q_ASSERT(m_rgbLights->size() == 0);
+        Q_ASSERT(m_lights->size() == 4);
 
-        auto lights = m_pwmLights;
-        command = QString("US%1%2%3%4%5\n")
-                .arg(lights->at(0)->value(), 2, 16, QChar('0'))
-                .arg(lights->at(1)->value(), 2, 16, QChar('0'))
-                .arg(lights->at(2)->value(), 2, 16, QChar('0'))
-                .arg(lights->at(3)->value(), 2, 16, QChar('0'))
-                .arg(3, 2, 16, QChar('0'));
+        auto light0 = qobject_cast<PWMLight*>(m_lights->at(0));
+        auto light1 = qobject_cast<PWMLight*>(m_lights->at(1));
+        auto light2 = qobject_cast<PWMLight*>(m_lights->at(2));
+        auto light3 = qobject_cast<PWMLight*>(m_lights->at(3));
+
+        if (light0 && light1 && light2 && light3) {
+            command = QString("US%1%2%3%4%5\n")
+                    .arg(light0->value(), 2, 16, QChar('0'))
+                    .arg(light1->value(), 2, 16, QChar('0'))
+                    .arg(light2->value(), 2, 16, QChar('0'))
+                    .arg(light3->value(), 2, 16, QChar('0'))
+                    .arg(3, 2, 16, QChar('0'));
+        } else {
+            qWarning() << "invalid data: expected 4 pwm lights - got:"
+                       << m_lights->at(0)
+                       << m_lights->at(1)
+                       << m_lights->at(2)
+                       << m_lights->at(3);
+        }
         break;
     }
     case V1_1xPWM_1xRGB: {
-        Q_ASSERT(m_analogicLights->size() == 0);
-        Q_ASSERT(m_pwmLights->size() == 1);
-        Q_ASSERT(m_rgbLights->size() == 1);
+        Q_ASSERT(m_lights->size() == 2);
 
-        auto pwmLight = m_pwmLights->at(0);
-        auto rgbLight = m_rgbLights->at(0);
-        command = QString("US%1%2%3%4%5\n")
-                .arg(pwmLight->value(), 2, 16, QChar('0'))
-                .arg(rgbLight->redValue(), 2, 16, QChar('0'))
-                .arg(rgbLight->greenValue(), 2, 16, QChar('0'))
-                .arg(rgbLight->blueValue(), 2, 16, QChar('0'))
-                .arg(1, 2, 16, QChar('0'));
+        auto pwmLight = qobject_cast<PWMLight*>(m_lights->at(0));
+        auto rgbLight = qobject_cast<RGBLight*>(m_lights->at(1));
+
+        if (pwmLight && rgbLight) {
+            command = QString("US%1%2%3%4%5\n")
+                    .arg(pwmLight->value(), 2, 16, QChar('0'))
+                    .arg(rgbLight->redValue(), 2, 16, QChar('0'))
+                    .arg(rgbLight->greenValue(), 2, 16, QChar('0'))
+                    .arg(rgbLight->blueValue(), 2, 16, QChar('0'))
+                    .arg(1, 2, 16, QChar('0'));
+        } else {
+            qWarning() << "invalid data: expected 1 pwm and 1 rgb light - got:"
+                       << m_lights->at(0)
+                       << m_lights->at(1);
+        }
         break;
     }
     default:
@@ -120,7 +109,7 @@ QByteArray ControllerBase::updateDeviceCommand() const
 
 void ControllerBase::clear()
 {
-    clearLights();
+    m_lights->clear();
 }
 
 void ControllerBase::read(const QJsonObject &json)
@@ -135,9 +124,7 @@ void ControllerBase::read(const QJsonObject &json)
         }
     });
 
-    readLights(json, jsonAnalogicLightsTag, m_analogicLights);
-    readLights(json, jsonPWMLightsTag, m_pwmLights);
-    readLights(json, jsonRGBLightsTag, m_rgbLights);
+    readModel(json, jsonLightsTag, m_lights);
 }
 
 void ControllerBase::write(QJsonObject &json) const
@@ -146,16 +133,7 @@ void ControllerBase::write(QJsonObject &json) const
     json[jsonAddressTag] = m_address;
     json[jsonControllerTypeTag] = QMetaEnum::fromType<ControllerType>().valueToKey(m_controllerType);
 
-    writeLights(json, jsonAnalogicLightsTag, m_analogicLights);
-    writeLights(json, jsonPWMLightsTag, m_pwmLights);
-    writeLights(json, jsonRGBLightsTag, m_rgbLights);
-}
-
-void ControllerBase::clearLights()
-{
-    m_analogicLights->clear();
-    m_pwmLights->clear();
-    m_rgbLights->clear();
+    writeModel(json, jsonLightsTag, m_lights);
 }
 
 } // namespace il

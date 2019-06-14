@@ -248,7 +248,7 @@ void Controller::updateFromDevice(const QByteArray &data)
         if(data.startsWith("*")) {
             if(m_command.startsWith("U?")) {
                 m_hasReceivedInitialState = true;
-                clearLights();
+                get_lights()->clear();
 
                 auto controllerType = data.right(2).toInt();
                 switch (controllerType) {
@@ -257,7 +257,7 @@ void Controller::updateFromDevice(const QByteArray &data)
                     update_controllerType(V1_2x10V);
                     for (int i = 0; i < 2; ++i) {
                         auto light = new AnalogicLight(QString::number(i+1), this);
-                        get_analogicLights()->append(light);
+                        get_lights()->append(light);
                         light->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
                         connect(light, &AnalogicLight::valueChanged, this, &Controller::updateDevice);
                     }
@@ -267,7 +267,7 @@ void Controller::updateFromDevice(const QByteArray &data)
                     update_controllerType(V1_4xPWM);
                     for (int i = 0; i < 4; ++i) {
                         auto light = new PWMLight(QString::number(i+1), this);
-                        get_pwmLights()->append(light);
+                        get_lights()->append(light);
                         light->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
                         connect(light, &PWMLight::valueChanged, this, &Controller::updateDevice);
                     }
@@ -276,12 +276,12 @@ void Controller::updateFromDevice(const QByteArray &data)
                     // 1 x PWM + 1 x RGB
                     update_controllerType(V1_1xPWM_1xRGB);
                     auto pwmLight = new PWMLight("1", this);
-                    get_pwmLights()->append(pwmLight);
+                    get_lights()->append(pwmLight);
                     pwmLight->set_value(data.mid(1, 2).toInt(nullptr, 16));
                     connect(pwmLight, &PWMLight::valueChanged, this, &Controller::updateDevice);
 
                     auto rgbLight = new RGBLight("2", this);
-                    get_rgbLights()->append(rgbLight);
+                    get_lights()->append(rgbLight);
                     rgbLight->set_redValue(data.mid(3, 2).toInt(nullptr, 16));
                     rgbLight->set_greenValue(data.mid(5, 2).toInt(nullptr, 16));
                     rgbLight->set_blueValue(data.mid(7, 2).toInt(nullptr, 16));
