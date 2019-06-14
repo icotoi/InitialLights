@@ -25,6 +25,12 @@ Item {
                              ? controller.message
                              : ""
 
+    onControllerChanged: {
+        if (controller !== null && controller.lights.count === 0) {
+            controller.connectToController()
+        }
+    }
+
     ListModel {
         id: designModel
         ListElement {
