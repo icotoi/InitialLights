@@ -1,18 +1,20 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
+import QtQuick.Controls.Material 2.12
 
 import "Images"
 import "Controls"
 import "Constants"
 
+import InitialLights 1.0
+
 Item {
     id: root
 
     property var controller: null
-    property int subtitleMargin: 10
-    property int lightMargin: 20
-    property int controllerLightLabelMinimumWidth: 75
+    property int smallMargins: 8
+    property int valueLabelMinimumWidth: 50
 
     property string title: controller !== null
                            ? (controller.name !== ""
@@ -24,159 +26,129 @@ Item {
                              : ""
 
     onControllerChanged: {
-        if (controller !== null) {
+        if (controller !== null && controller.lights.count === 0) {
             controller.connectToController()
         }
     }
 
-    Flickable {
-        anchors.fill: parent
-        contentHeight: contentColumn.height
+    ListModel {
+        id: designModel
+        ListElement {
+            name: "foo"
+            lightTypeName: "Analogic"
+            minValue: 0
+            maxValue: 255
+            valueIncrement: 1
+            value: 4
+            redValue: 0
+            greenValue: 128
+            blueValue: 255
+        }
+        ListElement {
+            name: "bar"
+            lightTypeName: "PWM"
+            minValue: 0
+            maxValue: 255
+            valueIncrement: 1
+            value: 10
+            redValue: 128
+            greenValue: 255
+            blueValue: 0
+        }
+    }
 
-        ColumnLayout {
-            id: contentColumn
+    ListView {
+        id: listView
+        anchors.fill: parent
+
+        model: root.controller !== null ? root.controller.lights : designModel
+
+        delegate: ColumnLayout {
             width: parent.width
 
-            ILControllerLightSectionLabel {
-                text: "PWM Lights"
-                horizontalAlignment: Text.AlignLeft
+            Label {
+                text: qsTr("%1 Light").arg(model.lightTypeName)
+                font.italic: true
+                font.pointSize: 8
                 Layout.fillWidth: true
-                leftPadding: root.subtitleMargin
-                visible: root.controller !== null && root.controller.pwmLights.count > 0
+                Layout.topMargin: root.smallMargins
+                Layout.leftMargin: root.smallMargins
+                Layout.rightMargin: root.smallMargins
+                color: Material.accent
             }
 
-            Repeater {
-                model: root.controller !== null ? root.controller.pwmLights : undefined
-
-                delegate: ColumnLayout {
-                    Layout.fillWidth: true
-
-                    Rectangle {
-                        Layout.fillWidth: true
-                        height: 1
-                        color: "gray"
-                        visible: index > 0
-                    }
-
-                    Label {
-                        Layout.fillWidth: true
-                        Layout.leftMargin: root.lightMargin
-                        text: "<b>Light %1<b>".arg(name)
-                    }
-
-                    ILControllerLight {
-                        Layout.fillWidth: true
-                        Layout.leftMargin: root.lightMargin
-                        labelMinimumWidth: root.controllerLightLabelMinimumWidth
-                        property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
-                        text: displayValue + "%"
-                        light: model
-                        value: model.value
-                        onValueChanged: model.value = value
-                    }
-                }
-            }
-
-            ILControllerLightSectionLabel {
-                text: "RGB Lights"
-                horizontalAlignment: Text.AlignLeft
+            TextField {
+                text: model.name
+                onTextChanged: model.name = text
+                placeholderText: qsTr("Light Name")
                 Layout.fillWidth: true
-                leftPadding: root.subtitleMargin
-                visible: root.controller !== null && root.controller.rgbLights.count > 0
+                Layout.leftMargin: root.smallMargins
+                Layout.rightMargin: root.smallMargins
             }
 
-            Repeater {
-                model: root.controller !== null ? root.controller.rgbLights : null
-
-                delegate: ColumnLayout {
-                    Layout.fillWidth: true
-
-                    Rectangle {
-                        Layout.fillWidth: true
-                        height: 1
-                        color: "gray"
-                        visible: index > 0
-                    }
-
-                    Label {
-                        Layout.fillWidth: true
-                        Layout.leftMargin: root.lightMargin
-                        text: "<b>Light %1<b>".arg(name)
-                    }
-
-                    ILControllerLight {
-                        Layout.fillWidth: true
-                        Layout.leftMargin: root.lightMargin
-                        labelMinimumWidth: root.controllerLightLabelMinimumWidth
-                        property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
-                        text: "%1% R".arg(displayValue)
-                        value: model.redValue
-                        light: model
-                        onValueChanged: model.redValue = value
-                    }
-
-                    ILControllerLight {
-                        Layout.fillWidth: true
-                        Layout.leftMargin: root.lightMargin
-                        labelMinimumWidth: root.controllerLightLabelMinimumWidth
-                        property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
-                        text: "%1% G".arg(displayValue)
-                        value: model.greenValue
-                        light: model
-                        onValueChanged: model.greenValue = value
-                    }
-
-                    ILControllerLight {
-                        Layout.fillWidth: true
-                        Layout.leftMargin: root.lightMargin
-                        labelMinimumWidth: root.controllerLightLabelMinimumWidth
-                        property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
-                        text: "%1% B".arg(displayValue)
-                        value: model.blueValue
-                        light: model
-                        onValueChanged: model.blueValue = value
-                    }
-                }
-            }
-
-            ILControllerLightSectionLabel {
-                text: "Analogic Lights"
-                horizontalAlignment: Text.AlignLeft
+            ILControllerLight {
+                visible: model.lightType === Light.Analogic
                 Layout.fillWidth: true
-                leftPadding: root.subtitleMargin
-                visible: root.controller !== null && root.controller.analogicLights.count > 0
+                Layout.leftMargin: root.smallMargins
+                Layout.rightMargin: root.smallMargins
+                labelMinimumWidth: root.valueLabelMinimumWidth
+                property double displayValue: 10.0 * (value - minValue) / (maxValue - minValue)
+                text: displayValue.toFixed(2) + "V"
+                value: model.value
+                light: model
+                onValueChanged: model.value = value
             }
 
-            Repeater {
-                model: root.controller !== null ? root.controller.analogicLights : null
+            ILControllerLight {
+                visible: model.lightType === Light.PWM
+                Layout.fillWidth: true
+                Layout.leftMargin: root.smallMargins
+                Layout.rightMargin: root.smallMargins
+                labelMinimumWidth: root.valueLabelMinimumWidth
+                property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
+                text: displayValue + "%"
+                light: model
+                value: model.value
+                onValueChanged: model.value = value
+            }
 
-                delegate: ColumnLayout {
-                    Layout.fillWidth: true
+            ILControllerLight {
+                visible: model.lightType === Light.RGB
+                Layout.fillWidth: true
+                Layout.leftMargin: root.smallMargins
+                Layout.rightMargin: root.smallMargins
+                labelMinimumWidth: root.valueLabelMinimumWidth
+                property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
+                text: "%1% R".arg(displayValue)
+                value: model.redValue
+                light: model
+                onValueChanged: model.redValue = value
+            }
 
-                    Rectangle {
-                        Layout.fillWidth: true
-                        height: 1
-                        color: "gray"
-                        visible: index > 0
-                    }
+            ILControllerLight {
+                visible: model.lightType === Light.RGB
+                Layout.fillWidth: true
+                Layout.leftMargin: root.smallMargins
+                Layout.rightMargin: root.smallMargins
+                labelMinimumWidth: root.valueLabelMinimumWidth
+                property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
+                text: "%1% G".arg(displayValue)
+                value: model.greenValue
+                light: model
+                onValueChanged: model.greenValue = value
+            }
 
-                    Label {
-                        Layout.fillWidth: true
-                        Layout.leftMargin: root.lightMargin
-                        text: "<b>Light %1<b>".arg(name)
-                    }
-
-                    ILControllerLight {
-                        Layout.fillWidth: true
-                        Layout.leftMargin: root.lightMargin
-                        labelMinimumWidth: root.controllerLightLabelMinimumWidth
-                        property double displayValue: 10.0 * (value - minValue) / (maxValue - minValue)
-                        text: displayValue.toFixed(2) + "V"
-                        value: model.value
-                        light: model
-                        onValueChanged: model.value = value
-                    }
-                }
+            ILControllerLight {
+                visible: model.lightType === Light.RGB
+                Layout.fillWidth: true
+                Layout.leftMargin: root.smallMargins
+                Layout.rightMargin: root.smallMargins
+                labelMinimumWidth: root.valueLabelMinimumWidth
+                property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
+                text: "%1% B".arg(displayValue)
+                value: model.blueValue
+                light: model
+                onValueChanged: model.blueValue = value
             }
         }
     }

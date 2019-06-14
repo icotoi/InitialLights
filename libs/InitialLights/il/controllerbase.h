@@ -7,9 +7,7 @@
 
 namespace il {
 
-class PWMLight;
-class RGBLight;
-class AnalogicLight;
+class Light;
 
 class INITIALLIGHTSSHARED_EXPORT ControllerBase : public QObject
 {
@@ -33,9 +31,7 @@ private:
     QML_READONLY_AUTO_PROPERTY(bool, isConnected)
     QML_READONLY_AUTO_PROPERTY(QString, message)
 
-    QML_OBJMODEL_PROPERTY(il::AnalogicLight, analogicLights)
-    QML_OBJMODEL_PROPERTY(il::PWMLight, pwmLights)
-    QML_OBJMODEL_PROPERTY(il::RGBLight, rgbLights)
+    QML_OBJMODEL_PROPERTY(il::Light, lights)
 
 public:
     ~ControllerBase();
@@ -51,8 +47,6 @@ public slots:
 
 protected:
     explicit ControllerBase(QObject *parent = nullptr);
-
-    void clearLights();
 };
 
 } // namespace il
