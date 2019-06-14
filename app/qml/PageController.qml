@@ -25,12 +25,6 @@ Item {
                              ? controller.message
                              : ""
 
-//    onControllerChanged: {
-//        if (controller !== null) {
-//            controller.connectToController()
-//        }
-//    }
-
     ListModel {
         id: designModel
         ListElement {

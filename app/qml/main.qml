@@ -204,6 +204,16 @@ ApplicationWindow {
 
     Component {
         id: controllerView
-        PageController {}
+        PageController {
+            property var extraToolbarItems: [
+                refreshButton
+            ]
+            ToolButton {
+                id: refreshButton
+                icon.source: ILStyle.refreshControllerLightConfigurationSource
+                onClicked: controller.connectToController()
+                enabled: controller !== null ? !controller.isBusy : false
+            }
+        }
     }
 }
