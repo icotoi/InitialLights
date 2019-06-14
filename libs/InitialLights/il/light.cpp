@@ -106,4 +106,9 @@ void Light::write(QJsonObject &json) const
     }
 }
 
+QString Light::lightTypeName() const
+{
+    return QMetaEnum::fromType<LightType>().valueToKey(m_lightType);
+}
+
 } // namespace il

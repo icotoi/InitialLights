@@ -34,6 +34,8 @@ private:
     QML_WRITABLE_AUTO_PROPERTY(int, greenValue)
     QML_WRITABLE_AUTO_PROPERTY(int, blueValue)
 
+    Q_PROPERTY(QString lightTypeName READ lightTypeName NOTIFY lightTypeChanged)
+
 public:
     explicit Light(QObject* parent = nullptr);
     explicit Light(LightType lightType, const QString& name, QObject* parent = nullptr);
@@ -41,6 +43,11 @@ public:
 
     virtual void read(const QJsonObject& json);
     virtual void write(QJsonObject& json) const;
+
+    QString lightTypeName() const;
+
+signals:
+    void lightTypeChanged(QString lightTypeName);
 
 private:
     static LightType readLightTypeFrom(const QJsonObject& json);
