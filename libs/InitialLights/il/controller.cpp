@@ -50,8 +50,6 @@ void Controller::clear()
     }
 
     update_isBusy(false);
-
-    qDebug() << "light controller internal state cleared";
 }
 
 void Controller::read(const QJsonObject &json)
