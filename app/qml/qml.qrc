@@ -52,5 +52,7 @@
         <file>Images/material.io-baseline-refresh-24px.svg</file>
         <file>Controls/ILControllerLight.qml</file>
         <file>Controls/ILControllerLightSectionLabel.qml</file>
+        <file>PageLightList.qml</file>
+        <file>DemoConfig.json</file>
     </qresource>
 </RCC>

@@ -1,0 +1,112 @@
+{
+    "controllers": {
+        "controllers": [
+            {
+                "address": "{5f8dfedd-b3a3-4ca8-bc6c-f404685b64be}",
+                "lights": [
+                    {
+                        "maxValue": 255,
+                        "minValue": 0,
+                        "name": "1",
+                        "type": "PWM",
+                        "value": 85,
+                        "valueIncrementTag": 1
+                    },
+                    {
+                        "blueValue": 0,
+                        "greenValue": 0,
+                        "maxValue": 255,
+                        "minValue": 0,
+                        "name": "2",
+                        "redValue": 153,
+                        "type": "RGB",
+                        "valueIncrementTag": 1
+                    }
+                ],
+                "name": "Entrance",
+                "type": "V1_1xPWM_1xRGB"
+            },
+            {
+                "address": "{5f8dfedd-b3a3-4ca8-bc6c-f404685b64be}",
+                "lights": [
+                    {
+                        "maxValue": 255,
+                        "minValue": 0,
+                        "name": "1",
+                        "type": "PWM",
+                        "value": 85,
+                        "valueIncrementTag": 1
+                    },
+                    {
+                        "maxValue": 255,
+                        "minValue": 0,
+                        "name": "2",
+                        "type": "PWM",
+                        "value": 153,
+                        "valueIncrementTag": 1
+                    },
+                    {
+                        "maxValue": 255,
+                        "minValue": 0,
+                        "name": "3",
+                        "type": "PWM",
+                        "value": 0,
+                        "valueIncrementTag": 1
+                    },
+                    {
+                        "maxValue": 255,
+                        "minValue": 0,
+                        "name": "4",
+                        "type": "PWM",
+                        "value": 0,
+                        "valueIncrementTag": 1
+                    }
+                ],
+                "name": "Livingroom",
+                "type": "V1_4xPWM"
+            },
+            {
+                "address": "{5f8dfedd-b3a3-4ca8-bc6c-f404685b64be}",
+                "lights": [
+                    {
+                        "maxValue": 255,
+                        "minValue": 0,
+                        "name": "1",
+                        "type": "Analogic",
+                        "value": 85,
+                        "valueIncrementTag": 1
+                    },
+                    {
+                        "maxValue": 255,
+                        "minValue": 0,
+                        "name": "2",
+                        "type": "Analogic",
+                        "value": 153,
+                        "valueIncrementTag": 1
+                    }
+                ],
+                "name": "Bedroom",
+                "type": "V1_2x10V"
+            }
+        ]
+    },
+    "rooms": [
+        {
+            "name": "Livingroom"
+        },
+        {
+            "name": "Bedroom"
+        }
+    ],
+    "scenes": [
+        {
+            "name": "Scene 0"
+        },
+        {
+            "name": "Scene 1"
+        },
+        {
+            "name": "Scene 2"
+        }
+    ]
+}

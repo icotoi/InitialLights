@@ -129,6 +129,7 @@ ApplicationWindow {
 
             lightList.onClicked: {
                 drawer.close()
+                showPage(lightsListView, {})
             }
         }
     }
@@ -166,9 +167,15 @@ ApplicationWindow {
                 updateToolbarForCurrentItem()
             }
 
+            lightList.onClicked: {
+                stackView.push(lightsListView)
+                updateToolbarForCurrentItem()
+            }
+
             clearLocalData.onClicked: {
                 backend.clearLocalData()
             }
+
             reloadDemoData.onClicked: {
                 backend.clearLocalData()
                 backend.loadLocalData()
@@ -215,5 +222,18 @@ ApplicationWindow {
                 enabled: controller !== null ? !controller.isBusy : false
             }
         }
+    }
+
+    Component {
+        id: lightsListView
+        PageLightList {
+            property string title: qsTr("Lights")
+            model: backend.controllerList.lights
+        }
+    }
+
+    Component.onCompleted: {
+        showPage(settingsView, {})
+//        showPage(lightsListView, {})
     }
 }

@@ -1,6 +1,7 @@
 #include "controllerlist.h"
 
 #include "controller.h"
+#include "light.h"
 
 #include <QJsonArray>
 #include <QJsonObject>
@@ -16,6 +17,7 @@ ControllerList::ControllerList(QObject *parent)
     , m_isBusy { false }
     , m_scanningTimeout { 3000 }
     , m_controllers { new QQmlObjectListModel<Controller>(this) }
+    , m_lights { new QQmlObjectListModel<Light>(this) }
 {
     connect(&m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
             this, &ControllerList::deviceDiscovered);
@@ -23,6 +25,9 @@ ControllerList::ControllerList(QObject *parent)
             this, &ControllerList::scanError);
     connect(&m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished,
             this, &ControllerList::scanFinished);
+
+    connect(m_controllers, &QAbstractListModel::rowsInserted, this, &ControllerList::onControllersInserted);
+    connect(m_controllers, &QAbstractListModel::rowsAboutToBeRemoved, this, &ControllerList::onControllersAboutToBeRemoved);
 }
 
 ControllerList::~ControllerList()
@@ -73,7 +78,7 @@ bool ControllerList::deviceAlreadyScanned(const QBluetoothDeviceInfo &info) cons
 {
     auto address = Controller::safeAddress(info);
     return std::any_of(m_controllers->begin(), m_controllers->end(), [address](Controller* controller){
-       return controller->address() == address;
+        return controller->address() == address;
     });
 }
 
@@ -110,8 +115,92 @@ void ControllerList::scanFinished()
     qDebug() << "scan finished";
     update_isBusy(false);
     set_message(m_controllers->size() == 0
-               ? "No Low Energy devices found"
-               : QString("Found %1 device(s)").arg(m_controllers->size()));
+                ? "No Low Energy devices found"
+                : QString("Found %1 device(s)").arg(m_controllers->size()));
+}
+
+void ControllerList::onControllersInserted(const QModelIndex &/*parent*/, int first, int last)
+{
+    for (int index = first; index <= last; ++index) {
+        auto controller = m_controllers->at(index);
+        if (!controller) {
+            qWarning() << "inserted NULL controller";
+            return;
+        }
+
+        qDebug() << "inserted controller:" << controller->address()
+                 << "with" << controller->get_lights()->count() << "lights";
+        auto lights = controller->get_lights();
+        for(auto it = lights->begin(); it != lights->end(); ++it) {
+            auto light = *it;
+            qDebug() << "inserted light:" << light->lightTypeName();
+            m_lights->append(light);
+        }
+
+        connect(controller->get_lights(), &QAbstractListModel::rowsInserted, this, &ControllerList::onLightsInserted);
+        connect(controller->get_lights(), &QAbstractListModel::rowsAboutToBeRemoved, this, &ControllerList::onLightsAboutToBeRemoved);
+    }
+}
+
+void ControllerList::onControllersAboutToBeRemoved(const QModelIndex &/*parent*/, int first, int last)
+{
+    for (int index = first; index <= last; ++index) {
+        auto controller = m_controllers->at(index);
+        if (!controller) {
+            qWarning() << "removing NULL controller";
+            return;
+        }
+
+        qDebug() << "removing:" << controller->address();
+
+        auto lights = controller->get_lights();
+        for(auto it = lights->begin(); it != lights->end(); ++it) {
+            auto light = *it;
+            qDebug() << "removing light:" << light->lightTypeName();
+            m_lights->remove(light);
+        }
+    }
+}
+
+void ControllerList::onLightsInserted(const QModelIndex &/*parent*/, int first, int last)
+{
+
+    auto lights = qobject_cast<const QQmlObjectListModelBase*>(sender());
+    if (!lights) {
+        qWarning() << "trying to use invalid lights model on lights inserted";
+        return;
+    }
+
+    for (int index = first; index <= last; ++index) {
+        auto light = qobject_cast<Light*>(lights->get(index));
+        if (!light) {
+            qWarning() << "inserted NULL light";
+            return;
+        }
+
+        qDebug() << "inserted light:" << light->lightTypeName();
+        m_lights->append(light);
+    }
+}
+
+void ControllerList::onLightsAboutToBeRemoved(const QModelIndex &/*parent*/, int first, int last)
+{
+    auto lights = qobject_cast<const QQmlObjectListModelBase*>(sender());
+    if (!lights) {
+        qWarning() << "trying to use invalid lights model on lights about to be removed";
+        return;
+    }
+
+    for (int index = first; index <= last; ++index) {
+        auto light = qobject_cast<Light*>(lights->get(index));
+        if (!light) {
+            qWarning() << "removing NULL light";
+            return;
+        }
+
+        qDebug() << "removing light:" << light->lightTypeName();
+        m_lights->remove(light);
+    }
 }
 
 }

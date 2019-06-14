@@ -111,4 +111,11 @@ QString Light::lightTypeName() const
     return QMetaEnum::fromType<LightType>().valueToKey(m_lightType);
 }
 
+QObject *Light::controller() const
+{
+    return parent()
+            ? parent()->parent()
+            : nullptr;
+}
+
 } // namespace il
