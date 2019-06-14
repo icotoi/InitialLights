@@ -1,32 +1,59 @@
 #pragma once
 
-#include "controllerbase.h"
+#include "initiallights_global.h"
+
+#include "QQmlAutoPropertyHelpers.h"
+#include "QQmlObjectListModel.h"
 
 #include <QLowEnergyController>
 #include <QLowEnergyService>
 
 namespace il {
 
-class INITIALLIGHTSSHARED_EXPORT Controller : public ControllerBase
+class Light;
+
+class INITIALLIGHTSSHARED_EXPORT Controller : public QObject
 {
+public:
+    enum ControllerType {
+        UndefinedControllerType,
+        V1_4xPWM,
+        V1_1xPWM_1xRGB,
+        V1_2x10V,
+    };
+    Q_ENUM(ControllerType)
+
+private:
     Q_OBJECT
+
+    QML_READONLY_AUTO_PROPERTY(il::Controller::ControllerType, controllerType)
+    QML_READONLY_AUTO_PROPERTY(QString, name)
+    QML_READONLY_AUTO_PROPERTY(QString, address)
+
+    QML_READONLY_AUTO_PROPERTY(bool, isBusy)
+    QML_READONLY_AUTO_PROPERTY(bool, isConnected)
+    QML_READONLY_AUTO_PROPERTY(QString, message)
+
+    QML_OBJMODEL_PROPERTY(il::Light, lights)
 
 public:
     explicit Controller(QObject *parent = nullptr);
     explicit Controller(const QBluetoothDeviceInfo &info, QObject *parent = nullptr);
-    ~Controller() override;
+    ~Controller();
+
+    void clear();
+    void read(const QJsonObject& json);
+    void write(QJsonObject& json) const;
 
     // NOTE: when I try to use 'address' instead of 'safeAddress',
     //       the compiler fails to distinguish between this and the address() getter
     static QString safeAddress(const QBluetoothDeviceInfo &info);
     static bool isValidDevice(const QBluetoothDeviceInfo &info);
 
-    void clear() override;
-    void read(const QJsonObject& json) override;
-
 public slots:
-    void connectToController() override;
-    void disconnectFromController() override;
+    void connectToController();
+    void disconnectFromController();
+    QByteArray updateDeviceCommand() const;
 
 private:
     //QLowEnergyController

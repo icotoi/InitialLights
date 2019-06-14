@@ -1,6 +1,7 @@
 #include "controller.h"
-
 #include "light.h"
+
+#include "jsonhelpers.h"
 
 #if defined (Q_OS_MAC)
 #include <QBluetoothUuid>
@@ -8,23 +9,36 @@
 #include <QBluetoothAddress>
 #endif
 
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QMetaEnum>
+
 namespace il {
 
 namespace  {
+const QString jsonNameTag { "name" };
+const QString jsonAddressTag { "address" };
+const QString jsonControllerTypeTag { "type" };
+const QString jsonLightsTag { "lights" };
+
 const QBluetoothUuid uuidService(QStringLiteral("6E400001-B5A3-F393-E0A9-E50E24DCCA9E"));
 const QBluetoothUuid writeCharacteristicUuid(QStringLiteral("6E400002-B5A3-F393-E0A9-E50E24DCCA9E"));
 const QBluetoothUuid readCharacteristicUuid(QStringLiteral("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"));
 }
 
 Controller::Controller(QObject *parent)
-    : ControllerBase (parent)
+    : QObject(parent)
+    , m_controllerType { UndefinedControllerType }
+    , m_isBusy { false }
+    , m_isConnected { false }
+    , m_lights { new QQmlObjectListModel<Light>(this) }
 {
 }
 
 Controller::Controller(const QBluetoothDeviceInfo &info, QObject *parent)
-    : ControllerBase (parent)
-    , m_info { info }
+    : Controller(parent)
 {
+    m_info = info;
     update_name(m_info.name());
     update_address(safeAddress(m_info));
 }
@@ -34,9 +48,65 @@ Controller::~Controller()
     clear();
 }
 
+QByteArray Controller::updateDeviceCommand() const
+{
+    QString command;
+
+    switch (controllerType()) {
+    case V1_2x10V:
+    {
+        Q_ASSERT(m_lights->size() == 2);
+        Q_ASSERT(m_lights->at(0)->lightType() == Light::Analogic);
+        Q_ASSERT(m_lights->at(1)->lightType() == Light::Analogic);
+
+        command = QStringLiteral(u"US%1%2%3\n")
+                .arg(m_lights->at(0)->value(), 2, 16, QChar('0'))
+                .arg(m_lights->at(1)->value(), 2, 16, QChar('0'))
+                .arg(2, 6, 16, QChar('0'))
+                ;
+        break;
+    }
+    case V1_4xPWM: {
+        Q_ASSERT(m_lights->size() == 4);
+        Q_ASSERT(m_lights->at(0)->lightType() == Light::PWM);
+        Q_ASSERT(m_lights->at(1)->lightType() == Light::PWM);
+        Q_ASSERT(m_lights->at(2)->lightType() == Light::PWM);
+        Q_ASSERT(m_lights->at(3)->lightType() == Light::PWM);
+
+        command = QString("US%1%2%3%4%5\n")
+                .arg(m_lights->at(0)->value(), 2, 16, QChar('0'))
+                .arg(m_lights->at(1)->value(), 2, 16, QChar('0'))
+                .arg(m_lights->at(2)->value(), 2, 16, QChar('0'))
+                .arg(m_lights->at(3)->value(), 2, 16, QChar('0'))
+                .arg(3, 2, 16, QChar('0'));
+        break;
+    }
+    case V1_1xPWM_1xRGB: {
+        Q_ASSERT(m_lights->size() == 2);
+        Q_ASSERT(m_lights->at(0)->lightType() == Light::PWM);
+        Q_ASSERT(m_lights->at(1)->lightType() == Light::RGB);
+
+        auto pwmLight = m_lights->at(0);
+        auto rgbLight = m_lights->at(1);
+        command = QString("US%1%2%3%4%5\n")
+                .arg(pwmLight->value(), 2, 16, QChar('0'))
+                .arg(rgbLight->redValue(), 2, 16, QChar('0'))
+                .arg(rgbLight->greenValue(), 2, 16, QChar('0'))
+                .arg(rgbLight->blueValue(), 2, 16, QChar('0'))
+                .arg(1, 2, 16, QChar('0'));
+        break;
+    }
+    default:
+        qWarning() << "don't know how to save controller state for controller type:" << controllerType();
+        break;
+    }
+
+    return command.toUpper().toUtf8();
+}
+
 void Controller::clear()
 {
-    ControllerBase::clear();
+    m_lights->clear();
 
     m_hasReceivedInitialState = false;
 
@@ -54,12 +124,32 @@ void Controller::clear()
 
 void Controller::read(const QJsonObject &json)
 {
-    ControllerBase::read(json);
+    safeRead(json, jsonNameTag, [&](const QString& s) { update_name(s); });
+    safeRead(json, jsonAddressTag, [&](const QString& s) { update_address(s); });
+    safeRead(json, jsonControllerTypeTag, [&](const QString& s) {
+        int value = QMetaEnum::fromType<ControllerType>().keyToValue(s.toStdString().c_str());
+        if (value >= 0) {
+            ControllerType ct { ControllerType(value) };
+            update_controllerType(ct);
+        }
+    });
+
+    readModel(json, jsonLightsTag, m_lights);
+
 #if defined(Q_OS_MAC)
     m_info = QBluetoothDeviceInfo(QBluetoothUuid(address()), name(), 0);
 #else
     m_info = QBluetoothDeviceInfo(QBluetoothAddress(address()), name(), 0);
 #endif
+}
+
+void Controller::write(QJsonObject &json) const
+{
+    json[jsonNameTag] = m_name;
+    json[jsonAddressTag] = m_address;
+    json[jsonControllerTypeTag] = QMetaEnum::fromType<ControllerType>().valueToKey(m_controllerType);
+
+    writeModel(json, jsonLightsTag, m_lights);
 }
 
 QString Controller::safeAddress(const QBluetoothDeviceInfo &info)
@@ -324,5 +414,4 @@ bool Controller::writeToDevice(const QByteArray &data)
 
     return true;
 }
-
 } // namespace il

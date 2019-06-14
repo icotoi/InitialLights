@@ -15,7 +15,7 @@ ControllerList::ControllerList(QObject *parent)
     : QObject (parent)
     , m_isBusy { false }
     , m_scanningTimeout { 3000 }
-    , m_controllers { new QQmlObjectListModel<ControllerBase>(this) }
+    , m_controllers { new QQmlObjectListModel<Controller>(this) }
 {
     connect(&m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
             this, &ControllerList::deviceDiscovered);
@@ -72,7 +72,7 @@ void ControllerList::scan()
 bool ControllerList::deviceAlreadyScanned(const QBluetoothDeviceInfo &info) const
 {
     auto address = Controller::safeAddress(info);
-    return std::any_of(m_controllers->begin(), m_controllers->end(), [address](ControllerBase* controller){
+    return std::any_of(m_controllers->begin(), m_controllers->end(), [address](Controller* controller){
        return controller->address() == address;
     });
 }
@@ -81,7 +81,7 @@ void ControllerList::deviceDiscovered(const QBluetoothDeviceInfo &info)
 {
     if (Controller::isValidDevice(info)) {
         if (!deviceAlreadyScanned(info)) {
-            ControllerBase* controller = new Controller(info);
+            Controller* controller = new Controller(info);
             m_controllers->append(controller);
             qWarning() << "LE Device name:" << controller->name()
                        << "address:" << controller->address() << "scanned; adding it to the devices list...";
