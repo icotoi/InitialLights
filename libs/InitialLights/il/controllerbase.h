@@ -7,7 +7,7 @@
 
 namespace il {
 
-class LightBase;
+class Light;
 
 class INITIALLIGHTSSHARED_EXPORT ControllerBase : public QObject
 {
@@ -31,7 +31,7 @@ private:
     QML_READONLY_AUTO_PROPERTY(bool, isConnected)
     QML_READONLY_AUTO_PROPERTY(QString, message)
 
-    QML_OBJMODEL_PROPERTY(il::LightBase, lights)
+    QML_OBJMODEL_PROPERTY(il::Light, lights)
 
 public:
     ~ControllerBase();

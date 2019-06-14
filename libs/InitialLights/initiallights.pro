@@ -25,28 +25,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        il/analogiclight.cpp \
         il/backend.cpp \
         il/controller.cpp \
         il/controllerbase.cpp \
         il/controllerlist.cpp \
         il/jsonhelpers.cpp \
-        il/lightbase.cpp \
-        il/pwmlight.cpp \
-        il/rgblight.cpp \
+        il/light.cpp \
         il/room.cpp \
         il/scene.cpp
 
 HEADERS += \
-        il/analogiclight.h \
         il/backend.h \
         il/controller.h \
         il/controllerbase.h \
         il/controllerlist.h \
         il/jsonhelpers.h \
-        il/lightbase.h \
-        il/pwmlight.h \
-        il/rgblight.h \
+        il/light.h \
         il/room.h \
         il/scene.h \
         initiallights_global.h

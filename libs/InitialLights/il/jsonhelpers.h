@@ -19,7 +19,8 @@ void readModel(const QJsonObject& json, const QString& tag, QQmlObjectListModel<
         model->clear();
         for (int i = 0; i < array.size(); ++i) {
             QJsonObject object = array[i].toObject();
-            auto item = T::fromJson(object);
+            auto item = new T;
+            item->read(object);
             model->append(item);
         }
     }

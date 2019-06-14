@@ -1,7 +1,5 @@
 #include "controllerbase.h"
-#include "pwmlight.h"
-#include "rgblight.h"
-#include "analogiclight.h"
+#include "light.h"
 
 #include "jsonhelpers.h"
 
@@ -23,7 +21,7 @@ ControllerBase::ControllerBase(QObject *parent)
     , m_controllerType { UndefinedControllerType }
     , m_isBusy { false }
     , m_isConnected { false }
-    , m_lights { new QQmlObjectListModel<LightBase>(this) }
+    , m_lights { new QQmlObjectListModel<Light>(this) }
 {
 }
 
@@ -40,63 +38,44 @@ QByteArray ControllerBase::updateDeviceCommand() const
     case V1_2x10V:
     {
         Q_ASSERT(m_lights->size() == 2);
+        Q_ASSERT(m_lights->at(0)->lightType() == Light::Analogic);
+        Q_ASSERT(m_lights->at(1)->lightType() == Light::Analogic);
 
-        auto light0 = qobject_cast<AnalogicLight*>(m_lights->at(0));
-        auto light1 = qobject_cast<AnalogicLight*>(m_lights->at(1));
-
-        if (light0 && light1) {
-            command = QStringLiteral(u"US%1%2%3\n")
-                    .arg(light0->value(), 2, 16, QChar('0'))
-                    .arg(light1->value(), 2, 16, QChar('0'))
-                    .arg(2, 6, 16, QChar('0'))
-                    ;
-        } else {
-            qWarning() << "invalid data: expected 2 analogic lights - got:" << m_lights->at(0) << m_lights->at(1);
-        }
+        command = QStringLiteral(u"US%1%2%3\n")
+                .arg(m_lights->at(0)->value(), 2, 16, QChar('0'))
+                .arg(m_lights->at(1)->value(), 2, 16, QChar('0'))
+                .arg(2, 6, 16, QChar('0'))
+                ;
         break;
     }
     case V1_4xPWM: {
         Q_ASSERT(m_lights->size() == 4);
+        Q_ASSERT(m_lights->at(0)->lightType() == Light::PWM);
+        Q_ASSERT(m_lights->at(1)->lightType() == Light::PWM);
+        Q_ASSERT(m_lights->at(2)->lightType() == Light::PWM);
+        Q_ASSERT(m_lights->at(3)->lightType() == Light::PWM);
 
-        auto light0 = qobject_cast<PWMLight*>(m_lights->at(0));
-        auto light1 = qobject_cast<PWMLight*>(m_lights->at(1));
-        auto light2 = qobject_cast<PWMLight*>(m_lights->at(2));
-        auto light3 = qobject_cast<PWMLight*>(m_lights->at(3));
-
-        if (light0 && light1 && light2 && light3) {
-            command = QString("US%1%2%3%4%5\n")
-                    .arg(light0->value(), 2, 16, QChar('0'))
-                    .arg(light1->value(), 2, 16, QChar('0'))
-                    .arg(light2->value(), 2, 16, QChar('0'))
-                    .arg(light3->value(), 2, 16, QChar('0'))
-                    .arg(3, 2, 16, QChar('0'));
-        } else {
-            qWarning() << "invalid data: expected 4 pwm lights - got:"
-                       << m_lights->at(0)
-                       << m_lights->at(1)
-                       << m_lights->at(2)
-                       << m_lights->at(3);
-        }
+        command = QString("US%1%2%3%4%5\n")
+                .arg(m_lights->at(0)->value(), 2, 16, QChar('0'))
+                .arg(m_lights->at(1)->value(), 2, 16, QChar('0'))
+                .arg(m_lights->at(2)->value(), 2, 16, QChar('0'))
+                .arg(m_lights->at(3)->value(), 2, 16, QChar('0'))
+                .arg(3, 2, 16, QChar('0'));
         break;
     }
     case V1_1xPWM_1xRGB: {
         Q_ASSERT(m_lights->size() == 2);
+        Q_ASSERT(m_lights->at(0)->lightType() == Light::PWM);
+        Q_ASSERT(m_lights->at(1)->lightType() == Light::RGB);
 
-        auto pwmLight = qobject_cast<PWMLight*>(m_lights->at(0));
-        auto rgbLight = qobject_cast<RGBLight*>(m_lights->at(1));
-
-        if (pwmLight && rgbLight) {
-            command = QString("US%1%2%3%4%5\n")
-                    .arg(pwmLight->value(), 2, 16, QChar('0'))
-                    .arg(rgbLight->redValue(), 2, 16, QChar('0'))
-                    .arg(rgbLight->greenValue(), 2, 16, QChar('0'))
-                    .arg(rgbLight->blueValue(), 2, 16, QChar('0'))
-                    .arg(1, 2, 16, QChar('0'));
-        } else {
-            qWarning() << "invalid data: expected 1 pwm and 1 rgb light - got:"
-                       << m_lights->at(0)
-                       << m_lights->at(1);
-        }
+        auto pwmLight = m_lights->at(0);
+        auto rgbLight = m_lights->at(1);
+        command = QString("US%1%2%3%4%5\n")
+                .arg(pwmLight->value(), 2, 16, QChar('0'))
+                .arg(rgbLight->redValue(), 2, 16, QChar('0'))
+                .arg(rgbLight->greenValue(), 2, 16, QChar('0'))
+                .arg(rgbLight->blueValue(), 2, 16, QChar('0'))
+                .arg(1, 2, 16, QChar('0'));
         break;
     }
     default:
