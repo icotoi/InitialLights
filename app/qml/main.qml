@@ -228,7 +228,7 @@ ApplicationWindow {
         id: lightsListView
         PageLightList {
             property string title: qsTr("Lights")
-            model: backend.controllerList.lights
+            model: backend.lights
         }
     }
 

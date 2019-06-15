@@ -1,6 +1,8 @@
 #include "backend.h"
 
+#include "controller.h"
 #include "controllerlist.h"
+#include "light.h"
 #include "room.h"
 #include "scene.h"
 
@@ -41,7 +43,12 @@ BackEnd::BackEnd(QObject *parent)
     , m_controllerList { new ControllerList(this) }
     , m_rooms { new QQmlObjectListModel<Room>(this) }
     , m_scenes { new QQmlObjectListModel<Scene>(this) }
+    , m_lights { new QQmlObjectListModel<Light>(this) }
 {
+    auto controllers = m_controllerList->get_controllers();
+
+    connect(controllers, &QAbstractListModel::rowsInserted, this, &BackEnd::onControllersInserted);
+    connect(controllers, &QAbstractListModel::rowsAboutToBeRemoved, this, &BackEnd::onControllersAboutToBeRemoved);
 }
 
 void BackEnd::clearLocalData()
@@ -146,6 +153,91 @@ void BackEnd::write(QJsonObject &json) const
         sceneArray.append(sceneObject);
     });
     json[jsonScenesTag] = sceneArray;
+}
+
+void BackEnd::onControllersInserted(const QModelIndex &/*parent*/, int first, int last)
+{
+    auto controllers = m_controllerList->get_controllers();
+    for (int index = first; index <= last; ++index) {
+        auto controller = controllers->at(index);
+        if (!controller) {
+            qWarning() << "inserted NULL controller";
+            return;
+        }
+
+        qDebug() << "inserted controller:" << controller->address()
+                 << "with" << controller->get_lights()->count() << "lights";
+        auto lights = controller->get_lights();
+        for(auto it = lights->begin(); it != lights->end(); ++it) {
+            auto light = *it;
+            qDebug() << "inserted light:" << light->lightTypeName();
+            m_lights->append(light);
+        }
+
+        connect(controller->get_lights(), &QAbstractListModel::rowsInserted, this, &BackEnd::onLightsInserted);
+        connect(controller->get_lights(), &QAbstractListModel::rowsAboutToBeRemoved, this, &BackEnd::onLightsAboutToBeRemoved);
+    }
+}
+
+void BackEnd::onControllersAboutToBeRemoved(const QModelIndex &/*parent*/, int first, int last)
+{
+    auto controllers = m_controllerList->get_controllers();
+    for (int index = first; index <= last; ++index) {
+        auto controller = controllers->at(index);
+        if (!controller) {
+            qWarning() << "removing NULL controller";
+            return;
+        }
+
+        qDebug() << "removing:" << controller->address();
+
+        auto lights = controller->get_lights();
+        for(auto it = lights->begin(); it != lights->end(); ++it) {
+            auto light = *it;
+            qDebug() << "removing light:" << light->lightTypeName();
+            m_lights->remove(light);
+        }
+    }
+}
+
+void BackEnd::onLightsInserted(const QModelIndex &/*parent*/, int first, int last)
+{
+    auto lights = qobject_cast<const QQmlObjectListModelBase*>(sender());
+    if (!lights) {
+        qWarning() << "trying to use invalid lights model on lights inserted";
+        return;
+    }
+
+    for (int index = first; index <= last; ++index) {
+        auto light = qobject_cast<Light*>(lights->get(index));
+        if (!light) {
+            qWarning() << "inserted NULL light";
+            return;
+        }
+
+        qDebug() << "inserted light:" << light->lightTypeName();
+        m_lights->append(light);
+    }
+}
+
+void BackEnd::onLightsAboutToBeRemoved(const QModelIndex &/*parent*/, int first, int last)
+{
+    auto lights = qobject_cast<const QQmlObjectListModelBase*>(sender());
+    if (!lights) {
+        qWarning() << "trying to use invalid lights model on lights about to be removed";
+        return;
+    }
+
+    for (int index = first; index <= last; ++index) {
+        auto light = qobject_cast<Light*>(lights->get(index));
+        if (!light) {
+            qWarning() << "removing NULL light";
+            return;
+        }
+
+        qDebug() << "removing light:" << light->lightTypeName();
+        m_lights->remove(light);
+    }
 }
 
 } // namespace il
