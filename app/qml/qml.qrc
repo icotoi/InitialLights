@@ -50,9 +50,9 @@
         <file>Images/material.io-baseline-tune-24px.svg</file>
         <file>Images/material.io-baseline-delete-24px.svg</file>
         <file>Images/material.io-baseline-refresh-24px.svg</file>
-        <file>Controls/ILControllerLight.qml</file>
-        <file>Controls/ILControllerLightSectionLabel.qml</file>
+        <file>Controls/ILLight.qml</file>
         <file>PageLightList.qml</file>
         <file>DemoConfig.json</file>
+        <file>Controls/ILLabeledSlider.qml</file>
     </qresource>
 </RCC>
