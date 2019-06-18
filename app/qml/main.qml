@@ -149,8 +149,9 @@ ApplicationWindow {
     Component {
         id: roomListView
         PageRoomList {
-            property string title: qsTr("Rooms")
             model: backend.rooms
+
+            addRoomButton.onClicked: backend.addNewRoom()
 
             onShowRoom: {
                 stackView.push(roomView, {

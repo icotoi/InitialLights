@@ -30,6 +30,8 @@ public slots:
     void loadLocalData();
     void saveLocalData();
 
+    void addNewRoom();
+
 private:
     void read(const QJsonObject& json);
     void write(QJsonObject& json) const;

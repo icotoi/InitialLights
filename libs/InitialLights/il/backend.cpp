@@ -104,6 +104,13 @@ void BackEnd::saveLocalData()
     saveFile.write(saveDoc.toJson());
 }
 
+void BackEnd::addNewRoom()
+{
+    auto room = new Room;
+    room->set_name("Room");
+    m_rooms->append(room);
+}
+
 void BackEnd::read(const QJsonObject &json)
 {
     if (json.contains(jsonControllersTag) && json[jsonControllersTag].isObject())

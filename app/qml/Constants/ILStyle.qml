@@ -57,6 +57,8 @@ QtObject {
 
     property string refreshControllerLightConfigurationSource: "Images/material.io-baseline-refresh-24px.svg"
 
+    property string addIconSource: "Images/material.io-sharp-add-24px.svg"
+
     // Demo stuff
     property string clearLocalDataIconSource: "Images/material.io-baseline-delete-24px.svg"
     property string reloadDemoDataIconSource: "Images/material.io-baseline-refresh-24px.svg"
