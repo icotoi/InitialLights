@@ -37,6 +37,8 @@ Item {
 
         delegate: ILLight {
             width: listView.width
+            isControllerNameVisible: false
+            light: model
         }
     }
 

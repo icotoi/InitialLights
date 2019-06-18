@@ -106,7 +106,7 @@ void BackEnd::saveLocalData()
 
 void BackEnd::addNewRoom()
 {
-    auto room = new Room;
+    auto room = new Room(m_controllerList);
     room->set_name("Room");
     m_rooms->append(room);
 }
@@ -121,7 +121,7 @@ void BackEnd::read(const QJsonObject &json)
         m_rooms->clear();
         for (int i = 0; i < roomArray.size(); ++i) {
             QJsonObject roomObject = roomArray[i].toObject();
-            auto room = new il::Room;
+            auto room = new il::Room(m_controllerList);
             room->read(roomObject);
             m_rooms->append(room);
         }

@@ -29,6 +29,8 @@ public:
     void read(const QJsonObject& json);
     void write(QJsonObject& json) const;
 
+    Controller* findControllerByAddress(const QString& address) const;
+
 public slots:
     void scan();
 

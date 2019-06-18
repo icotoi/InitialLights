@@ -10,14 +10,15 @@
 #include <QQmlContext>
 
 #include "il/backend.h"
-#include "il/room.h"
 #include "il/controllerlist.h"
+#include "il/room.h"
 #include "il/light.h"
 
 int main(int argc, char *argv[])
 {
-    qmlRegisterUncreatableType<il::Light>("InitialLights", 1, 0, "Light", "Type cannot be created in QML");
     qmlRegisterUncreatableType<il::ControllerList>("InitialLights", 1, 0, "ControllerList", "Type cannot be created in QML");
+    qmlRegisterUncreatableType<il::Room>("InitialLights", 1, 0, "Room", "Type cannot be created in QML");
+    qmlRegisterUncreatableType<il::Light>("InitialLights", 1, 0, "Light", "Type cannot be created in QML");
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 

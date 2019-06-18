@@ -3,9 +3,11 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
 RowLayout {
-    property var light: undefined
-    property alias text: label.text
     property alias value: slider.value
+    property alias minValue: slider.from
+    property alias maxValue: slider.to
+    property alias valueIncrement: slider.stepSize
+    property alias text: label.text
     property int labelMinimumWidth: 50
 
     Label {
@@ -17,8 +19,5 @@ RowLayout {
     Slider {
         id: slider
         Layout.fillWidth: true
-        from: light !== undefined ? light.minValue: 0
-        to: light !== undefined ? light.maxValue : 100
-        stepSize: light !== undefined ? light.valueIncrement : 1
     }
 }

@@ -60,6 +60,17 @@ void ControllerList::write(QJsonObject &json) const
     json[jsonControllersTag] = controllerArray;
 }
 
+Controller *ControllerList::findControllerByAddress(const QString &address) const
+{
+    for(int i = 0; i < m_controllers->size(); ++i) {
+        auto controller = m_controllers->at(i);
+        if (controller->address() == address) {
+            return controller;
+        }
+    }
+    return nullptr;
+}
+
 void ControllerList::scan()
 {
     update_isBusy(true);

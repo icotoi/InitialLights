@@ -1,5 +1,6 @@
 #include "light.h"
 
+#include "room.h"
 #include "jsonhelpers.h"
 
 #include <QJsonObject>
@@ -20,6 +21,9 @@ const QString jsonValueTag { "value" };
 const QString jsonRedValueTag { "redValue" };
 const QString jsonGreenValueTag { "greenValue" };
 const QString jsonBlueValueTag { "blueValue" };
+
+const QString jsonSideXTag { "sideX" };
+const QString jsonSideYTag { "sideY" };
 }
 
 Light::Light(QObject *parent)
@@ -32,6 +36,9 @@ Light::Light(QObject *parent)
     , m_redValue { 0 }
     , m_greenValue { 0 }
     , m_blueValue { 0 }
+    , m_sideX { 0.0 }
+    , m_sideY { 0.0 }
+    , m_room { nullptr }
 {
 }
 
@@ -48,23 +55,23 @@ Light::~Light()
 
 void Light::read(const QJsonObject &json)
 {
-    safeRead(json, jsonLightTypeTag, [&](const QString& s) {
-        int value = QMetaEnum::fromType<LightType>().keyToValue(s.toStdString().c_str());
+    safeRead(json, jsonLightTypeTag, QJsonValue::String, [&](const QJsonValue& json) {
+        int value = QMetaEnum::fromType<LightType>().keyToValue(json.toString().toStdString().c_str());
         if (value >= 0) {
             LightType lt = LightType(value);
             update_lightType(lt);
         }
     });
 
-    safeRead(json, jsonNameTag, [&](const QString& s) { set_name(s); });
-    safeRead(json, jsonMinValueTag, [&](int v) { update_minValue(v); });
-    safeRead(json, jsonMaxValueTag, [&](int v) { update_maxValue(v); });
-    safeRead(json, jsonValueIncrementTag, [&](int v) { update_valueIncrement(v); });
+    safeRead(json, jsonNameTag, QJsonValue::String, [&](const QJsonValue& json) { set_name(json.toString()); });
+    safeRead(json, jsonMinValueTag, QJsonValue::Double, [&](const QJsonValue& json) { update_minValue(json.toInt()); });
+    safeRead(json, jsonMaxValueTag, QJsonValue::Double, [&](const QJsonValue& json) { update_maxValue(json.toInt()); });
+    safeRead(json, jsonValueIncrementTag, QJsonValue::Double, [&](const QJsonValue& json) { update_valueIncrement(json.toInt()); });
 
     switch (m_lightType) {
     case PWM:
     case Analogic:
-        safeRead(json, jsonValueTag, [&](int v) { set_value(v); });
+        safeRead(json, jsonValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_value(json.toInt()); });
         set_redValue(0);
         set_greenValue(0);
         set_blueValue(0);
@@ -72,14 +79,17 @@ void Light::read(const QJsonObject &json)
         break;
     case RGB:
         set_value(0);
-        safeRead(json, jsonRedValueTag, [&](int v) { set_redValue(v); });
-        safeRead(json, jsonGreenValueTag, [&](int v) { set_greenValue(v); });
-        safeRead(json, jsonBlueValueTag, [&](int v) { set_blueValue(v); });
+        safeRead(json, jsonRedValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_redValue(json.toInt()); });
+        safeRead(json, jsonGreenValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_greenValue(json.toInt()); });
+        safeRead(json, jsonBlueValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_blueValue(json.toInt()); });
         break;
     default:
         qWarning() << "reading unknown light type";
         break;
     }
+
+    safeRead(json, jsonSideXTag, QJsonValue::Double, [&](const QJsonValue& json) { set_sideX(json.toDouble()); });
+    safeRead(json, jsonSideYTag, QJsonValue::Double, [&](const QJsonValue& json) { set_sideY(json.toDouble()); });
 }
 
 void Light::write(QJsonObject &json) const
@@ -104,6 +114,9 @@ void Light::write(QJsonObject &json) const
         qWarning() << "writing unknown light type";
         break;
     }
+
+    json[jsonSideXTag] = m_sideX;
+    json[jsonSideYTag] = m_sideY;
 }
 
 QString Light::lightTypeName() const
@@ -116,6 +129,34 @@ QObject *Light::controller() const
     return parent()
             ? parent()->parent()
             : nullptr;
+}
+
+void Light::setRoom(Room *room)
+{
+    if (m_room == room)
+        return;
+
+    if (m_room) {
+        m_room->get_lights()->remove(this);
+    }
+
+    m_room = room;
+
+    if (m_room) {
+        auto lights = m_room->get_lights();
+        if (lights) {
+            if (!lights->contains(this)) {
+                lights->append(this);
+            } else {
+                qWarning() << "room" << room->name() << "already has light" << m_name;
+            }
+        }
+    } else {
+        set_sideX(0);
+        set_sideY(0);
+    }
+
+    emit roomChanged(m_room);
 }
 
 } // namespace il

@@ -7,19 +7,24 @@ import InitialLights 1.0
 
 Item {
     id: root
+
     property int margins: 8
     property int valueLabelMinimumWidth: 50
     property int colorSwatchSize: 40
     property int colorSwatchRadius: 5
-    property bool isControllerVisible: false
-    property string label: qsTr("%1%2 Light")
-    .arg(isControllerVisible
-    ? ((model.controller.name !== ""
-    ? model.controller.name : model.controller.address) + ": ")
-    : "")
-    .arg(model.lightTypeName)
+
+    property bool isControllerNameVisible: true
+    property bool rgbSlidersVisible: true
+
+    property string controllerName: "Controller"
+
+    property var light: null
+
+    property string label: qsTr("%1%2 Light").arg(isControllerNameVisible ? (controllerName + ": ") : "").arg(light !== null ? light.lightTypeName : "")
 
     height: rowLayout.height
+
+    signal colorSwatchCliked(var color)
 
     RowLayout {
         id: rowLayout
@@ -41,92 +46,131 @@ Item {
             }
 
             TextField {
-                text: model.name
-                onTextChanged: model.name = text
+                id: nameTextField
                 placeholderText: qsTr("Light Name")
                 Layout.fillWidth: true
                 Layout.leftMargin: root.margins
                 Layout.rightMargin: root.margins
+                text: root.light !== null ? root.light.name : "Light"
+                onTextChanged: if (root.light !== null) { root.light.name = nameTextField.text }
             }
 
             Rectangle {
-                visible: model.lightType === Light.RGB
+                visible: root.light !== null && root.light.lightType === Light.RGB
                 Layout.leftMargin: root.margins
                 Layout.fillWidth: true
 //                width: root.colorSwatchSize
                 height: root.colorSwatchSize
                 radius: root.colorSwatchRadius
-                color:  "#%1%2%3"
-                .arg(model.redValue.toString(16).padStart(2, '0'))
-                .arg(model.greenValue.toString(16).padStart(2, '0'))
-                .arg(model.blueValue.toString(16).padStart(2, '0'))
+                color:  root.light !== null
+                        ? "#%1%2%3"
+                          .arg(root.light.redValue.toString(16).padStart(2, '0'))
+                          .arg(root.light.greenValue.toString(16).padStart(2, '0'))
+                          .arg(root.light.blueValue.toString(16).padStart(2, '0'))
+                        : "black"
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: root.colorSwatchClicked(parent.color)
+                }
             }
 
             ILLabeledSlider {
-                visible: model.lightType === Light.Analogic
+                id: analogicSlider
+                visible: root.light !== null && root.light.lightType === Light.Analogic
                 Layout.fillWidth: true
                 Layout.leftMargin: root.margins
                 Layout.rightMargin: root.margins
                 labelMinimumWidth: root.valueLabelMinimumWidth
-                property double displayValue: 10.0 * (value - minValue) / (maxValue - minValue)
+                property double displayValue: root.light !== null
+                                              ? 10.0 * (value - minValue) / (maxValue - minValue)
+                                              : 0
                 text: displayValue.toFixed(2) + "V"
-                value: model.value
-                light: model
-                onValueChanged: model.value = value
+
+                minValue: root.light !== null ? root.light.minValue : 0
+                maxValue: root.light !== null ? root.light.maxValue : 100
+                valueIncrement: root.light !== null ? root.light.valueIncrement : 1
+                value: root.light !== null ? root.light.value : 0
+                onValueChanged: if (root.light !== null) root.light.value = analogicSlider.value
             }
 
             ILLabeledSlider {
-                visible: model.lightType === Light.PWM// || model.lightType === Light.RGB
+                id: pwmSlider
+                visible: root.light !== null && root.light.lightType === Light.PWM
                 Layout.fillWidth: true
                 Layout.leftMargin: root.margins
                 Layout.rightMargin: root.margins
                 labelMinimumWidth: root.valueLabelMinimumWidth
-                property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
+                property int displayValue: root.light !== null
+                                           ? 100 * (value - minValue) / (maxValue - minValue)
+                                           : 0
                 text: displayValue + "%"
-                light: model
-                value: model.value
-                onValueChanged: model.value = value
+
+                minValue: root.light !== null ? root.light.minValue : 0
+                maxValue: root.light !== null ? root.light.maxValue : 100
+                valueIncrement: root.light !== null ? root.light.valueIncrement : 1
+                value: root.light !== null ? root.light.value : 0
+                onValueChanged: if (root.light !== null) root.light.value = pwmSlider.value
             }
 
             ILLabeledSlider {
-                visible: model.lightType === Light.RGB
+                id: redSlider
+                visible: root.light !== null && root.rgbSlidersVisible && root.light.lightType === Light.RGB
                 Layout.fillWidth: true
                 Layout.leftMargin: root.margins
                 Layout.rightMargin: root.margins
                 labelMinimumWidth: root.valueLabelMinimumWidth
-                property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
+                property int displayValue: root.light !== null
+                                           ? 100 * (value - minValue) / (maxValue - minValue)
+                                           : 0
                 text: "%1% R".arg(displayValue)
-                value: model.redValue
-                light: model
-                onValueChanged: model.redValue = value
+
+                minValue: root.light !== null ? root.light.minValue : 0
+                maxValue: root.light !== null ? root.light.maxValue : 100
+                valueIncrement: root.light !== null ? root.light.valueIncrement : 1
+                value: root.light !== null ? root.light.redValue : 0
+                onValueChanged: if (root.light !== null) root.light.redValue = redSlider.value
             }
 
             ILLabeledSlider {
-                visible: model.lightType === Light.RGB
+                id: greenSlider
+                visible: root.light !== null && root.rgbSlidersVisible && root.light.lightType === Light.RGB
                 Layout.fillWidth: true
                 Layout.leftMargin: root.margins
                 Layout.rightMargin: root.margins
                 labelMinimumWidth: root.valueLabelMinimumWidth
-                property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
+                property int displayValue: root.light !== undefined
+                                           ? 100 * (value - minValue) / (maxValue - minValue)
+                                           : 0
                 text: "%1% G".arg(displayValue)
-                value: model.greenValue
-                light: model
-                onValueChanged: model.greenValue = value
+
+                minValue: root.light !== null ? root.light.minValue : 0
+                maxValue: root.light !== null ? root.light.maxValue : 100
+                valueIncrement: root.light !== null ? root.light.valueIncrement : 1
+                value: root.light !== null ? root.light.greenValue : 0
+                onValueChanged: if (root.light !== null) root.light.greenValue = greenSlider.value
             }
 
             ILLabeledSlider {
-                visible: model.lightType === Light.RGB
+                id: blueSlider
+                visible: root.light !== null && root.rgbSlidersVisible && root.light.lightType === Light.RGB
                 Layout.fillWidth: true
                 Layout.leftMargin: root.margins
                 Layout.rightMargin: root.margins
                 labelMinimumWidth: root.valueLabelMinimumWidth
-                property int displayValue: 100 * (value - minValue) / (maxValue - minValue)
+                property int displayValue: root.light !== undefined
+                                           ? 100 * (value - minValue) / (maxValue - minValue)
+                                           : 0
                 text: "%1% B".arg(displayValue)
-                value: model.blueValue
-                light: model
-                onValueChanged: model.blueValue = value
+
+                minValue: root.light !== null ? root.light.minValue : 0
+                maxValue: root.light !== null ? root.light.maxValue : 100
+                valueIncrement: root.light !== null ? root.light.valueIncrement : 1
+                value: root.light !== null ? root.light.blueValue : 0
+                onValueChanged: if (root.light !== null) root.light.blueValue = blueSlider.value
             }
         }
+
         Switch {}
     }
 }
