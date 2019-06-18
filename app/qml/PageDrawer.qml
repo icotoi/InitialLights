@@ -14,7 +14,7 @@ PageDrawerForm {
 
     roomsRepeater {
         model: rooms
-        delegate: MenuItem {
+        delegate: ItemDelegate {
             Layout.fillWidth: true
             text: name
             onClicked: roomClicked(model)
@@ -23,7 +23,7 @@ PageDrawerForm {
 
     scenesRepeater {
         model: scenes
-        delegate: MenuItem {
+        delegate: ItemDelegate {
             enabled: false
             Layout.fillWidth: true
             text: name

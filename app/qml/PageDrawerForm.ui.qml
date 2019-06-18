@@ -29,7 +29,7 @@ Item {
             width: flickable.width
             spacing: 0
 
-            MenuItem {
+            ItemDelegate {
                 id: home
                 text: qsTr("Home")
                 icon.source: ILStyle.homeIconSource
@@ -78,21 +78,21 @@ Item {
                 Layout.fillWidth: true
             }
 
-            MenuItem {
+            ItemDelegate {
                 id: settings
                 text: qsTr("Settings")
                 Layout.fillWidth: true
                 icon.source: ILStyle.settingsIconSource
             }
 
-            MenuItem {
+            ItemDelegate {
                 id: controllerList
                 text: qsTr("Controllers")
                 Layout.fillWidth: true
                 icon.source: ILStyle.controllersIconSource
             }
 
-            MenuItem {
+            ItemDelegate {
                 id: lightList
                 text: qsTr("Lights")
                 Layout.fillWidth: true
