@@ -13,26 +13,43 @@ Item {
     property alias lightList: lightList
     property alias clearLocalData: clearLocalData
     property alias reloadDemoData: reloadDemoData
+    property alias roomList: roomList
 
     ColumnLayout {
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.top: parent.top
+        spacing: 0
+        anchors.fill: parent
 
-        Button {
+        ItemDelegate {
+            id: roomList
+            text: qsTr("Rooms")
+            Layout.fillWidth: true
+            icon.source: ILStyle.roomsIconSource
+        }
+
+        ItemDelegate {
+            id: scenesList
+            text: qsTr("Scenes")
+            enabled: false
+            Layout.fillWidth: true
+            icon.source: ILStyle.scenesIconSource
+        }
+
+        ItemDelegate {
             id: controllerList
             text: qsTr("Controllers")
-            flat: true
             Layout.fillWidth: true
             icon.source: ILStyle.controllersIconSource
         }
 
-        Button {
+        ItemDelegate {
             id: lightList
             text: qsTr("Lights")
-            flat: true
             Layout.fillWidth: true
             icon.source: ILStyle.lightsIconSource
+        }
+
+        Item {
+            Layout.fillHeight: true
         }
 
         Button {

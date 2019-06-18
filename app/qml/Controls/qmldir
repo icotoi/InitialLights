@@ -1,8 +1,0 @@
-module Controls
-ILColorWheel 1.0 ILColorWheel.qml
-ILMainPowerButton 1.0 ILMainPowerButton.qml
-ILRoomLight 1.0 ILRoomLight.qml
-ILRoomView 1.0 ILRoomView.qml
-ILToggleLedButton 1.0 ILToggleLedButton.qml
-ILLight 1.0 ILLight.qml
-ILLabeledSlider 1.0 ILLabeledSlider.qml

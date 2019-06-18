@@ -12,6 +12,7 @@ Item {
     property alias settings: settings
     property alias controllerList: controllerList
     property alias lightList: lightList
+    property alias roomList: roomList
 
     Rectangle {
         color: backgroundColor
@@ -42,12 +43,11 @@ Item {
                 Layout.fillWidth: true
             }
 
-            Label {
+            ItemDelegate {
+                id: roomList
                 text: qsTr("Rooms")
-                rightPadding: 8
-                font.pointSize: 10
                 Layout.fillWidth: true
-                horizontalAlignment: Text.AlignRight
+                icon.source: ILStyle.roomsIconSource
             }
 
             Repeater {
@@ -60,12 +60,12 @@ Item {
                 Layout.fillWidth: true
             }
 
-            Label {
+            ItemDelegate {
+                id: sceneList
                 text: qsTr("Scenes")
-                rightPadding: 8
-                font.pointSize: 10
+                enabled: false
                 Layout.fillWidth: true
-                horizontalAlignment: Text.AlignRight
+                icon.source: ILStyle.scenesIconSource
             }
 
             Repeater {
