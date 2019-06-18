@@ -27,7 +27,8 @@ PageRoomForm {
 
     signal updateMainToolbar()
 
-    lightView.visible: false
+    lightConfigurator.visible: (room !== null && roomView.currentIndex >= 0)
+    lightConfigurator.light: (room !== null && roomView.currentIndex >= 0) ? room.lights.get(roomView.currentIndex) : undefined
 
     roomView.lights: room !== null ? room.lights : null
 
@@ -59,7 +60,7 @@ PageRoomForm {
     ToolButton {
         id: deleteLightButton
         icon.source: "Images/material.io-sharp-delete-24px.svg"
-        visible: lightView.visible
+        visible: lightConfigurator.visible
         onClicked: roomView.removeCurrentLight()
     }
 

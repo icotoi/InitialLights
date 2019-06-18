@@ -9,7 +9,8 @@ import "Constants"
 Item {
     id: element
     property alias roomView: roomView
-    property alias lightView: lightView
+    property alias lightConfigurator: lightConfigurator
+
     clip: true
 
     ILRoomView {
@@ -25,7 +26,7 @@ Item {
     }
 
     ILLight {
-        id: lightView
+        id: lightConfigurator
         width: parent.width
         anchors.right: parent.right
         anchors.left: parent.left
@@ -33,6 +34,8 @@ Item {
         rgbSlidersVisible: false
     }
 }
+
+
 
 
 

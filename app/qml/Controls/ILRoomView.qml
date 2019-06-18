@@ -11,7 +11,7 @@ Item {
 
     property alias lights: lightsRepeater.model
     property alias image: image.source
-    property var currentLight: null
+    property int currentIndex: -1
 
 //    function removeCurrentLight() {
 //        if (currentLight) {
@@ -28,18 +28,13 @@ Item {
 //        }
 //    }
 
-//    QtObject {
-//        id: _
-//        property var lights: []
-
-//        function configureCurrentLight() {
-//            lights.forEach(function(light){
-//                if (light !== currentLight) {
-//                    light.checked = false
-//                }
-//            })
-//        }
-//    }
+    function checkOnlyCurrentLight() {
+        for (var index = 0; index < lightsRepeater.count; ++index) {
+            var item = lightsRepeater.itemAt(index)
+            if (index !== currentIndex)
+                item.checked = false
+        }
+    }
 
     Image {
         id: image
@@ -51,24 +46,10 @@ Item {
         id: mouseArea
         anchors.fill: parent
         onClicked: {
-            currentLight = null
-//            _.configureCurrentLight()
+            currentIndex = -1
+            checkOnlyCurrentLight()
         }
     }
-
-//    Component.onCompleted: {
-//        var lights = []
-//        for(var i = 0; i < children.length; ++i) {
-//            var child = children[i]
-//            if (child instanceof ILRoomLight) {
-//                lights.push(child)
-//            }
-//        }
-
-//        lights.forEach(function(light) {
-//            add(light)
-//        })
-//    }
 
     Repeater {
         id: lightsRepeater
@@ -83,8 +64,8 @@ Item {
             : (model.value - model.minValue) / (model.maxValue - model.minValue)
             dragTarget: control
             onToggled: {
-                //            currentLight = light.checked ? light : null
-                //            _.configureCurrentLight()
+                currentIndex = checked ? index : -1
+                checkOnlyCurrentLight()
             }
         }
     }
