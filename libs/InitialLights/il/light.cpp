@@ -145,7 +145,14 @@ void Light::setRoom(Room *room)
     m_room = room;
 
     if (m_room) {
-        m_room->get_lights()->append(this);
+        auto lights = m_room->get_lights();
+        if (lights) {
+            if (!lights->contains(this)) {
+                lights->append(this);
+            } else {
+                qWarning() << "room" << room->name() << "already has light" << m_name;
+            }
+        }
     } else {
         set_sideX(0);
         set_sideY(0);

@@ -26,16 +26,13 @@ void readModel(const QJsonObject& json, const QString& tag, QQmlObjectListModel<
 }
 
 template <typename T>
-void readModel(const QJsonObject &json, const QString &tag, QQmlObjectListModel<T>* model, std::function<T* (const QJsonObject &)> functor) {
+void readModel(const QJsonObject &json, const QString &tag, QQmlObjectListModel<T>* model, std::function<void (const QJsonObject &)> functor) {
     if (json.contains(tag) && json[tag].isArray()) {
         QJsonArray array { json[tag].toArray() };
         model->clear();
         for (int i = 0; i < array.size(); ++i) {
             QJsonObject object = array[i].toObject();
-            auto item = functor(object);
-            if (item) {
-                model->append(item);
-            }
+            functor(object);
         }
     }
 }

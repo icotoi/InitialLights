@@ -27,35 +27,35 @@ void Room::read(const QJsonObject &json)
 {
     safeRead(json, jsonNameTag, QJsonValue::String, [&](const QJsonValue& json) { set_name(json.toString()); });
 
-    readModel<Light>(json, jsonLightsTag, m_lights, [&](const QJsonObject& json) -> Light* {
+    readModel<Light>(json, jsonLightsTag, m_lights, [&](const QJsonObject& json) {
         QString address;
         int index = -1;
         safeRead(json, jsonControllerAddressTag, QJsonValue::String, [&](const QJsonValue& json) { address = json.toString(); });
         safeRead(json, jsonLightIndexTag, QJsonValue::Double, [&](const QJsonValue& json) { index = json.toInt(); });
         if (address.isEmpty() || index < 0) {
-            return nullptr;
+            return;
         }
 
         auto controller = m_controllerList->findControllerByAddress(address);
         if (!controller) {
             qWarning() << "could not find controller with address" << address;
-            return nullptr;
+            return;
         }
 
         auto lights = controller->get_lights();
         if (index >= lights->count()) {
             qWarning() << "could not find light" << (index + 1) << "- controller" << address << "only has" << lights->count() << "lights";
-            return nullptr;
+            return;
         }
 
         auto light = lights->at(index);
         if (light->room()) {
             qWarning() << "light already assigned to room" << light->room()->name();
-            return nullptr;
+            qWarning() << "room" << this->name() << "has" << m_lights->count() << "lights";
+            return;
         }
 
         light->setRoom(this);
-        return light;
     });
 }
 
