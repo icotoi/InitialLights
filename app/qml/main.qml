@@ -87,10 +87,6 @@ ApplicationWindow {
             RowLayout {
                 id: extraToolbarItems
             }
-
-//            ToolButton {
-//                icon.source: "Images/material.io-baseline-more_vert-24px.svg"
-//            }
         }
     }
 
@@ -107,6 +103,11 @@ ApplicationWindow {
             home.onClicked: {
                 drawer.close()
                 showHome()
+            }
+
+            roomList.onClicked: {
+                drawer.close()
+                showPage(roomListView, {})
             }
 
             onRoomClicked: {
@@ -146,6 +147,22 @@ ApplicationWindow {
     }
 
     Component {
+        id: roomListView
+        PageRoomList {
+            property string title: qsTr("Rooms")
+            model: backend.rooms
+
+            onShowRoom: {
+                stackView.push(roomView, {
+                                   room: room,
+                                   title: room.name
+                               })
+                updateToolbarForCurrentItem()
+            }
+        }
+    }
+
+    Component {
         id: roomView
         PageRoom {
             property string title: "Room"
@@ -162,6 +179,12 @@ ApplicationWindow {
         id: settingsView
         PageSettings {
             property string title: qsTr("Settings")
+
+            roomList.onClicked: {
+                stackView.push(roomListView)
+                updateToolbarForCurrentItem()
+            }
+
             controllerList.onClicked: {
                 stackView.push(controllerListView)
                 updateToolbarForCurrentItem()
