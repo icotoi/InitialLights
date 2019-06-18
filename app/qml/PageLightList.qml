@@ -13,7 +13,10 @@ Item {
 
         delegate: ILLight {
             width: parent.width
-            isControllerVisible: true
+            controllerName: model.controller.name !== ""
+                            ? model.controller.name
+                            : model.controller.address
+            light: model
         }
     }
 }
