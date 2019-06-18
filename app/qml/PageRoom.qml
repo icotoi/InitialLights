@@ -3,7 +3,11 @@ import QtQuick.Controls 2.12
 import QtQuick.Window 2.12
 import QtMultimedia 5.12
 
-PageRoomForm {
+import "Images"
+import "Controls"
+import "Constants"
+
+Item {
     id: root
 
     property var room: null
@@ -27,10 +31,7 @@ PageRoomForm {
 
     signal updateMainToolbar()
 
-    lightConfigurator.visible: (room !== null && roomView.currentIndex >= 0)
-    lightConfigurator.light: (room !== null && roomView.currentIndex >= 0) ? room.lights.get(roomView.currentIndex) : undefined
-
-    roomView.lights: room !== null ? room.lights : null
+    clip: true
 
     Component {
         id: lightSelectionView
@@ -87,6 +88,29 @@ PageRoomForm {
                 capturingImage = false
             }
         }
+    }
+
+    ILLight {
+        id: lightConfigurator
+        visible: (room !== null && roomView.currentIndex >= 0)
+        light: (room !== null && roomView.currentIndex >= 0) ? room.lights.get(roomView.currentIndex) : null
+        width: parent.width
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        rgbSlidersVisible: true
+    }
+
+    ILRoomView {
+        id: roomView
+
+        y: 0
+        width: 330
+        height: 330
+        anchors.horizontalCenter: parent.horizontalCenter
+        lights: room !== null ? room.lights : null
+
+        image: "Images/pixabay_illumination-lights-bulbs-731494_1920.jpg"
     }
 
     VideoOutput {

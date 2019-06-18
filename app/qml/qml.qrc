@@ -21,7 +21,6 @@
         <file>Images/power_on@2x.png</file>
         <file>Images/power_on@3x.png</file>
         <file>PageRoom.qml</file>
-        <file>PageRoomForm.ui.qml</file>
         <file>Images/pixabay_illumination-lights-bulbs-731494_1920.jpg</file>
         <file>Controls/ILRoomView.qml</file>
         <file>Controls/ILRoomLight.qml</file>
