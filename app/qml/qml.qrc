@@ -57,5 +57,6 @@
         <file>Controls/ILControllerItemDelegate.qml</file>
         <file>Images/material.io-baseline-photo_camera-24px.svg</file>
         <file>PageRoomList.qml</file>
+        <file>PageLightSelection.qml</file>
     </qresource>
 </RCC>

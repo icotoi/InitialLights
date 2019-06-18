@@ -10,14 +10,14 @@ PageDrawerForm {
     Material.theme: Material.Light
     backgroundColor: Material.accentColor
 
-    signal roomClicked(var room)
+    signal roomClicked(int index)
 
     roomsRepeater {
         model: rooms
         delegate: ItemDelegate {
             Layout.fillWidth: true
             text: name
-            onClicked: roomClicked(model)
+            onClicked: roomClicked(index)
         }
     }
 

@@ -32,6 +32,7 @@ Light::Light(QObject *parent)
     , m_redValue { 0 }
     , m_greenValue { 0 }
     , m_blueValue { 0 }
+    , m_room { nullptr }
 {
 }
 

@@ -112,10 +112,7 @@ ApplicationWindow {
 
             onRoomClicked: {
                 drawer.close()
-                showPage(roomView, {
-                             room: room,
-                             title: room.name
-                         })
+                showPage(roomView, { room: backend.rooms.get(index) })
             }
 
             settings.onClicked: {
@@ -130,7 +127,7 @@ ApplicationWindow {
 
             lightList.onClicked: {
                 drawer.close()
-                showPage(lightsListView, {})
+                showPage(lightListView, {})
             }
         }
     }
@@ -154,10 +151,7 @@ ApplicationWindow {
             addRoomButton.onClicked: backend.addNewRoom()
 
             onShowRoom: {
-                stackView.push(roomView, {
-                                   room: room,
-                                   title: room.name
-                               })
+                stackView.push(roomView, { room: backend.rooms.get(index) })
                 updateToolbarForCurrentItem()
             }
         }
@@ -166,13 +160,9 @@ ApplicationWindow {
     Component {
         id: roomView
         PageRoom {
-            property string title: "Room"
-            property var extraToolbarItems: [
-                deleteLightButton,
-                addLightButton,
-                cameraButton,
-                photosButton,
-            ]
+            stack: stackView
+            lights: backend.lights
+            onUpdateMainToolbar: updateToolbarForCurrentItem()
         }
     }
 
@@ -192,7 +182,7 @@ ApplicationWindow {
             }
 
             lightList.onClicked: {
-                stackView.push(lightsListView)
+                stackView.push(lightListView)
                 updateToolbarForCurrentItem()
             }
 
@@ -249,7 +239,7 @@ ApplicationWindow {
     }
 
     Component {
-        id: lightsListView
+        id: lightListView
         PageLightList {
             property string title: qsTr("Lights")
             model: backend.lights
@@ -262,10 +252,7 @@ ApplicationWindow {
 
         var room = backend.rooms.get(0)
         if (room !== null) {
-            stackView.push(roomView, {
-                               room: room,
-                               title: room.name
-                           })
+            stackView.push(roomView, { room: room })
             updateToolbarForCurrentItem()
         }
     }

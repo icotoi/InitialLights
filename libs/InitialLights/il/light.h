@@ -6,6 +6,8 @@
 
 namespace il {
 
+class Room;
+
 class INITIALLIGHTSSHARED_EXPORT Light : public QObject
 {
 public:
@@ -33,6 +35,8 @@ private:
     QML_WRITABLE_AUTO_PROPERTY(int, redValue)
     QML_WRITABLE_AUTO_PROPERTY(int, greenValue)
     QML_WRITABLE_AUTO_PROPERTY(int, blueValue)
+
+    QML_WRITABLE_AUTO_PROPERTY(il::Room*, room)
 
     Q_PROPERTY(QString lightTypeName READ lightTypeName NOTIFY lightTypeChanged)
     Q_PROPERTY(QObject* controller READ controller CONSTANT)

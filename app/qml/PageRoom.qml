@@ -6,22 +6,52 @@ import QtMultimedia 5.12
 PageRoomForm {
     id: root
 
-    property var room: undefined
+    property var room: null
+    property var lights: null
+    property var stack: null
 
     property bool isCameraAvailable: QtMultimedia.availableCameras.length > 0
     property bool capturingImage: false
 
+    property string title: room !== null ? room.name : "Room"
+    property var extraToolbarItems: [
+        deleteLightButton,
+        addLightButton,
+        cameraButton,
+        photosButton,
+    ]
+
     property alias deleteLightButton: deleteLightButton
-    property alias addLightButton: addLightButton
     property alias cameraButton: cameraButton
     property alias photosButton: photosButton
 
+    signal updateMainToolbar()
+
     lightView.visible: false
+
+    Component {
+        id: lightSelectionView
+        PageLightSelection {
+            model: root.lights
+            onLightSelected: {
+                if (root.room !== null)
+                    light.room = root.room
+                stackView.pop()
+                root.updateMainToolbar()
+            }
+        }
+    }
 
     ToolButton {
         id: addLightButton
         icon.source: "Images/material.io-sharp-add-24px.svg"
-        onClicked: roomView.addNewLight()
+        onClicked: {
+            if (stackView === null)
+                return;
+
+            stackView.push(lightSelectionView, { room: root.room })
+            root.updateMainToolbar()
+        }
     }
 
     ToolButton {
