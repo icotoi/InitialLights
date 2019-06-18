@@ -29,6 +29,8 @@ PageRoomForm {
 
     lightView.visible: false
 
+    roomView.lights: room !== null ? room.lights : null
+
     Component {
         id: lightSelectionView
         PageLightSelection {

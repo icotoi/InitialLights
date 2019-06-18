@@ -124,10 +124,10 @@ void Controller::clear()
 
 void Controller::read(const QJsonObject &json)
 {
-    safeRead(json, jsonNameTag, [&](const QString& s) { update_name(s); });
-    safeRead(json, jsonAddressTag, [&](const QString& s) { update_address(s); });
-    safeRead(json, jsonControllerTypeTag, [&](const QString& s) {
-        int value = QMetaEnum::fromType<ControllerType>().keyToValue(s.toStdString().c_str());
+    safeRead(json, jsonNameTag, QJsonValue::String, [&](const QJsonValue& json) { update_name(json.toString()); });
+    safeRead(json, jsonAddressTag, QJsonValue::String, [&](const QJsonValue& json) { update_address(json.toString()); });
+    safeRead(json, jsonControllerTypeTag, QJsonValue::String, [&](const QJsonValue& json) {
+        int value = QMetaEnum::fromType<ControllerType>().keyToValue(json.toString().toStdString().c_str());
         if (value >= 0) {
             ControllerType ct { ControllerType(value) };
             update_controllerType(ct);

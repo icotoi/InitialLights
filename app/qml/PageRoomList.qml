@@ -17,7 +17,7 @@ Item {
     property alias model: listView.model
     property alias addRoomButton: addRoomButton
 
-    signal showRoom(var room)
+    signal showRoom(int index)
 
     ToolButton {
         id: addRoomButton
@@ -31,7 +31,7 @@ Item {
         delegate: SwipeDelegate {
             width: parent.width
             text: model.name
-            onClicked: showRoom(model)
+            onClicked: showRoom(index)
 
             swipe.right: Label {
                 id: deleteLabel

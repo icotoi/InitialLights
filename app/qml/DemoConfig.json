@@ -2,7 +2,7 @@
     "controllers": {
         "controllers": [
             {
-                "address": "{5f8dfedd-b3a3-4ca8-bc6c-f404685b64be}",
+                "address": "{5f8dfedd-b3a3-4ca8-bc6c-f404685b64b1}",
                 "lights": [
                     {
                         "maxValue": 255,
@@ -27,7 +27,7 @@
                 "type": "V1_1xPWM_1xRGB"
             },
             {
-                "address": "{5f8dfedd-b3a3-4ca8-bc6c-f404685b64be}",
+                "address": "{5f8dfedd-b3a3-4ca8-bc6c-f404685b64b2}",
                 "lights": [
                     {
                         "maxValue": 255,
@@ -66,7 +66,7 @@
                 "type": "V1_4xPWM"
             },
             {
-                "address": "{5f8dfedd-b3a3-4ca8-bc6c-f404685b64be}",
+                "address": "{5f8dfedd-b3a3-4ca8-bc6c-f404685b64b3}",
                 "lights": [
                     {
                         "maxValue": 255,
