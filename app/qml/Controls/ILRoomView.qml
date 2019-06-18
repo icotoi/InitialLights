@@ -13,21 +13,6 @@ Item {
     property alias image: image.source
     property int currentIndex: -1
 
-//    function removeCurrentLight() {
-//        if (currentLight) {
-//            var index = _.lights.indexOf(currentLight)
-//            if (index < 0) {
-//                console.warn("currentLight not found in the list of lights!")
-//                return
-//            }
-
-//            _.lights.splice(index, 1)
-//            currentLight.destroy()
-//            currentLight = null
-//            _.configureCurrentLight()
-//        }
-//    }
-
     function checkOnlyCurrentLight() {
         for (var index = 0; index < lightsRepeater.count; ++index) {
             var item = lightsRepeater.itemAt(index)
@@ -46,7 +31,7 @@ Item {
         id: mouseArea
         anchors.fill: parent
         onClicked: {
-            currentIndex = -1
+            control.currentIndex = -1
             checkOnlyCurrentLight()
         }
     }
@@ -64,9 +49,10 @@ Item {
             : (model.value - model.minValue) / (model.maxValue - model.minValue)
             dragTarget: control
             onToggled: {
-                currentIndex = checked ? index : -1
+                control.currentIndex = checked ? index : -1
                 checkOnlyCurrentLight()
             }
+            checked: control.currentIndex === index
         }
     }
 }

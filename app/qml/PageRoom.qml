@@ -38,8 +38,11 @@ Item {
         PageLightSelection {
             model: root.lights
             onLightSelected: {
-                if (root.room !== null)
+                if (root.room !== null) {
+                    var light = root.lights.get(index)
                     light.room = root.room
+                    roomView.currentIndex = root.room.lights.indexOf(light)
+                }
                 stackView.pop()
                 root.updateMainToolbar()
             }
@@ -62,7 +65,16 @@ Item {
         id: deleteLightButton
         icon.source: "Images/material.io-sharp-delete-24px.svg"
         visible: lightConfigurator.visible
-        onClicked: roomView.removeCurrentLight()
+        onClicked: {
+            if (root.room === null || roomView.currentIndex < 0)
+                return
+
+            var light = root.room.lights.get(roomView.currentIndex)
+            if (light !== null)
+                light.room = null
+
+            roomView.currentIndex = -1
+        }
     }
 
     ToolButton {

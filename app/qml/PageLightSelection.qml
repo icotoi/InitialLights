@@ -16,7 +16,7 @@ Item {
     property string title: "Add light" + (root.room !== null ? " to " + room.name : "")
     property var extraToolbarItems: []
 
-    signal lightSelected(var light)
+    signal lightSelected(int index)
 
     ListView {
         id: listView
@@ -44,7 +44,7 @@ Item {
                 }
             }
 
-            onClicked: root.lightSelected(model)
+            onClicked: root.lightSelected(index)
         }
     }
 }

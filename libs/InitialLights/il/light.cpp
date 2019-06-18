@@ -56,8 +56,6 @@ Light::~Light()
 void Light::read(const QJsonObject &json)
 {
     safeRead(json, jsonLightTypeTag, QJsonValue::String, [&](const QJsonValue& json) {
-        qDebug() << ">>>>" << json.toString();
-
         int value = QMetaEnum::fromType<LightType>().keyToValue(json.toString().toStdString().c_str());
         if (value >= 0) {
             LightType lt = LightType(value);
