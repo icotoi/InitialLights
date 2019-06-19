@@ -41,7 +41,7 @@ Item {
                 height: width
                 radius: width / 2
                 color: control.color
-                opacity: control.isOn ? control.onOpacity : control.offOpacity
+                opacity: lightIntensity // control.isOn ? control.onOpacity : control.offOpacity
             }
 
             Rectangle {
