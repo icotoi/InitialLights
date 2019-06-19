@@ -36,8 +36,13 @@ Item {
                 }
 
                 Label {
+                    property string controllerName: model.controller !== undefined
+                                                    ? (model.controller.name !== ""
+                                                       ? model.controller.name
+                                                       : model.controller.address)
+                                                    : "controller"
                     text: "<b>controller:</b> %1<br><b>type:</b> %2<br><b>room:</b> %3"
-                    .arg(model.controller.name)
+                    .arg(controllerName)
                     .arg(model.lightTypeName)
                     .arg(model.room !== null ? model.room.name : "<font color=\"tomato\">unassigned</font>")
                     font.pixelSize: nameLabel.font.pixelSize * 0.8

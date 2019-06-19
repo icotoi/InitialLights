@@ -29,9 +29,11 @@ Item {
 
         delegate: ILLight {
             width: parent.width
-            controllerName: model.controller.name !== ""
-                            ? model.controller.name
-                            : model.controller.address
+            controllerName: model.controller !== undefined
+                            ? (model.controller.name !== ""
+                               ? model.controller.name
+                               : model.controller.address)
+                            : "controller"
             light: model
 
             onColorSwatchClicked: {
