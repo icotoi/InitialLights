@@ -226,6 +226,7 @@ ApplicationWindow {
     Component {
         id: controllerView
         PageController {
+            stack: stackView
             property var extraToolbarItems: [
                 refreshButton
             ]
@@ -235,6 +236,7 @@ ApplicationWindow {
                 onClicked: controller.connectToController()
                 enabled: controller !== null ? !controller.isBusy : false
             }
+            onUpdateMainToolbar: updateToolbarForCurrentItem()
         }
     }
 
@@ -244,16 +246,17 @@ ApplicationWindow {
             property string title: qsTr("Lights")
             model: backend.lights
             stack: stackView
+            onUpdateMainToolbar: updateToolbarForCurrentItem()
         }
     }
 
-    Component.onCompleted: {
+//    Component.onCompleted: {
 //        showPage(settingsView, {})
-        showPage(lightListView, {})
+//        showPage(lightListView, {})
 //        var room = backend.rooms.get(0)
 //        if (room !== null) {
 //            stackView.push(roomView, { room: room })
 //            updateToolbarForCurrentItem()
 //        }
-    }
+//    }
 }

@@ -13,6 +13,7 @@ Item {
     id: root
 
     property var controller: null
+    property var stack: null
 
     property string title: controller !== null
                            ? (controller.name !== ""
@@ -23,9 +24,23 @@ Item {
                              ? controller.message
                              : ""
 
+    signal updateMainToolbar()
+
     onControllerChanged: {
         if (controller !== null && controller.lights.count === 0) {
             controller.connectToController()
+        }
+    }
+
+    Component {
+        id: colorSelectionView
+        PageColorSelection {
+            property var light: null
+            Component.onDestruction: {
+                if (light !== null) {
+                    light.color = selectedColor
+                }
+            }
         }
     }
 
@@ -39,6 +54,14 @@ Item {
             width: listView.width
             isControllerNameVisible: false
             light: model
+
+            onColorSwatchClicked: {
+                if (root.stack === null)
+                    return;
+
+                root.stack.push(colorSelectionView, { inputColor: color, light: listView.model.get(index) })
+                root.updateMainToolbar()
+            }
         }
     }
 
