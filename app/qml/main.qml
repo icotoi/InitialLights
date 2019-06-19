@@ -243,16 +243,17 @@ ApplicationWindow {
         PageLightList {
             property string title: qsTr("Lights")
             model: backend.lights
+            stack: stackView
         }
     }
 
     Component.onCompleted: {
 //        showPage(settingsView, {})
-//        showPage(lightsListView, {})
-        var room = backend.rooms.get(0)
-        if (room !== null) {
-            stackView.push(roomView, { room: room })
-            updateToolbarForCurrentItem()
-        }
+        showPage(lightListView, {})
+//        var room = backend.rooms.get(0)
+//        if (room !== null) {
+//            stackView.push(roomView, { room: room })
+//            updateToolbarForCurrentItem()
+//        }
     }
 }

@@ -55,7 +55,6 @@ Item {
         id: colorSelectionView
         PageColorSelection {
             Component.onDestruction: {
-                console.log(selectedColor)
                 var light = lightConfigurator.light
                 if (light !== null) {
                     light.color = selectedColor
