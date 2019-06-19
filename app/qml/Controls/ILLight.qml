@@ -58,6 +58,7 @@ Item {
             Rectangle {
                 visible: root.light !== null && root.light.lightType === Light.RGB
                 Layout.leftMargin: root.margins
+                Layout.rightMargin: root.margins
                 Layout.fillWidth: true
 //                width: root.colorSwatchSize
                 height: root.colorSwatchSize
@@ -171,6 +172,8 @@ Item {
             }
         }
 
-        Switch {}
+        Switch {
+            visible: false
+        }
     }
 }
