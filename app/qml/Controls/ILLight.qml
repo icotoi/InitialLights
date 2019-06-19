@@ -24,7 +24,7 @@ Item {
 
     height: rowLayout.height
 
-    signal colorSwatchCliked(var color)
+    signal colorSwatchClicked(var color)
 
     RowLayout {
         id: rowLayout
