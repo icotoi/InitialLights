@@ -19,32 +19,11 @@ Item {
         id: listView
         anchors.fill: parent
 
-        delegate: ItemDelegate {
+        delegate: ILControllerItemDelegate {
             width: parent.width
-
-            contentItem: RowLayout {
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    Label {
-                        Layout.fillWidth: true
-                        text: "<b>Name:</b> " + model.name
-                        elide: Text.ElideMiddle
-                    }
-                    Label {
-                        Layout.fillWidth: true
-                        text: "<b>Address:</b> " + model.address
-                        elide: Text.ElideMiddle
-                    }
-                }
-
-                ToolButton {
-                    icon.source: "Images/material.io-baseline-arrow_forward_ios-24px.svg"
-                    onClicked: showController(index)
-                }
-            }
-
-            highlighted: ListView.isCurrentItem
-            onClicked: listView.currentIndex = index
+            name: model.name
+            address: model.address
+            onClicked: showController(index)
         }
     }
 

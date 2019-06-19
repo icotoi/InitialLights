@@ -10,30 +10,28 @@
 #include <QQmlContext>
 
 #include "il/backend.h"
-#include "il/room.h"
 #include "il/controllerlist.h"
-
-void configureDemoBackend(il::BackEnd& backend) {
-    auto livingroom = new il::Room;
-    livingroom->set_name("Livingroom");
-    backend.get_rooms()->append(livingroom);
-
-    auto bedroom = new il::Room;
-    bedroom->set_name("Bedroom");
-    backend.get_rooms()->append(bedroom);
-}
+#include "il/room.h"
+#include "il/light.h"
 
 int main(int argc, char *argv[])
 {
     qmlRegisterUncreatableType<il::ControllerList>("InitialLights", 1, 0, "ControllerList", "Type cannot be created in QML");
+    qmlRegisterUncreatableType<il::Room>("InitialLights", 1, 0, "Room", "Type cannot be created in QML");
+    qmlRegisterUncreatableType<il::Light>("InitialLights", 1, 0, "Light", "Type cannot be created in QML");
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    QCoreApplication::setApplicationName("InitialLights");
+    QCoreApplication::setOrganizationName("DeviceHub");
+    QCoreApplication::setOrganizationDomain("net.devicehub");
+
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
 
     il::BackEnd backend;
-    configureDemoBackend(backend);
+    backend.loadLocalData();
     engine.rootContext()->setContextProperty("backend", &backend);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
@@ -44,5 +42,7 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
     engine.load(url);
 
-    return app.exec();
+    int ret = app.exec();
+    backend.saveLocalData();
+    return ret;
 }

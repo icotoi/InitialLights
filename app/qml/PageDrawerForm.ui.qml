@@ -2,12 +2,17 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
+import "Constants"
+
 Item {
     property string backgroundColor: "Orange"
     property alias roomsRepeater: roomsRepeater
-    property alias settingsMenu: settingsMenu
-    property alias homeMenu: homeMenu
     property alias scenesRepeater: scenesRepeater
+    property alias home: home
+    property alias settings: settings
+    property alias controllerList: controllerList
+    property alias lightList: lightList
+    property alias roomList: roomList
 
     Rectangle {
         color: backgroundColor
@@ -25,10 +30,10 @@ Item {
             width: flickable.width
             spacing: 0
 
-            MenuItem {
-                id: homeMenu
+            ItemDelegate {
+                id: home
                 text: qsTr("Home")
-                icon.source: "Images/material.io-sharp-home-24px.svg"
+                icon.source: ILStyle.homeIconSource
                 Layout.fillWidth: true
             }
 
@@ -38,12 +43,11 @@ Item {
                 Layout.fillWidth: true
             }
 
-            Label {
+            ItemDelegate {
+                id: roomList
                 text: qsTr("Rooms")
-                rightPadding: 8
-                font.pointSize: 10
                 Layout.fillWidth: true
-                horizontalAlignment: Text.AlignRight
+                icon.source: ILStyle.roomsIconSource
             }
 
             Repeater {
@@ -56,12 +60,12 @@ Item {
                 Layout.fillWidth: true
             }
 
-            Label {
+            ItemDelegate {
+                id: sceneList
                 text: qsTr("Scenes")
-                rightPadding: 8
-                font.pointSize: 10
+                enabled: false
                 Layout.fillWidth: true
-                horizontalAlignment: Text.AlignRight
+                icon.source: ILStyle.scenesIconSource
             }
 
             Repeater {
@@ -74,11 +78,25 @@ Item {
                 Layout.fillWidth: true
             }
 
-            MenuItem {
-                id: settingsMenu
-                text: "Settings"
+            ItemDelegate {
+                id: settings
+                text: qsTr("Settings")
                 Layout.fillWidth: true
-                icon.source: "Images/material.io-sharp-settings-24px.svg"
+                icon.source: ILStyle.settingsIconSource
+            }
+
+            ItemDelegate {
+                id: controllerList
+                text: qsTr("Controllers")
+                Layout.fillWidth: true
+                icon.source: ILStyle.controllersIconSource
+            }
+
+            ItemDelegate {
+                id: lightList
+                text: qsTr("Lights")
+                Layout.fillWidth: true
+                icon.source: ILStyle.lightsIconSource
             }
         }
     }

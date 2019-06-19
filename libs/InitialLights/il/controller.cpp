@@ -1,10 +1,7 @@
 #include "controller.h"
-#include "pwmchannel.h"
-#include "rgbchannel.h"
-#include "analogicchannel.h"
+#include "light.h"
 
-//#include <QRandomGenerator>
-//#include <QTimer>
+#include "jsonhelpers.h"
 
 #if defined (Q_OS_MAC)
 #include <QBluetoothUuid>
@@ -12,20 +9,38 @@
 #include <QBluetoothAddress>
 #endif
 
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QMetaEnum>
+
 namespace il {
 
 namespace  {
+const QString jsonNameTag { "name" };
+const QString jsonAddressTag { "address" };
+const QString jsonControllerTypeTag { "type" };
+const QString jsonLightsTag { "lights" };
+
 const QBluetoothUuid uuidService(QStringLiteral("6E400001-B5A3-F393-E0A9-E50E24DCCA9E"));
 const QBluetoothUuid writeCharacteristicUuid(QStringLiteral("6E400002-B5A3-F393-E0A9-E50E24DCCA9E"));
 const QBluetoothUuid readCharacteristicUuid(QStringLiteral("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"));
 }
 
-Controller::Controller(const QBluetoothDeviceInfo &info, QObject *parent)
-    : AbstractController (parent)
-    , m_info { info }
+Controller::Controller(QObject *parent)
+    : QObject(parent)
+    , m_controllerType { UndefinedControllerType }
+    , m_isBusy { false }
+    , m_isConnected { false }
+    , m_lights { new QQmlObjectListModel<Light>(this) }
 {
+}
+
+Controller::Controller(const QBluetoothDeviceInfo &info, QObject *parent)
+    : Controller(parent)
+{
+    m_info = info;
     update_name(m_info.name());
-    update_address(address(m_info));
+    update_address(safeAddress(m_info));
 }
 
 Controller::~Controller()
@@ -33,9 +48,65 @@ Controller::~Controller()
     clear();
 }
 
+QByteArray Controller::updateDeviceCommand() const
+{
+    QString command;
+
+    switch (controllerType()) {
+    case V1_2x10V:
+    {
+        Q_ASSERT(m_lights->size() == 2);
+        Q_ASSERT(m_lights->at(0)->lightType() == Light::Analogic);
+        Q_ASSERT(m_lights->at(1)->lightType() == Light::Analogic);
+
+        command = QStringLiteral(u"US%1%2%3\n")
+                .arg(m_lights->at(0)->value(), 2, 16, QChar('0'))
+                .arg(m_lights->at(1)->value(), 2, 16, QChar('0'))
+                .arg(2, 6, 16, QChar('0'))
+                ;
+        break;
+    }
+    case V1_4xPWM: {
+        Q_ASSERT(m_lights->size() == 4);
+        Q_ASSERT(m_lights->at(0)->lightType() == Light::PWM);
+        Q_ASSERT(m_lights->at(1)->lightType() == Light::PWM);
+        Q_ASSERT(m_lights->at(2)->lightType() == Light::PWM);
+        Q_ASSERT(m_lights->at(3)->lightType() == Light::PWM);
+
+        command = QString("US%1%2%3%4%5\n")
+                .arg(m_lights->at(0)->value(), 2, 16, QChar('0'))
+                .arg(m_lights->at(1)->value(), 2, 16, QChar('0'))
+                .arg(m_lights->at(2)->value(), 2, 16, QChar('0'))
+                .arg(m_lights->at(3)->value(), 2, 16, QChar('0'))
+                .arg(3, 2, 16, QChar('0'));
+        break;
+    }
+    case V1_1xPWM_1xRGB: {
+        Q_ASSERT(m_lights->size() == 2);
+        Q_ASSERT(m_lights->at(0)->lightType() == Light::PWM);
+        Q_ASSERT(m_lights->at(1)->lightType() == Light::RGB);
+
+        auto pwmLight = m_lights->at(0);
+        auto rgbLight = m_lights->at(1);
+        command = QString("US%1%2%3%4%5\n")
+                .arg(pwmLight->value(), 2, 16, QChar('0'))
+                .arg(rgbLight->redValue(), 2, 16, QChar('0'))
+                .arg(rgbLight->greenValue(), 2, 16, QChar('0'))
+                .arg(rgbLight->blueValue(), 2, 16, QChar('0'))
+                .arg(1, 2, 16, QChar('0'));
+        break;
+    }
+    default:
+        qWarning() << "don't know how to save controller state for controller type:" << controllerType();
+        break;
+    }
+
+    return command.toUpper().toUtf8();
+}
+
 void Controller::clear()
 {
-    AbstractController::clear();
+    m_lights->clear();
 
     m_hasReceivedInitialState = false;
 
@@ -49,11 +120,39 @@ void Controller::clear()
     }
 
     update_isBusy(false);
-
-    qDebug() << "light controller internal state cleared";
 }
 
-QString Controller::address(const QBluetoothDeviceInfo &info)
+void Controller::read(const QJsonObject &json)
+{
+    safeRead(json, jsonNameTag, QJsonValue::String, [&](const QJsonValue& json) { update_name(json.toString()); });
+    safeRead(json, jsonAddressTag, QJsonValue::String, [&](const QJsonValue& json) { update_address(json.toString()); });
+    safeRead(json, jsonControllerTypeTag, QJsonValue::String, [&](const QJsonValue& json) {
+        int value = QMetaEnum::fromType<ControllerType>().keyToValue(json.toString().toStdString().c_str());
+        if (value >= 0) {
+            ControllerType ct { ControllerType(value) };
+            update_controllerType(ct);
+        }
+    });
+
+    readModel(json, jsonLightsTag, m_lights);
+
+#if defined(Q_OS_MAC)
+    m_info = QBluetoothDeviceInfo(QBluetoothUuid(address()), name(), 0);
+#else
+    m_info = QBluetoothDeviceInfo(QBluetoothAddress(address()), name(), 0);
+#endif
+}
+
+void Controller::write(QJsonObject &json) const
+{
+    json[jsonNameTag] = m_name;
+    json[jsonAddressTag] = m_address;
+    json[jsonControllerTypeTag] = QMetaEnum::fromType<ControllerType>().valueToKey(m_controllerType);
+
+    writeModel(json, jsonLightsTag, m_lights);
+}
+
+QString Controller::safeAddress(const QBluetoothDeviceInfo &info)
 {
 #if defined(Q_OS_MAC)
     // workaround for Core Bluetooth:
@@ -233,7 +332,7 @@ void Controller::updateFromDevice(const QByteArray &data)
         if(data.startsWith("*")) {
             if(m_command.startsWith("U?")) {
                 m_hasReceivedInitialState = true;
-                clearChannels();
+                get_lights()->clear();
 
                 auto controllerType = data.right(2).toInt();
                 switch (controllerType) {
@@ -241,38 +340,38 @@ void Controller::updateFromDevice(const QByteArray &data)
                     // 2 x Analogic
                     update_controllerType(V1_2x10V);
                     for (int i = 0; i < 2; ++i) {
-                        auto channel = new AnalogicChannel(QString::number(i+1), this);
-                        get_analogicChannels()->append(channel);
-                        channel->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
-                        connect(channel, &AnalogicChannel::valueChanged, this, &Controller::updateDevice);
+                        auto light = new Light(Light::Analogic, QString::number(i+1), this);
+                        get_lights()->append(light);
+                        light->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
+                        connect(light, &Light::valueChanged, this, &Controller::updateDevice);
                     }
                     break;
                 case 3:
                     // 4 x PWM
                     update_controllerType(V1_4xPWM);
                     for (int i = 0; i < 4; ++i) {
-                        auto channel = new PWMChannel(QString::number(i+1), this);
-                        get_pwmChannels()->append(channel);
-                        channel->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
-                        connect(channel, &PWMChannel::valueChanged, this, &Controller::updateDevice);
+                        auto light = new Light(Light::PWM, QString::number(i+1), this);
+                        get_lights()->append(light);
+                        light->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
+                        connect(light, &Light::valueChanged, this, &Controller::updateDevice);
                     }
                     break;
                 default:
                     // 1 x PWM + 1 x RGB
                     update_controllerType(V1_1xPWM_1xRGB);
-                    auto pwmChannel = new PWMChannel("1", this);
-                    get_pwmChannels()->append(pwmChannel);
-                    pwmChannel->set_value(data.mid(1, 2).toInt(nullptr, 16));
-                    connect(pwmChannel, &PWMChannel::valueChanged, this, &Controller::updateDevice);
+                    auto pwmLight = new Light(Light::PWM, "1", this);
+                    get_lights()->append(pwmLight);
+                    pwmLight->set_value(data.mid(1, 2).toInt(nullptr, 16));
+                    connect(pwmLight, &Light::valueChanged, this, &Controller::updateDevice);
 
-                    auto rgbChannel = new RGBChannel("2", this);
-                    get_rgbChannels()->append(rgbChannel);
-                    rgbChannel->set_redValue(data.mid(3, 2).toInt(nullptr, 16));
-                    rgbChannel->set_greenValue(data.mid(5, 2).toInt(nullptr, 16));
-                    rgbChannel->set_blueValue(data.mid(7, 2).toInt(nullptr, 16));
-                    connect(rgbChannel, &RGBChannel::redValueChanged, this, &Controller::updateDevice);
-                    connect(rgbChannel, &RGBChannel::greenValueChanged, this, &Controller::updateDevice);
-                    connect(rgbChannel, &RGBChannel::blueValueChanged, this, &Controller::updateDevice);
+                    auto rgbLight = new Light(Light::RGB, "2", this);
+                    get_lights()->append(rgbLight);
+                    rgbLight->set_redValue(data.mid(3, 2).toInt(nullptr, 16));
+                    rgbLight->set_greenValue(data.mid(5, 2).toInt(nullptr, 16));
+                    rgbLight->set_blueValue(data.mid(7, 2).toInt(nullptr, 16));
+                    connect(rgbLight, &Light::redValueChanged, this, &Controller::updateDevice);
+                    connect(rgbLight, &Light::greenValueChanged, this, &Controller::updateDevice);
+                    connect(rgbLight, &Light::blueValueChanged, this, &Controller::updateDevice);
                     break;
                 }
             } else if(m_command.startsWith("UV")) {
@@ -315,5 +414,4 @@ bool Controller::writeToDevice(const QByteArray &data)
 
     return true;
 }
-
 } // namespace il

@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
+import "Constants"
+
 ApplicationWindow {
     id: window
     visible: true
@@ -55,9 +57,7 @@ ApplicationWindow {
             // a hamburger button that rotates
             ToolButton {
                 id: hamburgerButton
-                icon.source: onStartPage
-                             ? "Images/material.io-baseline-menu-24px.svg"
-                             : "Images/material.io-baseline-arrow_back-24px.svg"
+                icon.source: onStartPage ? ILStyle.hamburgerIconSource : ILStyle.backIconSource
                 onClicked: {
                     if (onStartPage) {
                         drawer.visible ? drawer.close() : drawer.open()
@@ -87,10 +87,6 @@ ApplicationWindow {
             RowLayout {
                 id: extraToolbarItems
             }
-
-//            ToolButton {
-//                icon.source: "Images/material.io-baseline-more_vert-24px.svg"
-//            }
         }
     }
 
@@ -101,24 +97,37 @@ ApplicationWindow {
         height: window.height - header.height
         PageDrawer {
             rooms: backend.rooms
+            scenes: backend.scenes
             anchors.fill: parent
 
-            onHomeClicked: {
+            home.onClicked: {
                 drawer.close()
                 showHome()
             }
 
-            onRoomClicked: {
+            roomList.onClicked: {
                 drawer.close()
-                showPage(roomView, {
-                             room: room,
-                             title: room.name
-                         })
+                showPage(roomListView, {})
             }
 
-            onSettingsClicked: {
+            onRoomClicked: {
+                drawer.close()
+                showPage(roomView, { room: backend.rooms.get(index) })
+            }
+
+            settings.onClicked: {
+                drawer.close()
+                showPage(settingsView, {})
+            }
+
+            controllerList.onClicked: {
                 drawer.close()
                 showPage(controllerListView, {})
+            }
+
+            lightList.onClicked: {
+                drawer.close()
+                showPage(lightListView, {})
             }
         }
     }
@@ -135,15 +144,56 @@ ApplicationWindow {
     }
 
     Component {
+        id: roomListView
+        PageRoomList {
+            model: backend.rooms
+
+            addRoomButton.onClicked: backend.addNewRoom()
+
+            onShowRoom: {
+                stackView.push(roomView, { room: backend.rooms.get(index) })
+                updateToolbarForCurrentItem()
+            }
+        }
+    }
+
+    Component {
         id: roomView
         PageRoom {
-            property string title: "Room"
-            property var extraToolbarItems: [
-                deleteLightButton,
-                addLightButton,
-                cameraButton,
-                photosButton,
-            ]
+            stack: stackView
+            lights: backend.lights
+            onUpdateMainToolbar: updateToolbarForCurrentItem()
+        }
+    }
+
+    Component {
+        id: settingsView
+        PageSettings {
+            property string title: qsTr("Settings")
+
+            roomList.onClicked: {
+                stackView.push(roomListView)
+                updateToolbarForCurrentItem()
+            }
+
+            controllerList.onClicked: {
+                stackView.push(controllerListView)
+                updateToolbarForCurrentItem()
+            }
+
+            lightList.onClicked: {
+                stackView.push(lightListView)
+                updateToolbarForCurrentItem()
+            }
+
+            clearLocalData.onClicked: {
+                backend.clearLocalData()
+            }
+
+            reloadDemoData.onClicked: {
+                backend.clearLocalData()
+                backend.loadLocalData()
+            }
         }
     }
 
@@ -151,14 +201,13 @@ ApplicationWindow {
         id: controllerListView
         PageControllerList {
             property string title: qsTr("Controllers")
-
             property var extraToolbarItems: [
                 bluetoothScanButton
             ]
 
             ToolButton {
                 id: bluetoothScanButton
-                icon.source: "Images/material.io-sharp-bluetooth_searching-24px.svg"
+                icon.source: ILStyle.bluetoothScanIconSource
                 onClicked: backend.controllerList.scan()
                 enabled: !backend.controllerList.isBusy
             }
@@ -166,10 +215,48 @@ ApplicationWindow {
             model: backend.controllerList.controllers
             isBusy: backend.controllerList.isBusy
             message: backend.controllerList.message
+
+            onShowController: {
+                stackView.push(controllerView, { controller: backend.controllerList.controllers.get(index) })
+                updateToolbarForCurrentItem()
+            }
         }
     }
 
-    Component.onCompleted: {
-//        showPage(controllerListView, {})
+    Component {
+        id: controllerView
+        PageController {
+            stack: stackView
+            property var extraToolbarItems: [
+                refreshButton
+            ]
+            ToolButton {
+                id: refreshButton
+                icon.source: ILStyle.refreshControllerLightConfigurationSource
+                onClicked: controller.connectToController()
+                enabled: controller !== null ? !controller.isBusy : false
+            }
+            onUpdateMainToolbar: updateToolbarForCurrentItem()
+        }
     }
+
+    Component {
+        id: lightListView
+        PageLightList {
+            property string title: qsTr("Lights")
+            model: backend.lights
+            stack: stackView
+            onUpdateMainToolbar: updateToolbarForCurrentItem()
+        }
+    }
+
+//    Component.onCompleted: {
+//        showPage(settingsView, {})
+//        showPage(lightListView, {})
+//        var room = backend.rooms.get(0)
+//        if (room !== null) {
+//            stackView.push(roomView, { room: room })
+//            updateToolbarForCurrentItem()
+//        }
+//    }
 }

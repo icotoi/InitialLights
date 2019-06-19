@@ -4,7 +4,6 @@
         <file>Constants/ILStyle.qml</file>
         <file>Constants/qmldir</file>
         <file>qtquickcontrols2.conf</file>
-        <file>Controls/qmldir</file>
         <file>Controls/ILToggleLedButton.qml</file>
         <file>Controls/ILColorWheel.qml</file>
         <file>DemoToggleLedButton.qml</file>
@@ -22,7 +21,6 @@
         <file>Images/power_on@2x.png</file>
         <file>Images/power_on@3x.png</file>
         <file>PageRoom.qml</file>
-        <file>PageRoomForm.ui.qml</file>
         <file>Images/pixabay_illumination-lights-bulbs-731494_1920.jpg</file>
         <file>Controls/ILRoomView.qml</file>
         <file>Controls/ILRoomLight.qml</file>
@@ -32,7 +30,6 @@
         <file>PageDrawerForm.ui.qml</file>
         <file>LightColorChooserPopup.qml</file>
         <file>LightColorChooserPopupForm.ui.qml</file>
-        <file>Images/material.io-baseline-photo_camera-24px.svg</file>
         <file>Images/material.io-baseline-photo_library-24px.svg</file>
         <file>Images/material.io-baseline-arrow_back-24px.svg</file>
         <file>Images/material.io-baseline-menu-24px.svg</file>
@@ -42,5 +39,24 @@
         <file>PageControllerList.qml</file>
         <file>Images/material.io-sharp-bluetooth_searching-24px.svg</file>
         <file>Images/material.io-baseline-arrow_forward_ios-24px.svg</file>
+        <file>PageController.qml</file>
+        <file>Images/material.io-baseline-wb_incandescent-24px.svg</file>
+        <file>Images/material.io-baseline-settings_input_svideo-24px.svg</file>
+        <file>PageSettings.qml</file>
+        <file>PageSettingsForm.ui.qml</file>
+        <file>Images/material.io-baseline-tune-24px.svg</file>
+        <file>Images/material.io-baseline-delete-24px.svg</file>
+        <file>Images/material.io-baseline-refresh-24px.svg</file>
+        <file>Controls/ILLight.qml</file>
+        <file>PageLightList.qml</file>
+        <file>DemoConfig.json</file>
+        <file>Controls/ILLabeledSlider.qml</file>
+        <file>Images/material.io-baseline-location_city-24px.svg</file>
+        <file>Images/material.io-baseline-weekend-48px.svg</file>
+        <file>Controls/ILControllerItemDelegate.qml</file>
+        <file>Images/material.io-baseline-photo_camera-24px.svg</file>
+        <file>PageRoomList.qml</file>
+        <file>PageLightSelection.qml</file>
+        <file>PageColorSelection.qml</file>
     </qresource>
 </RCC>
