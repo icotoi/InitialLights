@@ -72,7 +72,8 @@ private:
     void onRGBValueChanged();
 
     Room* m_room { nullptr };
-    QColor m_color;
+    QColor m_color { Qt::white };
+    bool m_colorUpdateEnabled { true };
 };
 
 } // namespace il

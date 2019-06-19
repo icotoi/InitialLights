@@ -3,6 +3,7 @@
 #include "room.h"
 #include "jsonhelpers.h"
 
+#include <QDebug>
 #include <QJsonObject>
 #include <QMetaEnum>
 
@@ -38,8 +39,6 @@ Light::Light(QObject *parent)
     , m_blueValue { 0 }
     , m_sideX { 0.0 }
     , m_sideY { 0.0 }
-    , m_room { nullptr }
-    , m_color { Qt::white }
 {
     connect(this, &Light::redValueChanged, this, &Light::onRGBValueChanged);
     connect(this, &Light::greenValueChanged, this, &Light::onRGBValueChanged);
@@ -165,8 +164,10 @@ void Light::setRoom(Room *room)
 
 void Light::setColor(QColor color)
 {
-    if (m_color == color)
+    if (m_color == color || !m_colorUpdateEnabled)
         return;
+
+    m_colorUpdateEnabled = false;
 
     m_color = color;
 
@@ -175,6 +176,8 @@ void Light::setColor(QColor color)
     set_redValue(m_color.red());
     set_greenValue(m_color.green());
     set_blueValue(m_color.blue());
+
+    m_colorUpdateEnabled = true;
 }
 
 void Light::onRGBValueChanged()
