@@ -1,7 +1,6 @@
 TEMPLATE = lib
 
 QT += qml bluetooth
-QT -= gui
 
 TARGET = InitialLights
 CONFIG += c++17

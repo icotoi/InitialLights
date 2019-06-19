@@ -42,6 +42,7 @@ Item {
         delegate: ILRoomLight {
             x: model.sideX
             y: model.sideY
+            color: model.color
             onXChanged: model.sideX = x
             onYChanged: model.sideY = y
             lightIntensity: (model.lightType === Light.RGB)

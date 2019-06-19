@@ -246,13 +246,13 @@ ApplicationWindow {
         }
     }
 
-//    Component.onCompleted: {
+    Component.onCompleted: {
 //        showPage(settingsView, {})
 //        showPage(lightsListView, {})
-//        var room = backend.rooms.get(0)
-//        if (room !== null) {
-//            stackView.push(roomView, { room: room })
-//            updateToolbarForCurrentItem()
-//        }
-//    }
+        var room = backend.rooms.get(0)
+        if (room !== null) {
+            stackView.push(roomView, { room: room })
+            updateToolbarForCurrentItem()
+        }
+    }
 }

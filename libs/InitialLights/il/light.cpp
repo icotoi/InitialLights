@@ -39,7 +39,11 @@ Light::Light(QObject *parent)
     , m_sideX { 0.0 }
     , m_sideY { 0.0 }
     , m_room { nullptr }
+    , m_color { Qt::white }
 {
+    connect(this, &Light::redValueChanged, this, &Light::onRGBValueChanged);
+    connect(this, &Light::greenValueChanged, this, &Light::onRGBValueChanged);
+    connect(this, &Light::blueValueChanged, this, &Light::onRGBValueChanged);
 }
 
 Light::Light(Light::LightType lightType, const QString &name, QObject *parent)
@@ -157,6 +161,32 @@ void Light::setRoom(Room *room)
     }
 
     emit roomChanged(m_room);
+}
+
+void Light::setColor(QColor color)
+{
+    if (m_color == color)
+        return;
+
+    m_color = color;
+
+    emit colorChanged(m_color);
+
+    set_redValue(m_color.red());
+    set_greenValue(m_color.green());
+    set_blueValue(m_color.blue());
+}
+
+void Light::onRGBValueChanged()
+{
+    switch (m_lightType) {
+    case RGB:
+        setColor(QColor(m_redValue, m_greenValue, m_blueValue));
+        break;
+    default:
+        qWarning() << "color changed but the light is not an RGB one";
+        break;
+    }
 }
 
 } // namespace il

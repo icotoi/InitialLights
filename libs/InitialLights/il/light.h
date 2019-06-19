@@ -1,7 +1,7 @@
 #pragma once
 
 #include "initiallights_global.h"
-
+#include <QColor>
 #include "QQmlAutoPropertyHelpers.h"
 
 namespace il {
@@ -42,6 +42,7 @@ private:
     Q_PROPERTY(QString lightTypeName READ lightTypeName NOTIFY lightTypeChanged)
     Q_PROPERTY(QObject* controller READ controller CONSTANT)
     Q_PROPERTY(il::Room* room READ room WRITE setRoom NOTIFY roomChanged)
+    Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
 
 public:
     explicit Light(QObject* parent = nullptr);
@@ -54,17 +55,24 @@ public:
     QString lightTypeName() const;
     QObject* controller() const;
     Room* room() const { return m_room; }
+    QColor color() const { return m_color; }
 
 public slots:
     void setRoom(il::Room* room);
+    void setColor(QColor color);
 
 signals:
     void lightTypeChanged(QString lightTypeName);
     void roomChanged(il::Room* room);
+    void colorChanged(QColor color);
 
 private:
     static LightType readLightTypeFrom(const QJsonObject& json);
+
+    void onRGBValueChanged();
+
     Room* m_room { nullptr };
+    QColor m_color;
 };
 
 } // namespace il

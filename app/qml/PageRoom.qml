@@ -43,8 +43,23 @@ Item {
                     light.room = root.room
                     roomView.currentIndex = root.room.lights.indexOf(light)
                 }
-                stackView.pop()
-                root.updateMainToolbar()
+                if (root.stack !== null) {
+                    root.stack.pop()
+                    root.updateMainToolbar()
+                }
+            }
+        }
+    }
+
+    Component {
+        id: colorSelectionView
+        PageColorSelection {
+            Component.onDestruction: {
+                console.log(selectedColor)
+                var light = lightConfigurator.light
+                if (light !== null) {
+                    light.color = selectedColor
+                }
             }
         }
     }
@@ -53,10 +68,10 @@ Item {
         id: addLightButton
         icon.source: "Images/material.io-sharp-add-24px.svg"
         onClicked: {
-            if (stackView === null)
+            if (root.stack === null)
                 return;
 
-            stackView.push(lightSelectionView, { room: root.room })
+            root.stack.push(lightSelectionView, { room: root.room })
             root.updateMainToolbar()
         }
     }
@@ -111,6 +126,14 @@ Item {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         rgbSlidersVisible: true
+
+        onColorSwatchClicked: {
+            if (root.stack === null)
+                return;
+
+            root.stack.push(colorSelectionView, { inputColor: color })
+            root.updateMainToolbar()
+        }
     }
 
     ILRoomView {

@@ -63,12 +63,7 @@ Item {
 //                width: root.colorSwatchSize
                 height: root.colorSwatchSize
                 radius: root.colorSwatchRadius
-                color:  root.light !== null
-                        ? "#%1%2%3"
-                          .arg(root.light.redValue.toString(16).padStart(2, '0'))
-                          .arg(root.light.greenValue.toString(16).padStart(2, '0'))
-                          .arg(root.light.blueValue.toString(16).padStart(2, '0'))
-                        : "black"
+                color:  root.light !== null ? root.light.color : "white"
 
                 MouseArea {
                     anchors.fill: parent
