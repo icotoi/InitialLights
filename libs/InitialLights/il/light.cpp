@@ -86,6 +86,7 @@ void Light::read(const QJsonObject &json)
         safeRead(json, jsonRedValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_redValue(json.toInt()); });
         safeRead(json, jsonGreenValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_greenValue(json.toInt()); });
         safeRead(json, jsonBlueValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_blueValue(json.toInt()); });
+        onRGBValueChanged(); // make sure the "color" is updated when reading from JSON
         break;
     default:
         qWarning() << "reading unknown light type";
