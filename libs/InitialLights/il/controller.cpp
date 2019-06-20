@@ -9,6 +9,7 @@
 #include <QBluetoothAddress>
 #endif
 
+#include <QEventLoop>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QMetaEnum>
@@ -106,7 +107,9 @@ QByteArray Controller::updateDeviceCommand() const
 
 void Controller::clear()
 {
-    m_lights->clear();
+    if (m_needsInitialState) {
+        m_lights->clear();
+    }
 
     m_hasReceivedInitialState = false;
 
@@ -120,6 +123,7 @@ void Controller::clear()
     }
 
     update_isBusy(false);
+    update_isConnected(false);
 }
 
 void Controller::read(const QJsonObject &json)
@@ -134,7 +138,12 @@ void Controller::read(const QJsonObject &json)
         }
     });
 
-    readModel(json, jsonLightsTag, m_lights);
+    readModel(json, jsonLightsTag, m_lights, [&](const QJsonObject& json) {
+        auto light = new Light;
+        light->read(json);
+        connectLight(light);
+        m_lights->append(light);
+    });
 
 #if defined(Q_OS_MAC)
     m_info = QBluetoothDeviceInfo(QBluetoothUuid(address()), name(), 0);
@@ -165,6 +174,34 @@ QString Controller::safeAddress(const QBluetoothDeviceInfo &info)
 bool Controller::isValidDevice(const QBluetoothDeviceInfo &info)
 {
     return info.serviceUuids().contains(uuidService);
+}
+
+void Controller::blink(Light *light, int offset)
+{
+    // FIXME: demo requires negative offset
+//    if (offset < 0) {
+//        qWarning() << "offset blink must be positive; received:" << offset;
+//        return;
+//    }
+
+    if (!light) {
+        qWarning() << "trying to blink NULL light";
+        return;
+    }
+
+    int index = m_lights->indexOf(light);
+    if (index < 0) {
+        qWarning() << "light" << light->name() << "not in controller" << m_name;
+        return;
+    }
+
+    index += offset;
+
+    if (index > 3) {
+        qWarning() << "don't know how to blink channel" << index;
+    }
+
+    writeToDevice("UB" + QByteArray::number(index) + "\n");
 }
 
 void Controller::connectToController()
@@ -280,7 +317,13 @@ void Controller::serviceStateChanged(QLowEnergyService::ServiceState state)
         update_message("Connected");
         qDebug() << "connected";
 
-        writeToDevice("U?\n", true);
+        update_isConnected(true);
+
+        if (m_needsInitialState) {
+            writeToDevice("U?\n");
+        } else {
+            update_isBusy(false);
+        }
 
         break;
     }
@@ -356,38 +399,29 @@ void Controller::updateFromDevice(const QByteArray &data)
                     // 2 x Analogic
                     update_controllerType(V1_2x10V);
                     for (int i = 0; i < 2; ++i) {
-                        auto light = new Light(Light::Analogic, QString::number(i+1), this);
-                        get_lights()->append(light);
+                        auto light = addNewLight(Light::Analogic, QString::number(i+1));
                         light->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
-                        connect(light, &Light::valueChanged, this, &Controller::updateDevice);
                     }
                     break;
                 case 3:
                     // 4 x PWM
                     update_controllerType(V1_4xPWM);
                     for (int i = 0; i < 4; ++i) {
-                        auto light = new Light(Light::PWM, QString::number(i+1), this);
-                        get_lights()->append(light);
+                        auto light = addNewLight(Light::PWM, QString::number(i+1));
                         light->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
-                        connect(light, &Light::valueChanged, this, &Controller::updateDevice);
                     }
                     break;
                 default:
                     // 1 x PWM + 1 x RGB
                     update_controllerType(V1_1xPWM_1xRGB);
-                    auto pwmLight = new Light(Light::PWM, "1", this);
-                    get_lights()->append(pwmLight);
+                    auto pwmLight = addNewLight(Light::PWM, "1");
                     pwmLight->set_value(data.mid(1, 2).toInt(nullptr, 16));
-                    connect(pwmLight, &Light::valueChanged, this, &Controller::updateDevice);
 
-                    auto rgbLight = new Light(Light::RGB, "2", this);
-                    get_lights()->append(rgbLight);
+                    auto rgbLight = addNewLight(Light::RGB, "2");
                     rgbLight->set_redValue(data.mid(3, 2).toInt(nullptr, 16));
                     rgbLight->set_greenValue(data.mid(5, 2).toInt(nullptr, 16));
                     rgbLight->set_blueValue(data.mid(7, 2).toInt(nullptr, 16));
-                    connect(rgbLight, &Light::redValueChanged, this, &Controller::updateDevice);
-                    connect(rgbLight, &Light::greenValueChanged, this, &Controller::updateDevice);
-                    connect(rgbLight, &Light::blueValueChanged, this, &Controller::updateDevice);
+
                     break;
                 }
             } else if(m_command.startsWith("UV")) {
@@ -418,6 +452,10 @@ void Controller::updateDevice()
 
 bool Controller::writeToDevice(const QByteArray &data, bool clearReadBuffer)
 {
+    if (!connectIfNeeded()) {
+        return false;
+    }
+
     if (clearReadBuffer) {
         m_readBuffer.clear();
     }
@@ -430,8 +468,67 @@ bool Controller::writeToDevice(const QByteArray &data, bool clearReadBuffer)
     }
 
     m_command = data;
+
+    qDebug() << "sending command to device:" << m_command;
+
     m_service->writeCharacteristic(writeCharacteristic, m_command,  QLowEnergyService::WriteMode::WriteWithoutResponse);
 
     return true;
+}
+
+bool Controller::connectIfNeeded()
+{
+    if (m_isConnected)
+        return true;
+
+    m_needsInitialState = false;
+
+    QEventLoop localEventLoop;
+    connect(this, &Controller::isConnectedChanged, [&localEventLoop, this](){
+        if (m_isConnected) {
+            localEventLoop.quit();
+        }
+    });
+
+    qDebug() << "reconnecting controller";
+
+    connectToController();
+
+    qDebug() << "waiting...";
+
+    localEventLoop.exec();
+
+    qDebug() << "done";
+
+    m_needsInitialState = true;
+
+    return true;
+}
+
+Light *Controller::addNewLight(Light::LightType lightType, const QString &name)
+{
+    auto light = new Light(lightType, name);
+    m_lights->append(light);
+    connectLight(light);
+    return light;
+}
+
+void Controller::connectLight(Light *light)
+{
+    if (!light) {
+        qWarning() << "trying to connect NULL light";
+        return;
+    }
+
+    switch (light->lightType()) {
+    case Light::RGB:
+        connect(light, &Light::redValueChanged, this, &Controller::updateDevice);
+        connect(light, &Light::greenValueChanged, this, &Controller::updateDevice);
+        connect(light, &Light::blueValueChanged, this, &Controller::updateDevice);
+        break;
+    default:
+        connect(light, &Light::valueChanged, this, &Controller::updateDevice);
+        break;
+    }
 }
 } // namespace il

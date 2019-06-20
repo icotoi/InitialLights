@@ -53,7 +53,7 @@ Item {
         delegate: ILLight {
             width: listView.width
             isControllerNameVisible: false
-            light: model
+            light: listView.model.get(index)
 
             onColorSwatchClicked: {
                 if (root.stack === null)

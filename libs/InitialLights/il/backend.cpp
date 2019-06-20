@@ -146,19 +146,21 @@ void BackEnd::write(QJsonObject &json) const
     json[jsonControllersTag] = controllerListObject;
 
     QJsonArray roomArray;
-    std::for_each (m_rooms->constBegin(), m_rooms->constEnd(), [&roomArray](const Room* room) {
+    for (auto it = m_rooms->constBegin(); it != m_rooms->constEnd(); ++it) {
+        auto room = *it;
         QJsonObject roomObject;
         room->write(roomObject);
         roomArray.append(roomObject);
-    });
+    }
     json[jsonRoomsTag] = roomArray;
 
     QJsonArray sceneArray;
-    std::for_each (m_scenes->constBegin(), m_scenes->constEnd(), [&sceneArray](const Scene* scene) {
+    for (auto it = m_scenes->constBegin(); it != m_scenes->constEnd(); ++it) {
+        auto scene = *it;
         QJsonObject sceneObject;
         scene->write(sceneObject);
         sceneArray.append(sceneObject);
-    });
+    }
     json[jsonScenesTag] = sceneArray;
 }
 

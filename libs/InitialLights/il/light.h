@@ -6,6 +6,7 @@
 
 namespace il {
 
+class Controller;
 class Room;
 
 class INITIALLIGHTSSHARED_EXPORT Light : public QObject
@@ -40,7 +41,7 @@ private:
     QML_WRITABLE_AUTO_PROPERTY(double, sideY)
 
     Q_PROPERTY(QString lightTypeName READ lightTypeName NOTIFY lightTypeChanged)
-    Q_PROPERTY(QObject* controller READ controller CONSTANT)
+    Q_PROPERTY(il::Controller* controller READ controller CONSTANT)
     Q_PROPERTY(il::Room* room READ room WRITE setRoom NOTIFY roomChanged)
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
 
@@ -53,13 +54,14 @@ public:
     virtual void write(QJsonObject& json) const;
 
     QString lightTypeName() const;
-    QObject* controller() const;
+    Controller* controller() const;
     Room* room() const { return m_room; }
     QColor color() const { return m_color; }
 
 public slots:
     void setRoom(il::Room* room);
     void setColor(QColor color);
+    void blink(int offset);
 
 signals:
     void lightTypeChanged(QString lightTypeName);

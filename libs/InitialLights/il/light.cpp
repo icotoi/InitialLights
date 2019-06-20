@@ -1,5 +1,6 @@
 #include "light.h"
 
+#include "controller.h"
 #include "room.h"
 #include "jsonhelpers.h"
 
@@ -85,6 +86,7 @@ void Light::read(const QJsonObject &json)
         safeRead(json, jsonRedValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_redValue(json.toInt()); });
         safeRead(json, jsonGreenValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_greenValue(json.toInt()); });
         safeRead(json, jsonBlueValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_blueValue(json.toInt()); });
+        onRGBValueChanged(); // make sure the "color" is updated when reading from JSON
         break;
     default:
         qWarning() << "reading unknown light type";
@@ -127,11 +129,23 @@ QString Light::lightTypeName() const
     return QMetaEnum::fromType<LightType>().valueToKey(m_lightType);
 }
 
-QObject *Light::controller() const
+Controller *Light::controller() const
 {
-    return parent()
-            ? parent()->parent()
-            : nullptr;
+    auto c = parent()
+                 ? parent()->parent()
+                 : nullptr;
+
+    if (!c) {
+        qWarning() << "no parent->parent found for light" << m_name;
+        return nullptr;
+    }
+
+    auto cc = qobject_cast<Controller*>(c);
+    if (!cc) {
+        qWarning() << "light parent->parent is not a controller: parent" << parent() << "parent->parent:" << parent()->parent();
+        return nullptr;
+    }
+    return cc;
 }
 
 void Light::setRoom(Room *room)
@@ -178,6 +192,18 @@ void Light::setColor(QColor color)
     set_blueValue(m_color.blue());
 
     m_colorUpdateEnabled = true;
+}
+
+void Light::blink(int offset)
+{
+    auto c = controller();
+    if (c) {
+        c->blink(this, offset);
+    } else {
+        qWarning() << "no controller found for this light";
+        qWarning() << "parent:" << parent();
+        qWarning() << "parent->parent():" << parent()->parent();
+    }
 }
 
 void Light::onRGBValueChanged()
