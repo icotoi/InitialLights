@@ -27,22 +27,24 @@ void readModel(const QJsonObject &json, const QString &tag, QQmlObjectListModel<
 template <typename T>
 void writeModel(QJsonObject& json, const QString& tag, const QQmlObjectListModel<T>* model) {
     QJsonArray array;
-    std::for_each (model->constBegin(), model->constEnd(), [&array](const T* item) {
+    for (auto it = model->constBegin(); it != model->constEnd(); ++it) {
+        auto item = *it;
         QJsonObject object;
         item->write(object);
         array.append(object);
-    });
+    }
     json[tag] = array;
 }
 
 template <typename T>
 void writeModel(QJsonObject& json, const QString& tag, const QQmlObjectListModel<T>* model, std::function<void(QJsonObject& json, const T*)> functor) {
     QJsonArray array;
-    std::for_each (model->constBegin(), model->constEnd(), [&array, &functor](const T* item) {
+    for (auto it = model->constBegin(); it != model->constEnd(); ++it) {
+        auto item = *it;
         QJsonObject object;
         functor(object, item);
         array.append(object);
-    });
+    }
     json[tag] = array;
 }
 } // namespace il
