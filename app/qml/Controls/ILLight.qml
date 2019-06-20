@@ -90,7 +90,7 @@ Item {
                 valueIncrement: root.light !== null ? root.light.valueIncrement : 1
                 value: root.light !== null ? root.light.value : 0
                 onValueChanged: if (root.light !== null) root.light.value = analogicChannel.value
-                onBlink: if (root.light !== null) light.blink(0)
+                onBlink: if (root.light !== null) root.light.blink(0)
             }
 
             ILLightChannel {
@@ -110,8 +110,8 @@ Item {
                 valueIncrement: root.light !== null ? root.light.valueIncrement : 1
                 value: root.light !== null ? root.light.value : 0
                 onValueChanged: if (root.light !== null) root.light.value = pwmChannel.value
-//                onBlink: if (root.light !== null) light.blink(0)
-                onBlink: if (root.light !== null) light.blink(1) // FIXME: fix for demo
+//                onBlink: if (root.light !== null) root.light.blink(0)
+                onBlink: if (root.light !== null) root.light.blink(1) // FIXME: fix for demo
             }
 
             ILLightChannel {
@@ -131,8 +131,8 @@ Item {
                 valueIncrement: root.light !== null ? root.light.valueIncrement : 1
                 value: root.light !== null ? root.light.redValue : 0
                 onValueChanged: if (root.light !== null) root.light.redValue = redChannel.value
-//                onBlink: if (root.light !== null) light.blink(0)
-                onBlink: if (root.light !== null) light.blink(-1) // FIXME: fix for demo
+//                onBlink: if (root.light !== null) root.light.blink(0)
+                onBlink: if (root.light !== null) root.light.blink(-1) // FIXME: fix for demo
             }
 
             ILLightChannel {
@@ -152,8 +152,8 @@ Item {
                 valueIncrement: root.light !== null ? root.light.valueIncrement : 1
                 value: root.light !== null ? root.light.greenValue : 0
                 onValueChanged: if (root.light !== null) root.light.greenValue = greenChannel.value
-//                onBlink: if (root.light !== null) light.blink(1)
-                onBlink: if (root.light !== null) light.blink(2) // FIXME: fix for demo
+//                onBlink: if (root.light !== null) root.light.blink(1)
+                onBlink: if (root.light !== null) root.light.blink(2) // FIXME: fix for demo
             }
 
             ILLightChannel {
@@ -173,8 +173,8 @@ Item {
                 valueIncrement: root.light !== null ? root.light.valueIncrement : 1
                 value: root.light !== null ? root.light.blueValue : 0
                 onValueChanged: if (root.light !== null) root.light.blueValue = blueChannel.value
-//                onBlink: if (root.light !== null) light.blink(2)
-                onBlink: if (root.light !== null) light.blink(1) // FIXME: fix for demo
+//                onBlink: if (root.light !== null) root.light.blink(2)
+                onBlink: if (root.light !== null) root.light.blink(1) // FIXME: fix for demo
             }
         }
 
