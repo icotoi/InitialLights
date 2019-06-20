@@ -41,9 +41,9 @@ Light::Light(QObject *parent)
     , m_sideX { 0.0 }
     , m_sideY { 0.0 }
 {
-    connect(this, &Light::redValueChanged, this, &Light::onRGBValueChanged);
-    connect(this, &Light::greenValueChanged, this, &Light::onRGBValueChanged);
-    connect(this, &Light::blueValueChanged, this, &Light::onRGBValueChanged);
+    connect(this, &Light::redValueChanged, this, &Light::updateColorValue);
+    connect(this, &Light::greenValueChanged, this, &Light::updateColorValue);
+    connect(this, &Light::blueValueChanged, this, &Light::updateColorValue);
 }
 
 Light::Light(Light::LightType lightType, const QString &name, QObject *parent)
@@ -86,7 +86,7 @@ void Light::read(const QJsonObject &json)
         safeRead(json, jsonRedValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_redValue(json.toInt()); });
         safeRead(json, jsonGreenValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_greenValue(json.toInt()); });
         safeRead(json, jsonBlueValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_blueValue(json.toInt()); });
-        onRGBValueChanged(); // make sure the "color" is updated when reading from JSON
+        updateColorValue(); // make sure the "color" is updated when reading from JSON
         break;
     default:
         qWarning() << "reading unknown light type";
@@ -206,7 +206,7 @@ void Light::blink(int offset)
     }
 }
 
-void Light::onRGBValueChanged()
+void Light::updateColorValue()
 {
     switch (m_lightType) {
     case RGB:

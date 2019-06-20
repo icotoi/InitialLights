@@ -57,6 +57,7 @@ public:
     Controller* controller() const;
     Room* room() const { return m_room; }
     QColor color() const { return m_color; }
+    void updateColorValue();
 
 public slots:
     void setRoom(il::Room* room);
@@ -70,8 +71,6 @@ signals:
 
 private:
     static LightType readLightTypeFrom(const QJsonObject& json);
-
-    void onRGBValueChanged();
 
     Room* m_room { nullptr };
     QColor m_color { Qt::white };

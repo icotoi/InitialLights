@@ -421,6 +421,7 @@ void Controller::updateFromDevice(const QByteArray &data)
                     rgbLight->set_redValue(data.mid(3, 2).toInt(nullptr, 16));
                     rgbLight->set_greenValue(data.mid(5, 2).toInt(nullptr, 16));
                     rgbLight->set_blueValue(data.mid(7, 2).toInt(nullptr, 16));
+                    rgbLight->updateColorValue();
 
                     break;
                 }
