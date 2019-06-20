@@ -394,7 +394,7 @@ void Controller::updateFromDevice(const QByteArray &data)
                     // 2 x Analogic
                     update_controllerType(V1_2x10V);
                     for (int i = 0; i < 2; ++i) {
-                        auto light = new Light(Light::Analogic, QString::number(i+1), this);
+                        auto light = new Light(Light::Analogic, QString::number(i+1));
                         get_lights()->append(light);
                         light->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
                         connect(light, &Light::valueChanged, this, &Controller::updateDevice);
@@ -404,7 +404,7 @@ void Controller::updateFromDevice(const QByteArray &data)
                     // 4 x PWM
                     update_controllerType(V1_4xPWM);
                     for (int i = 0; i < 4; ++i) {
-                        auto light = new Light(Light::PWM, QString::number(i+1), this);
+                        auto light = new Light(Light::PWM, QString::number(i+1));
                         get_lights()->append(light);
                         light->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
                         connect(light, &Light::valueChanged, this, &Controller::updateDevice);
@@ -413,12 +413,12 @@ void Controller::updateFromDevice(const QByteArray &data)
                 default:
                     // 1 x PWM + 1 x RGB
                     update_controllerType(V1_1xPWM_1xRGB);
-                    auto pwmLight = new Light(Light::PWM, "1", this);
+                    auto pwmLight = new Light(Light::PWM, "1");
                     get_lights()->append(pwmLight);
                     pwmLight->set_value(data.mid(1, 2).toInt(nullptr, 16));
                     connect(pwmLight, &Light::valueChanged, this, &Controller::updateDevice);
 
-                    auto rgbLight = new Light(Light::RGB, "2", this);
+                    auto rgbLight = new Light(Light::RGB, "2");
                     get_lights()->append(rgbLight);
                     rgbLight->set_redValue(data.mid(3, 2).toInt(nullptr, 16));
                     rgbLight->set_greenValue(data.mid(5, 2).toInt(nullptr, 16));
