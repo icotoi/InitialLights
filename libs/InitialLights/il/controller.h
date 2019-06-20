@@ -2,6 +2,8 @@
 
 #include "initiallights_global.h"
 
+#include "light.h"
+
 #include "QQmlAutoPropertyHelpers.h"
 #include "QQmlObjectListModel.h"
 
@@ -9,8 +11,6 @@
 #include <QLowEnergyService>
 
 namespace il {
-
-class Light;
 
 class INITIALLIGHTSSHARED_EXPORT Controller : public QObject
 {
@@ -78,6 +78,9 @@ private:
     bool writeToDevice(const QByteArray& data, bool clearReadBuffer = true);
 
     bool connectIfNeeded();
+
+    Light* addNewLight(Light::LightType lightType, const QString& name);
+    void connectLight(Light* light);
 
     QBluetoothDeviceInfo m_info;
     QScopedPointer<QLowEnergyController> m_controller;

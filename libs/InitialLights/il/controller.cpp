@@ -138,7 +138,12 @@ void Controller::read(const QJsonObject &json)
         }
     });
 
-    readModel(json, jsonLightsTag, m_lights);
+    readModel(json, jsonLightsTag, m_lights, [&](const QJsonObject& json) {
+        auto light = new Light;
+        light->read(json);
+        connectLight(light);
+        m_lights->append(light);
+    });
 
 #if defined(Q_OS_MAC)
     m_info = QBluetoothDeviceInfo(QBluetoothUuid(address()), name(), 0);
@@ -394,38 +399,29 @@ void Controller::updateFromDevice(const QByteArray &data)
                     // 2 x Analogic
                     update_controllerType(V1_2x10V);
                     for (int i = 0; i < 2; ++i) {
-                        auto light = new Light(Light::Analogic, QString::number(i+1));
-                        get_lights()->append(light);
+                        auto light = addNewLight(Light::Analogic, QString::number(i+1));
                         light->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
-                        connect(light, &Light::valueChanged, this, &Controller::updateDevice);
                     }
                     break;
                 case 3:
                     // 4 x PWM
                     update_controllerType(V1_4xPWM);
                     for (int i = 0; i < 4; ++i) {
-                        auto light = new Light(Light::PWM, QString::number(i+1));
-                        get_lights()->append(light);
+                        auto light = addNewLight(Light::PWM, QString::number(i+1));
                         light->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
-                        connect(light, &Light::valueChanged, this, &Controller::updateDevice);
                     }
                     break;
                 default:
                     // 1 x PWM + 1 x RGB
                     update_controllerType(V1_1xPWM_1xRGB);
-                    auto pwmLight = new Light(Light::PWM, "1");
-                    get_lights()->append(pwmLight);
+                    auto pwmLight = addNewLight(Light::PWM, "1");
                     pwmLight->set_value(data.mid(1, 2).toInt(nullptr, 16));
-                    connect(pwmLight, &Light::valueChanged, this, &Controller::updateDevice);
 
-                    auto rgbLight = new Light(Light::RGB, "2");
-                    get_lights()->append(rgbLight);
+                    auto rgbLight = addNewLight(Light::RGB, "2");
                     rgbLight->set_redValue(data.mid(3, 2).toInt(nullptr, 16));
                     rgbLight->set_greenValue(data.mid(5, 2).toInt(nullptr, 16));
                     rgbLight->set_blueValue(data.mid(7, 2).toInt(nullptr, 16));
-                    connect(rgbLight, &Light::redValueChanged, this, &Controller::updateDevice);
-                    connect(rgbLight, &Light::greenValueChanged, this, &Controller::updateDevice);
-                    connect(rgbLight, &Light::blueValueChanged, this, &Controller::updateDevice);
+
                     break;
                 }
             } else if(m_command.startsWith("UV")) {
@@ -507,5 +503,32 @@ bool Controller::connectIfNeeded()
     m_needsInitialState = true;
 
     return true;
+}
+
+Light *Controller::addNewLight(Light::LightType lightType, const QString &name)
+{
+    auto light = new Light(lightType, name);
+    m_lights->append(light);
+    connectLight(light);
+    return light;
+}
+
+void Controller::connectLight(Light *light)
+{
+    if (!light) {
+        qWarning() << "trying to connect NULL light";
+        return;
+    }
+
+    switch (light->lightType()) {
+    case Light::RGB:
+        connect(light, &Light::redValueChanged, this, &Controller::updateDevice);
+        connect(light, &Light::greenValueChanged, this, &Controller::updateDevice);
+        connect(light, &Light::blueValueChanged, this, &Controller::updateDevice);
+        break;
+    default:
+        connect(light, &Light::valueChanged, this, &Controller::updateDevice);
+        break;
+    }
 }
 } // namespace il

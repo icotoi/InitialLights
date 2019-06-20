@@ -12,20 +12,6 @@ namespace il {
 void safeRead(const QJsonObject &json, const QString &tag, QJsonValue::Type jsonType, std::function<void(const QJsonValue &)> functor);
 
 template <typename T>
-void readModel(const QJsonObject& json, const QString& tag, QQmlObjectListModel<T>* model) {
-    if (json.contains(tag) && json[tag].isArray()) {
-        QJsonArray array { json[tag].toArray() };
-        model->clear();
-        for (int i = 0; i < array.size(); ++i) {
-            QJsonObject object = array[i].toObject();
-            auto item = new T;
-            item->read(object);
-            model->append(item);
-        }
-    }
-}
-
-template <typename T>
 void readModel(const QJsonObject &json, const QString &tag, QQmlObjectListModel<T>* model, std::function<void (const QJsonObject &)> functor) {
     if (json.contains(tag) && json[tag].isArray()) {
         QJsonArray array { json[tag].toArray() };
@@ -33,6 +19,7 @@ void readModel(const QJsonObject &json, const QString &tag, QQmlObjectListModel<
         for (int i = 0; i < array.size(); ++i) {
             QJsonObject object = array[i].toObject();
             functor(object);
+            // NOTE: the functor must append the object to the model!
         }
     }
 }
