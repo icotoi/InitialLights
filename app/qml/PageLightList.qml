@@ -35,6 +35,7 @@ Item {
                                : model.controller.address)
                             : "controller"
             light: listView.model.get(index)
+            enabled: (light !== null && light.controller !== null) ? !light.controller.isBusy : false
 
             onColorSwatchClicked: {
                 if (root.stack === null)

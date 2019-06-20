@@ -50,7 +50,7 @@
         <file>Controls/ILLight.qml</file>
         <file>PageLightList.qml</file>
         <file>DemoConfig.json</file>
-        <file>Controls/ILLabeledSlider.qml</file>
+        <file>Controls/ILLightChannel.qml</file>
         <file>Images/material.io-baseline-location_city-24px.svg</file>
         <file>Images/material.io-baseline-weekend-48px.svg</file>
         <file>Controls/ILControllerItemDelegate.qml</file>

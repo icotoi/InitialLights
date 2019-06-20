@@ -124,7 +124,7 @@ Item {
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.bottom: parent.bottom
-        rgbSlidersVisible: true
+        rgbChannelsVisible: true
 
         onColorSwatchClicked: {
             if (root.stack === null)

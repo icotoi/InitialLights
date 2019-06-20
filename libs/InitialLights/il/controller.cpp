@@ -173,10 +173,11 @@ bool Controller::isValidDevice(const QBluetoothDeviceInfo &info)
 
 void Controller::blink(Light *light, int offset)
 {
-    if (offset < 0) {
-        qWarning() << "offset blink must be positive; received:" << offset;
-        return;
-    }
+    // FIXME: demo requires negative offset
+//    if (offset < 0) {
+//        qWarning() << "offset blink must be positive; received:" << offset;
+//        return;
+//    }
 
     if (!light) {
         qWarning() << "trying to blink NULL light";
