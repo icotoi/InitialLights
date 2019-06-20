@@ -186,6 +186,10 @@ void Light::blink(int offset)
     auto c = qobject_cast<Controller*>(controller());
     if (c) {
         c->blink(this, offset);
+    } else {
+        qWarning() << "no controller found for this light";
+        qWarning() << "parent:" << parent();
+        qWarning() << "parent->parent():" << parent()->parent();
     }
 }
 
