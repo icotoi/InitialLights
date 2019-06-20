@@ -28,5 +28,15 @@ RowLayout {
     ToolButton {
         icon.source: "../Images/material.io-baseline-wb_incandescent-24px--blink.svg"
         onClicked: control.blink()
+        Rectangle {
+            color: "transparent"
+            anchors.centerIn: parent
+            width: 36
+            height: width
+            radius: width / 2
+            border.width: 1
+            border.color: label.color
+            opacity: 0.3
+        }
     }
 }
