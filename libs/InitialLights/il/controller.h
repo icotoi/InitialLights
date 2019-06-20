@@ -73,7 +73,7 @@ private:
 
     void updateFromDevice(const QByteArray& data);
     void updateDevice();
-    bool writeToDevice(const QByteArray& data);
+    bool writeToDevice(const QByteArray& data, bool clearReadBuffer = false);
 
     QBluetoothDeviceInfo m_info;
     QScopedPointer<QLowEnergyController> m_controller;
@@ -81,6 +81,7 @@ private:
     QLowEnergyDescriptor m_notificationDescriptor;
     QByteArray m_command;
     bool m_hasReceivedInitialState { false };
+    QByteArray m_readBuffer;
 };
 
 } // namespace il

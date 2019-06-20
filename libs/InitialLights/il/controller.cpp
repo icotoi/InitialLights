@@ -280,7 +280,7 @@ void Controller::serviceStateChanged(QLowEnergyService::ServiceState state)
         update_message("Connected");
         qDebug() << "connected";
 
-        writeToDevice("U?\n");
+        writeToDevice("U?\n", true);
 
         break;
     }
@@ -296,9 +296,25 @@ void Controller::serviceCharacteristicChanged(const QLowEnergyCharacteristic &ch
     if (characteristic.uuid() != QBluetoothUuid(readCharacteristicUuid))
         return;
 
-    qDebug() << "received response: " << data;
+    const char messageSeparator { '\n' };
 
-    updateFromDevice(data.simplified());
+    int index = data.indexOf(messageSeparator);
+    if (m_readBuffer.size() > 0 || index < 0) {
+        qDebug() << "received partial data:" << data;
+    }
+
+    if (index >=0) {
+        index += m_readBuffer.size();
+    }
+
+    m_readBuffer += data;
+
+    if (index >= 0) {
+        auto response = m_readBuffer.left(index + 1);
+        m_readBuffer = m_readBuffer.mid(index + 2);
+        qDebug() << "received response: " << response << "(left in read buffer:" << m_readBuffer <<")";
+        updateFromDevice(response.simplified());
+    }
 }
 
 void Controller::serviceDescriptorWritten(const QLowEnergyDescriptor &descriptor, const QByteArray &data)
@@ -400,8 +416,12 @@ void Controller::updateDevice()
     }
 }
 
-bool Controller::writeToDevice(const QByteArray &data)
+bool Controller::writeToDevice(const QByteArray &data, bool clearReadBuffer)
 {
+    if (clearReadBuffer) {
+        m_readBuffer.clear();
+    }
+
     auto writeCharacteristic = m_service->characteristic(writeCharacteristicUuid);
     if (!writeCharacteristic.isValid()) {
         update_message("Cannot get write characteristic");
