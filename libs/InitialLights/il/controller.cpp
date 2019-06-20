@@ -9,6 +9,7 @@
 #include <QBluetoothAddress>
 #endif
 
+#include <QEventLoop>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QMetaEnum>
@@ -106,7 +107,9 @@ QByteArray Controller::updateDeviceCommand() const
 
 void Controller::clear()
 {
-    m_lights->clear();
+    if (m_needsInitialState) {
+        m_lights->clear();
+    }
 
     m_hasReceivedInitialState = false;
 
@@ -120,6 +123,7 @@ void Controller::clear()
     }
 
     update_isBusy(false);
+    update_isConnected(false);
 }
 
 void Controller::read(const QJsonObject &json)
@@ -165,6 +169,33 @@ QString Controller::safeAddress(const QBluetoothDeviceInfo &info)
 bool Controller::isValidDevice(const QBluetoothDeviceInfo &info)
 {
     return info.serviceUuids().contains(uuidService);
+}
+
+void Controller::blink(Light *light, int offset)
+{
+    if (offset < 0) {
+        qWarning() << "offset blink must be positive; received:" << offset;
+        return;
+    }
+
+    if (!light) {
+        qWarning() << "trying to blink NULL light";
+        return;
+    }
+
+    int index = m_lights->indexOf(light);
+    if (index < 0) {
+        qWarning() << "light" << light->name() << "not in controller" << m_name;
+        return;
+    }
+
+    index += offset;
+
+    if (index > 3) {
+        qWarning() << "don't know how to blink channel" << index;
+    }
+
+    writeToDevice("UB" + QByteArray::number(index) + "\n");
 }
 
 void Controller::connectToController()
@@ -280,7 +311,13 @@ void Controller::serviceStateChanged(QLowEnergyService::ServiceState state)
         update_message("Connected");
         qDebug() << "connected";
 
-        writeToDevice("U?\n", true);
+        update_isConnected(true);
+
+        if (m_needsInitialState) {
+            writeToDevice("U?\n");
+        } else {
+            update_isBusy(false);
+        }
 
         break;
     }
@@ -418,6 +455,10 @@ void Controller::updateDevice()
 
 bool Controller::writeToDevice(const QByteArray &data, bool clearReadBuffer)
 {
+    if (!connectIfNeeded()) {
+        return false;
+    }
+
     if (clearReadBuffer) {
         m_readBuffer.clear();
     }
@@ -430,7 +471,39 @@ bool Controller::writeToDevice(const QByteArray &data, bool clearReadBuffer)
     }
 
     m_command = data;
+
+    qDebug() << "sending command to device:" << m_command;
+
     m_service->writeCharacteristic(writeCharacteristic, m_command,  QLowEnergyService::WriteMode::WriteWithoutResponse);
+
+    return true;
+}
+
+bool Controller::connectIfNeeded()
+{
+    if (m_isConnected)
+        return true;
+
+    m_needsInitialState = false;
+
+    QEventLoop localEventLoop;
+    connect(this, &Controller::isConnectedChanged, [&localEventLoop, this](){
+        if (m_isConnected) {
+            localEventLoop.quit();
+        }
+    });
+
+    qDebug() << "reconnecting controller";
+
+    connectToController();
+
+    qDebug() << "waiting...";
+
+    localEventLoop.exec();
+
+    qDebug() << "done";
+
+    m_needsInitialState = true;
 
     return true;
 }

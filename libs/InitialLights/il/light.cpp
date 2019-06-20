@@ -1,5 +1,6 @@
 #include "light.h"
 
+#include "controller.h"
 #include "room.h"
 #include "jsonhelpers.h"
 
@@ -178,6 +179,14 @@ void Light::setColor(QColor color)
     set_blueValue(m_color.blue());
 
     m_colorUpdateEnabled = true;
+}
+
+void Light::blink(int offset)
+{
+    auto c = qobject_cast<Controller*>(controller());
+    if (c) {
+        c->blink(this, offset);
+    }
 }
 
 void Light::onRGBValueChanged()

@@ -3,6 +3,8 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Controls.Material 2.12
 
+import "../Constants"
+
 import InitialLights 1.0
 
 Item {
@@ -167,8 +169,27 @@ Item {
             }
         }
 
-        Switch {
-            visible: false
+        ColumnLayout {
+            ToolButton {
+                icon.source: "../Images/material.io-baseline-wb_incandescent-24px.svg"
+                onClicked: if (light !== null) light.blink(0)
+            }
+
+            ToolButton {
+                visible: root.light !== null && root.light.lightType === Light.RGB
+                icon.source: "../Images/material.io-baseline-wb_incandescent-24px.svg"
+                onClicked: if (light !== null) light.blink(1)
+            }
+
+            ToolButton {
+                visible: root.light !== null && root.light.lightType === Light.RGB
+                icon.source: "../Images/material.io-baseline-wb_incandescent-24px.svg"
+                onClicked: if (light !== null) light.blink(2)
+            }
+
+            Switch {
+                visible: true
+            }
         }
     }
 }

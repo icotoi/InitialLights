@@ -50,6 +50,8 @@ public:
     static QString safeAddress(const QBluetoothDeviceInfo &info);
     static bool isValidDevice(const QBluetoothDeviceInfo &info);
 
+    void blink(Light *light, int offset);
+
 public slots:
     void connectToController();
     void disconnectFromController();
@@ -73,7 +75,9 @@ private:
 
     void updateFromDevice(const QByteArray& data);
     void updateDevice();
-    bool writeToDevice(const QByteArray& data, bool clearReadBuffer = false);
+    bool writeToDevice(const QByteArray& data, bool clearReadBuffer = true);
+
+    bool connectIfNeeded();
 
     QBluetoothDeviceInfo m_info;
     QScopedPointer<QLowEnergyController> m_controller;
@@ -81,6 +85,7 @@ private:
     QLowEnergyDescriptor m_notificationDescriptor;
     QByteArray m_command;
     bool m_hasReceivedInitialState { false };
+    bool m_needsInitialState { true };
     QByteArray m_readBuffer;
 };
 

@@ -34,7 +34,7 @@ Item {
                                ? model.controller.name
                                : model.controller.address)
                             : "controller"
-            light: model
+            light: listView.model.get(index)
 
             onColorSwatchClicked: {
                 if (root.stack === null)

@@ -60,6 +60,7 @@ public:
 public slots:
     void setRoom(il::Room* room);
     void setColor(QColor color);
+    void blink(int offset);
 
 signals:
     void lightTypeChanged(QString lightTypeName);
