@@ -180,7 +180,7 @@ Item {
 
         Switch {
             id: isOnSwitch
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+//            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
             visible: true
             checked: (root.light !== null && root.light.isOn)
             onCheckedChanged: if (root.light !== null) root.light.isOn = isOnSwitch.checked

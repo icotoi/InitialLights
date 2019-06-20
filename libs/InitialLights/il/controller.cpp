@@ -452,7 +452,6 @@ void Controller::updateDevice()
     }
 
     if (m_command != command) {
-        qDebug() << "sending update to device:" << command;
         writeToDevice(command);
     }
 }
