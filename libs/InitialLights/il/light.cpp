@@ -128,11 +128,23 @@ QString Light::lightTypeName() const
     return QMetaEnum::fromType<LightType>().valueToKey(m_lightType);
 }
 
-QObject *Light::controller() const
+Controller *Light::controller() const
 {
-    return parent()
-            ? parent()->parent()
-            : nullptr;
+    auto c = parent()
+                 ? parent()->parent()
+                 : nullptr;
+
+    if (!c) {
+        qWarning() << "no parent->parent found for light" << m_name;
+        return nullptr;
+    }
+
+    auto cc = qobject_cast<Controller*>(c);
+    if (!cc) {
+        qWarning() << "light parent->parent is not a controller: parent" << parent() << "parent->parent:" << parent()->parent();
+        return nullptr;
+    }
+    return cc;
 }
 
 void Light::setRoom(Room *room)
@@ -183,7 +195,7 @@ void Light::setColor(QColor color)
 
 void Light::blink(int offset)
 {
-    auto c = qobject_cast<Controller*>(controller());
+    auto c = controller();
     if (c) {
         c->blink(this, offset);
     } else {
