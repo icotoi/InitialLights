@@ -38,6 +38,7 @@ private:
 
 public:
     explicit Controller(QObject *parent = nullptr);
+    explicit Controller(bool offline, QObject *parent = nullptr);
     explicit Controller(const QBluetoothDeviceInfo &info, QObject *parent = nullptr);
     ~Controller();
 
@@ -90,6 +91,7 @@ private:
     bool m_hasReceivedInitialState { false };
     bool m_needsInitialState { true };
     QByteArray m_readBuffer;
+    bool m_offline {false}; // for testing without network communication
 };
 
 } // namespace il

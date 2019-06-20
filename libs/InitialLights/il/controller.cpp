@@ -36,6 +36,12 @@ Controller::Controller(QObject *parent)
 {
 }
 
+Controller::Controller(bool offline, QObject *parent)
+    : Controller(parent)
+{
+    m_offline = offline;
+}
+
 Controller::Controller(const QBluetoothDeviceInfo &info, QObject *parent)
     : Controller(parent)
 {
@@ -61,10 +67,10 @@ QByteArray Controller::updateDeviceCommand() const
         Q_ASSERT(m_lights->at(1)->lightType() == Light::Analogic);
 
         command = QStringLiteral(u"US%1%2%3\n")
-                .arg(m_lights->at(0)->value(), 2, 16, QChar('0'))
-                .arg(m_lights->at(1)->value(), 2, 16, QChar('0'))
-                .arg(2, 6, 16, QChar('0'))
-                ;
+                      .arg(m_lights->at(0)->actualValue(), 2, 16, QChar('0'))
+                      .arg(m_lights->at(1)->actualValue(), 2, 16, QChar('0'))
+                      .arg(2, 6, 16, QChar('0'))
+            ;
         break;
     }
     case V1_4xPWM: {
@@ -75,10 +81,10 @@ QByteArray Controller::updateDeviceCommand() const
         Q_ASSERT(m_lights->at(3)->lightType() == Light::PWM);
 
         command = QString("US%1%2%3%4%5\n")
-                .arg(m_lights->at(0)->value(), 2, 16, QChar('0'))
-                .arg(m_lights->at(1)->value(), 2, 16, QChar('0'))
-                .arg(m_lights->at(2)->value(), 2, 16, QChar('0'))
-                .arg(m_lights->at(3)->value(), 2, 16, QChar('0'))
+                .arg(m_lights->at(0)->actualValue(), 2, 16, QChar('0'))
+                .arg(m_lights->at(1)->actualValue(), 2, 16, QChar('0'))
+                .arg(m_lights->at(2)->actualValue(), 2, 16, QChar('0'))
+                .arg(m_lights->at(3)->actualValue(), 2, 16, QChar('0'))
                 .arg(3, 2, 16, QChar('0'));
         break;
     }
@@ -90,10 +96,10 @@ QByteArray Controller::updateDeviceCommand() const
         auto pwmLight = m_lights->at(0);
         auto rgbLight = m_lights->at(1);
         command = QString("US%1%2%3%4%5\n")
-                .arg(pwmLight->value(), 2, 16, QChar('0'))
-                .arg(rgbLight->redValue(), 2, 16, QChar('0'))
-                .arg(rgbLight->greenValue(), 2, 16, QChar('0'))
-                .arg(rgbLight->blueValue(), 2, 16, QChar('0'))
+                      .arg(pwmLight->actualValue(), 2, 16, QChar('0'))
+                      .arg(rgbLight->actualRedValue(), 2, 16, QChar('0'))
+                      .arg(rgbLight->actualGreenValue(), 2, 16, QChar('0'))
+                      .arg(rgbLight->actualBlueValue(), 2, 16, QChar('0'))
                 .arg(1, 2, 16, QChar('0'));
         break;
     }
@@ -400,7 +406,7 @@ void Controller::updateFromDevice(const QByteArray &data)
                     update_controllerType(V1_2x10V);
                     for (int i = 0; i < 2; ++i) {
                         auto light = addNewLight(Light::Analogic, QString::number(i+1));
-                        light->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
+                        light->setValue(data.mid(1 + i*2, 2).toInt(nullptr, 16));
                     }
                     break;
                 case 3:
@@ -408,14 +414,14 @@ void Controller::updateFromDevice(const QByteArray &data)
                     update_controllerType(V1_4xPWM);
                     for (int i = 0; i < 4; ++i) {
                         auto light = addNewLight(Light::PWM, QString::number(i+1));
-                        light->set_value(data.mid(1 + i*2, 2).toInt(nullptr, 16));
+                        light->setValue(data.mid(1 + i*2, 2).toInt(nullptr, 16));
                     }
                     break;
                 default:
                     // 1 x PWM + 1 x RGB
                     update_controllerType(V1_1xPWM_1xRGB);
                     auto pwmLight = addNewLight(Light::PWM, "1");
-                    pwmLight->set_value(data.mid(1, 2).toInt(nullptr, 16));
+                    pwmLight->setValue(data.mid(1, 2).toInt(nullptr, 16));
 
                     auto rgbLight = addNewLight(Light::RGB, "2");
                     rgbLight->set_redValue(data.mid(3, 2).toInt(nullptr, 16));
@@ -453,6 +459,10 @@ void Controller::updateDevice()
 
 bool Controller::writeToDevice(const QByteArray &data, bool clearReadBuffer)
 {
+    if (m_offline) {
+        return false;
+    }
+
     if (!connectIfNeeded()) {
         return false;
     }
@@ -531,5 +541,7 @@ void Controller::connectLight(Light *light)
         connect(light, &Light::valueChanged, this, &Controller::updateDevice);
         break;
     }
+
+    connect(light, &Light::isOnChanged, this, &Controller::updateDevice);
 }
 } // namespace il

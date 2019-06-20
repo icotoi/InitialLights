@@ -34,7 +34,6 @@ Light::Light(QObject *parent)
     , m_minValue { 0 }
     , m_maxValue { 255 }
     , m_valueIncrement { 1 }
-    , m_value { 0 }
     , m_redValue { 0 }
     , m_greenValue { 0 }
     , m_blueValue { 0 }
@@ -75,14 +74,14 @@ void Light::read(const QJsonObject &json)
     switch (m_lightType) {
     case PWM:
     case Analogic:
-        safeRead(json, jsonValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_value(json.toInt()); });
+        safeRead(json, jsonValueTag, QJsonValue::Double, [&](const QJsonValue& json) { setValue(json.toInt()); });
         set_redValue(0);
         set_greenValue(0);
         set_blueValue(0);
 
         break;
     case RGB:
-        set_value(0);
+        setValue(0);
         safeRead(json, jsonRedValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_redValue(json.toInt()); });
         safeRead(json, jsonGreenValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_greenValue(json.toInt()); });
         safeRead(json, jsonBlueValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_blueValue(json.toInt()); });
@@ -192,6 +191,8 @@ void Light::setColor(QColor color)
     set_blueValue(m_color.blue());
 
     m_colorUpdateEnabled = true;
+
+    setIsOn(m_color != Qt::black);
 }
 
 void Light::blink(int offset)
@@ -206,6 +207,26 @@ void Light::blink(int offset)
     }
 }
 
+void Light::setIsOn(bool isOn)
+{
+    if (m_isOn == isOn)
+        return;
+
+    m_isOn = isOn;
+    emit isOnChanged(m_isOn);
+}
+
+void Light::setValue(int value)
+{
+    if (m_value == value)
+        return;
+
+    m_value = value;
+    emit valueChanged(m_value);
+
+    setIsOn(m_value > 0);
+}
+
 void Light::updateColorValue()
 {
     switch (m_lightType) {
@@ -216,6 +237,30 @@ void Light::updateColorValue()
         qWarning() << "color changed but the light is not an RGB one";
         break;
     }
+}
+
+int Light::actualValue()
+{
+    return m_isOn ? ( m_value != 0 ? m_value : m_maxValue )
+                  : 0;
+}
+
+int Light::actualRedValue()
+{
+    return m_isOn ? ( m_color != Qt::black ? m_redValue : m_maxValue )
+                  : 0;
+}
+
+int Light::actualGreenValue()
+{
+    return m_isOn ? ( m_color != Qt::black ? m_greenValue : m_maxValue )
+                  : 0;
+}
+
+int Light::actualBlueValue()
+{
+    return m_isOn ? ( m_color != Qt::black ? m_blueValue : m_maxValue )
+                  : 0;
 }
 
 } // namespace il
