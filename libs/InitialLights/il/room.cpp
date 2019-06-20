@@ -64,7 +64,7 @@ void Room::write(QJsonObject &json) const
     json[jsonNameTag] = m_name;
 
     writeModel<Light>(json, jsonLightsTag, m_lights, [&](QJsonObject& json, const Light* light) {
-        auto controller = qobject_cast<Controller*>(light->controller());
+        auto controller = light->controller();
         if (!controller) {
             qWarning() << "could not save room light without controller";
             return;
