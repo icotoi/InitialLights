@@ -58,5 +58,6 @@
         <file>PageRoomList.qml</file>
         <file>PageLightSelection.qml</file>
         <file>PageColorSelection.qml</file>
+        <file>Images/material.io-baseline-wb_incandescent-24px--blink.svg</file>
     </qresource>
 </RCC>
