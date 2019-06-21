@@ -10,6 +10,8 @@ import "Constants"
 Item {
     id: root
 
+//    focus: true
+
     property var room: null
     property var lights: null
     property var stack: null
@@ -116,25 +118,6 @@ Item {
         }
     }
 
-    ILLight {
-        id: lightConfigurator
-        visible: (room !== null && roomView.currentIndex >= 0)
-        light: (room !== null && roomView.currentIndex >= 0) ? room.lights.get(roomView.currentIndex) : null
-        width: parent.width
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        rgbChannelsVisible: true
-
-        onColorSwatchClicked: {
-            if (root.stack === null)
-                return;
-
-            root.stack.push(colorSelectionView, { inputColor: color })
-            root.updateMainToolbar()
-        }
-    }
-
     ILRoomView {
         id: roomView
 
@@ -156,6 +139,48 @@ Item {
         MouseArea {
             anchors.fill: parent;
             onClicked: camera.imageCapture.capture();
+        }
+    }
+
+    Pane {
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        visible: (room !== null && roomView.currentIndex < 0)
+        TextField {
+            id: roomNameTextField
+//            focus: true
+            anchors.fill: parent
+            placeholderText: qsTr("Room Name")
+            text: root.room !== null ? root.room.name : ""
+            onEditingFinished: {
+                if (root.room !== null) { root.room.name = roomNameTextField.text }
+                root.updateMainToolbar()
+            }
+        }
+    }
+
+    Pane {
+//        width: parent.width
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+
+        visible: (room !== null && roomView.currentIndex >= 0)
+
+        ILLight {
+            id: lightConfigurator
+            anchors.fill: parent
+            light: (room !== null && roomView.currentIndex >= 0) ? room.lights.get(roomView.currentIndex) : null
+            rgbChannelsVisible: true
+
+            onColorSwatchClicked: {
+                if (root.stack === null)
+                    return;
+
+                root.stack.push(colorSelectionView, { inputColor: color })
+                root.updateMainToolbar()
+            }
         }
     }
 }
