@@ -3,8 +3,11 @@
 #include "controller.h"
 #include "controllerlist.h"
 #include "light.h"
+#include "mainpage.h"
 #include "room.h"
 #include "scene.h"
+
+#include "jsonhelpers.h"
 
 #include <QDir>
 #include <QFile>
@@ -20,6 +23,7 @@ namespace  {
 const QString jsonControllersTag { "controllers" };
 const QString jsonRoomsTag { "rooms" };
 const QString jsonScenesTag { "scenes" };
+const QString jsonMainPageTag { "mainPage" };
 
 QString localDataDirName()
 {
@@ -44,11 +48,18 @@ BackEnd::BackEnd(QObject *parent)
     , m_rooms { new QQmlObjectListModel<Room>(this) }
     , m_scenes { new QQmlObjectListModel<Scene>(this) }
     , m_lights { new QQmlObjectListModel<Light>(this) }
+    , m_frontPageRooms { new QQmlObjectListModel<Room>(this) }
+    , m_frontPageScenes { new QQmlObjectListModel<Scene>(this) }
+    , m_mainPage { new MainPage(m_rooms, this) }
 {
     auto controllers = m_controllerList->get_controllers();
 
     connect(controllers, &QAbstractListModel::rowsInserted, this, &BackEnd::onControllersInserted);
     connect(controllers, &QAbstractListModel::rowsAboutToBeRemoved, this, &BackEnd::onControllersAboutToBeRemoved);
+}
+
+BackEnd::~BackEnd()
+{
 }
 
 void BackEnd::clearLocalData()
@@ -113,8 +124,7 @@ void BackEnd::addNewRoom()
 
 void BackEnd::read(const QJsonObject &json)
 {
-    if (json.contains(jsonControllersTag) && json[jsonControllersTag].isObject())
-        m_controllerList->read(json[jsonControllersTag].toObject());
+    READ_DECODABLE_OBJECT(json, jsonControllersTag, m_controllerList)
 
     if (json.contains(jsonRoomsTag) && json[jsonRoomsTag].isArray()) {
         QJsonArray roomArray { json[jsonRoomsTag].toArray() };
@@ -137,13 +147,14 @@ void BackEnd::read(const QJsonObject &json)
             m_scenes->append(scene);
         }
     }
+
+    READ_DECODABLE_OBJECT(json, jsonMainPageTag, m_mainPage)
 }
 
 void BackEnd::write(QJsonObject &json) const
 {
-    QJsonObject controllerListObject;
-    m_controllerList->write(controllerListObject);
-    json[jsonControllersTag] = controllerListObject;
+    WRITE_ENCODABLE_OBJECT(json, jsonControllersTag, m_controllerList)
+    WRITE_ENCODABLE_OBJECT(json, jsonMainPageTag, m_mainPage)
 
     QJsonArray roomArray;
     for (auto it = m_rooms->constBegin(); it != m_rooms->constEnd(); ++it) {

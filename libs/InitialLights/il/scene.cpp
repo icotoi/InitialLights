@@ -15,6 +15,10 @@ Scene::Scene(QObject *parent)
 {
 }
 
+Scene::~Scene()
+{
+}
+
 void Scene::read(const QJsonObject &json)
 {
     safeRead(json, jsonNameTag, QJsonValue::String, [&](const QJsonValue& json) { set_name(json.toString()); });

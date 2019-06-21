@@ -1,6 +1,6 @@
 #pragma once
 
-#include "initiallights_global.h"
+#include "icodable.h"
 
 #include "QQmlAutoPropertyHelpers.h"
 #include "QQmlObjectListModel.h"
@@ -10,7 +10,7 @@ namespace il {
 class ControllerList;
 class Light;
 
-class INITIALLIGHTSSHARED_EXPORT Room : public QObject
+class INITIALLIGHTSSHARED_EXPORT Room : public QObject, public ICodable
 {
     Q_OBJECT
 
@@ -19,9 +19,12 @@ class INITIALLIGHTSSHARED_EXPORT Room : public QObject
 
 public:
     explicit Room(ControllerList* controllerList, QObject *parent = nullptr);
+    ~Room() override;
 
-    void read(const QJsonObject& json);
-    void write(QJsonObject& json) const;
+    void read(const QJsonObject& json) override;
+    void write(QJsonObject& json) const override;
+
+    void turnLights(bool on);
 
 private:
     ControllerList* m_controllerList;

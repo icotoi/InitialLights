@@ -1,6 +1,6 @@
 #pragma once
 
-#include "initiallights_global.h"
+#include "icodable.h"
 
 #include <QBluetoothDeviceDiscoveryAgent>
 
@@ -11,7 +11,7 @@ namespace il {
 
 class Controller;
 
-class INITIALLIGHTSSHARED_EXPORT ControllerList: public QObject
+class INITIALLIGHTSSHARED_EXPORT ControllerList: public QObject, public ICodable
 {
     Q_OBJECT
 
@@ -22,12 +22,12 @@ class INITIALLIGHTSSHARED_EXPORT ControllerList: public QObject
 
 public:
     explicit ControllerList(QObject* parent = nullptr);
-    virtual ~ControllerList();
+    ~ControllerList() override;
 
     void clear();
 
-    void read(const QJsonObject& json);
-    void write(QJsonObject& json) const;
+    void read(const QJsonObject& json) override;
+    void write(QJsonObject& json) const override;
 
     Controller* findControllerByAddress(const QString& address) const;
 

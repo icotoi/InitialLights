@@ -1,94 +1,74 @@
 import QtQuick 2.12
+import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
 import "Controls"
 import "Constants"
 
-PageMainForm {
+Item {
+    id: root
+    clip: true
 
-    topGridLayout.children: [
-        // row 1
-        ILToggleLedButton {
-            text: "Living Room"
-            ledColor: "skyblue"
-            Layout.fillWidth: true
-        },
+    property color ledColor: "skyblue"
+    property string title: qsTr("Initial Lights")
 
-        ILToggleLedButton {
-            text: qsTr("Bedroom")
-            ledColor: "tomato"
-            Layout.fillWidth: true
-        },
+    property alias rooms: roomsRepeater.model
+    property alias scenes: scenesRepeater.model
+    property alias mainButton: mainButton
 
-        ILToggleLedButton {
-            text: qsTr("Bathroom")
-            ledColor: "pink"
-            Layout.fillWidth: true
-        },
-
-        // row 2
-        ILToggleLedButton {
-            text: qsTr("Kitchen")
-            ledColor: "coral"
-            Layout.fillWidth: true
-            checked: true
-        },
-
-        ILToggleLedButton {
-            text: qsTr("room")
-            ledColor: "greenyellow"
-            Layout.fillWidth: true
-            checked: true
-        },
-
-        ILToggleLedButton {
-            text: "Testroom1"
-            ledColor: "lemonchiffon"
-            Layout.fillWidth: true
-            checked: true
-        }
+    property var extraToolbarItems: [
     ]
 
-    bottomGridLayout.children: [
-        // row 1
-        ILToggleLedButton {
-            text: qsTr("Coming in")
-            ledColor: "pink"
-            Layout.fillWidth: true
-        },
+    signal roomClicked(int index, bool checked)
 
-        ILToggleLedButton {
-            text: qsTr("Leave")
-            ledColor: "tomato"
-            Layout.fillWidth: true
-        },
+    GridLayout {
+        id: roomsLayout
+        anchors.margins: 20
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.top: parent.top
+        columns: 3
 
-        ILToggleLedButton {
-            text: "Garden"
-            ledColor: "skyblue"
-            Layout.fillWidth: true
-        },
-
-        // row 2
-        ILToggleLedButton {
-            text: qsTr("Stairway")
-            ledColor: "coral"
-            Layout.fillWidth: true
-            checked: true
-        },
-
-        ILToggleLedButton {
-            text: qsTr("Event")
-            ledColor: "greenyellow"
-            Layout.fillWidth: true
-            checked: true
-        },
-
-        ILToggleLedButton {
-            text: "Event"
-            ledColor: "lemonchiffon"
-            Layout.fillWidth: true
-            checked: true
+        Repeater {
+            id: roomsRepeater
+            model: 9
+            delegate: ILToggleLedButton {
+                text: model.name
+                ledColor: root.ledColor
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
+                onClicked: root.roomClicked(index, checked)
+            }
         }
-    ]
+    }
+
+    ILMainPowerButton {
+        id: mainButton
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: 20
+        anchors.verticalCenter: parent.verticalCenter
+    }
+
+    GridLayout {
+        id: scenesLayout
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        columns: 3
+
+        anchors.margins: 20
+
+        Repeater {
+            id: scenesRepeater
+            model: 8
+            delegate: ILToggleLedButton {
+                text: qsTr("Scene %1".arg(modelData + 1))
+                ledColor: root.ledColor
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignBottom
+                enabled: false
+            }
+        }
+    }
 }

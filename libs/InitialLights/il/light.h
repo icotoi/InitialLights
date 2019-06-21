@@ -1,15 +1,16 @@
 #pragma once
 
-#include "initiallights_global.h"
-#include <QColor>
+#include "icodable.h"
+
 #include "QQmlAutoPropertyHelpers.h"
+#include <QColor>
 
 namespace il {
 
 class Controller;
 class Room;
 
-class INITIALLIGHTSSHARED_EXPORT Light : public QObject
+class INITIALLIGHTSSHARED_EXPORT Light : public QObject, public ICodable
 {
 public:
     enum LightType {
@@ -48,10 +49,10 @@ private:
 public:
     explicit Light(QObject* parent = nullptr);
     explicit Light(LightType lightType, const QString& name, QObject* parent = nullptr);
-    virtual ~Light();
+    ~Light() override;
 
-    virtual void read(const QJsonObject& json);
-    virtual void write(QJsonObject& json) const;
+    void read(const QJsonObject& json) override;
+    void write(QJsonObject& json) const override;
 
     QString lightTypeName() const;
     Controller* controller() const;
