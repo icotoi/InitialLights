@@ -19,6 +19,7 @@ Item {
     property var extraToolbarItems: [
     ]
 
+    signal turnAll(bool checked)
     signal roomClicked(int index, bool checked)
     signal sceneClicked(int index, bool checked)
 
@@ -38,7 +39,11 @@ Item {
                 ledColor: root.ledColor
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignTop
-                onClicked: root.roomClicked(index, checked)
+                checked: model.isOn
+                onClicked: {
+                    root.mainButton.checked = false
+                    root.roomClicked(index, checked)
+                }
             }
         }
     }
@@ -49,6 +54,7 @@ Item {
         anchors.right: parent.right
         anchors.margins: 20
         anchors.verticalCenter: parent.verticalCenter
+        onClicked: root.turnAll(checked)
     }
 
     GridLayout {

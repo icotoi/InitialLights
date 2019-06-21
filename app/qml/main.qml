@@ -138,6 +138,7 @@ ApplicationWindow {
         PageMain {
             rooms: backend.mainPage.rooms
             sceneCount: backend.mainPage.sceneCount
+            onTurnAll: backend.mainPage.turnAllLights(checked)
             onRoomClicked: backend.mainPage.turnLights(index, checked)
             onSceneClicked: backend.controllerList.turnScene(index, checked)
         }

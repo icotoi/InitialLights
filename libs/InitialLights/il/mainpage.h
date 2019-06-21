@@ -28,6 +28,7 @@ public:
 
 public slots:
     void turnLights(int index, bool on);
+    void turnAllLights(bool on);
 
 private:
     void onAllRoomsRowsChanged();

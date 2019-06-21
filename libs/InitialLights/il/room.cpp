@@ -84,12 +84,19 @@ void Room::write(QJsonObject &json) const
     });
 }
 
-void Room::turnLights(bool on)
+void Room::setIsOn(bool isOn)
 {
+    if (m_isOn == isOn)
+        return;
+
+    m_isOn = isOn;
+
     for (int index = 0; index < m_lights->count(); ++index) {
         auto light = m_lights->at(index);
-        light->setIsOn(on);
+        light->setIsOn(m_isOn);
     }
+
+    emit isOnChanged(m_isOn);
 }
 
 } // namespace il

@@ -39,7 +39,23 @@ void MainPage::turnLights(int index, bool on)
     }
 
     auto room = m_rooms->at(index);
-    room->turnLights(on);
+    room->setIsOn(on);
+}
+
+void MainPage::turnAllLights(bool on)
+{
+    if (on) {
+        for (int i = 0; i < m_rooms->count(); ++i) {
+            auto room = m_rooms->at(i);
+            room->storeIsOnAsPreviousIsOn();
+            room->setIsOn(true);
+        }
+    } else {
+        for (int i = 0; i < m_rooms->count(); ++i) {
+            auto room = m_rooms->at(i);
+            room->setIsOn(room->previousIsOn());
+        }
+    }
 }
 
 void MainPage::onAllRoomsRowsChanged()
