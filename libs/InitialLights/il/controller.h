@@ -2,6 +2,8 @@
 
 #include "initiallights_global.h"
 
+#include "light.h"
+
 #include "QQmlAutoPropertyHelpers.h"
 #include "QQmlObjectListModel.h"
 
@@ -9,8 +11,6 @@
 #include <QLowEnergyService>
 
 namespace il {
-
-class Light;
 
 class INITIALLIGHTSSHARED_EXPORT Controller : public QObject
 {
@@ -38,6 +38,7 @@ private:
 
 public:
     explicit Controller(QObject *parent = nullptr);
+    explicit Controller(bool offline, QObject *parent = nullptr);
     explicit Controller(const QBluetoothDeviceInfo &info, QObject *parent = nullptr);
     ~Controller();
 
@@ -49,6 +50,8 @@ public:
     //       the compiler fails to distinguish between this and the address() getter
     static QString safeAddress(const QBluetoothDeviceInfo &info);
     static bool isValidDevice(const QBluetoothDeviceInfo &info);
+
+    void blink(Light *light, int offset);
 
 public slots:
     void connectToController();
@@ -73,7 +76,12 @@ private:
 
     void updateFromDevice(const QByteArray& data);
     void updateDevice();
-    bool writeToDevice(const QByteArray& data);
+    bool writeToDevice(const QByteArray& data, bool clearReadBuffer = true);
+
+    bool connectIfNeeded();
+
+    Light* addNewLight(Light::LightType lightType, const QString& name);
+    void connectLight(Light* light);
 
     QBluetoothDeviceInfo m_info;
     QScopedPointer<QLowEnergyController> m_controller;
@@ -81,6 +89,9 @@ private:
     QLowEnergyDescriptor m_notificationDescriptor;
     QByteArray m_command;
     bool m_hasReceivedInitialState { false };
+    bool m_needsInitialState { true };
+    QByteArray m_readBuffer;
+    bool m_offline {false}; // for testing without network communication
 };
 
 } // namespace il

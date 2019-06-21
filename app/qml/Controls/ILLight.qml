@@ -3,6 +3,8 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Controls.Material 2.12
 
+import "../Constants"
+
 import InitialLights 1.0
 
 Item {
@@ -14,7 +16,7 @@ Item {
     property int colorSwatchRadius: 5
 
     property bool isControllerNameVisible: true
-    property bool rgbSlidersVisible: true
+    property bool rgbChannelsVisible: true
 
     property string controllerName: "Controller"
 
@@ -71,8 +73,8 @@ Item {
                 }
             }
 
-            ILLabeledSlider {
-                id: analogicSlider
+            ILLightChannel {
+                id: analogicChannel
                 visible: root.light !== null && root.light.lightType === Light.Analogic
                 Layout.fillWidth: true
                 Layout.leftMargin: root.margins
@@ -87,11 +89,12 @@ Item {
                 maxValue: root.light !== null ? root.light.maxValue : 100
                 valueIncrement: root.light !== null ? root.light.valueIncrement : 1
                 value: root.light !== null ? root.light.value : 0
-                onValueChanged: if (root.light !== null) root.light.value = analogicSlider.value
+                onValueChanged: if (root.light !== null) root.light.value = analogicChannel.value
+                onBlink: if (root.light !== null) root.light.blink(0)
             }
 
-            ILLabeledSlider {
-                id: pwmSlider
+            ILLightChannel {
+                id: pwmChannel
                 visible: root.light !== null && root.light.lightType === Light.PWM
                 Layout.fillWidth: true
                 Layout.leftMargin: root.margins
@@ -106,12 +109,14 @@ Item {
                 maxValue: root.light !== null ? root.light.maxValue : 100
                 valueIncrement: root.light !== null ? root.light.valueIncrement : 1
                 value: root.light !== null ? root.light.value : 0
-                onValueChanged: if (root.light !== null) root.light.value = pwmSlider.value
+                onValueChanged: if (root.light !== null) root.light.value = pwmChannel.value
+//                onBlink: if (root.light !== null) root.light.blink(0)
+                onBlink: if (root.light !== null) root.light.blink(1) // FIXME: fix for demo
             }
 
-            ILLabeledSlider {
-                id: redSlider
-                visible: root.light !== null && root.rgbSlidersVisible && root.light.lightType === Light.RGB
+            ILLightChannel {
+                id: redChannel
+                visible: root.light !== null && root.rgbChannelsVisible && root.light.lightType === Light.RGB
                 Layout.fillWidth: true
                 Layout.leftMargin: root.margins
                 Layout.rightMargin: root.margins
@@ -125,12 +130,14 @@ Item {
                 maxValue: root.light !== null ? root.light.maxValue : 100
                 valueIncrement: root.light !== null ? root.light.valueIncrement : 1
                 value: root.light !== null ? root.light.redValue : 0
-                onValueChanged: if (root.light !== null) root.light.redValue = redSlider.value
+                onValueChanged: if (root.light !== null) root.light.redValue = redChannel.value
+//                onBlink: if (root.light !== null) root.light.blink(0)
+                onBlink: if (root.light !== null) root.light.blink(-1) // FIXME: fix for demo
             }
 
-            ILLabeledSlider {
-                id: greenSlider
-                visible: root.light !== null && root.rgbSlidersVisible && root.light.lightType === Light.RGB
+            ILLightChannel {
+                id: greenChannel
+                visible: root.light !== null && root.rgbChannelsVisible && root.light.lightType === Light.RGB
                 Layout.fillWidth: true
                 Layout.leftMargin: root.margins
                 Layout.rightMargin: root.margins
@@ -144,12 +151,14 @@ Item {
                 maxValue: root.light !== null ? root.light.maxValue : 100
                 valueIncrement: root.light !== null ? root.light.valueIncrement : 1
                 value: root.light !== null ? root.light.greenValue : 0
-                onValueChanged: if (root.light !== null) root.light.greenValue = greenSlider.value
+                onValueChanged: if (root.light !== null) root.light.greenValue = greenChannel.value
+//                onBlink: if (root.light !== null) root.light.blink(1)
+                onBlink: if (root.light !== null) root.light.blink(2) // FIXME: fix for demo
             }
 
-            ILLabeledSlider {
-                id: blueSlider
-                visible: root.light !== null && root.rgbSlidersVisible && root.light.lightType === Light.RGB
+            ILLightChannel {
+                id: blueChannel
+                visible: root.light !== null && root.rgbChannelsVisible && root.light.lightType === Light.RGB
                 Layout.fillWidth: true
                 Layout.leftMargin: root.margins
                 Layout.rightMargin: root.margins
@@ -163,12 +172,18 @@ Item {
                 maxValue: root.light !== null ? root.light.maxValue : 100
                 valueIncrement: root.light !== null ? root.light.valueIncrement : 1
                 value: root.light !== null ? root.light.blueValue : 0
-                onValueChanged: if (root.light !== null) root.light.blueValue = blueSlider.value
+                onValueChanged: if (root.light !== null) root.light.blueValue = blueChannel.value
+//                onBlink: if (root.light !== null) root.light.blink(2)
+                onBlink: if (root.light !== null) root.light.blink(1) // FIXME: fix for demo
             }
         }
 
         Switch {
-            visible: false
+            id: isOnSwitch
+//            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+            visible: true
+            checked: (root.light !== null && root.light.isOn)
+            onCheckedChanged: if (root.light !== null) root.light.isOn = isOnSwitch.checked
         }
     }
 }

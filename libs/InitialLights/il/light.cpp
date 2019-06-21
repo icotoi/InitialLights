@@ -1,5 +1,6 @@
 #include "light.h"
 
+#include "controller.h"
 #include "room.h"
 #include "jsonhelpers.h"
 
@@ -33,16 +34,15 @@ Light::Light(QObject *parent)
     , m_minValue { 0 }
     , m_maxValue { 255 }
     , m_valueIncrement { 1 }
-    , m_value { 0 }
     , m_redValue { 0 }
     , m_greenValue { 0 }
     , m_blueValue { 0 }
     , m_sideX { 0.0 }
     , m_sideY { 0.0 }
 {
-    connect(this, &Light::redValueChanged, this, &Light::onRGBValueChanged);
-    connect(this, &Light::greenValueChanged, this, &Light::onRGBValueChanged);
-    connect(this, &Light::blueValueChanged, this, &Light::onRGBValueChanged);
+    connect(this, &Light::redValueChanged, this, &Light::updateColorValue);
+    connect(this, &Light::greenValueChanged, this, &Light::updateColorValue);
+    connect(this, &Light::blueValueChanged, this, &Light::updateColorValue);
 }
 
 Light::Light(Light::LightType lightType, const QString &name, QObject *parent)
@@ -74,17 +74,18 @@ void Light::read(const QJsonObject &json)
     switch (m_lightType) {
     case PWM:
     case Analogic:
-        safeRead(json, jsonValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_value(json.toInt()); });
+        safeRead(json, jsonValueTag, QJsonValue::Double, [&](const QJsonValue& json) { setValue(json.toInt()); });
         set_redValue(0);
         set_greenValue(0);
         set_blueValue(0);
 
         break;
     case RGB:
-        set_value(0);
+        setValue(0);
         safeRead(json, jsonRedValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_redValue(json.toInt()); });
         safeRead(json, jsonGreenValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_greenValue(json.toInt()); });
         safeRead(json, jsonBlueValueTag, QJsonValue::Double, [&](const QJsonValue& json) { set_blueValue(json.toInt()); });
+        updateColorValue(); // make sure the "color" is updated when reading from JSON
         break;
     default:
         qWarning() << "reading unknown light type";
@@ -127,11 +128,23 @@ QString Light::lightTypeName() const
     return QMetaEnum::fromType<LightType>().valueToKey(m_lightType);
 }
 
-QObject *Light::controller() const
+Controller *Light::controller() const
 {
-    return parent()
-            ? parent()->parent()
-            : nullptr;
+    auto c = parent()
+                 ? parent()->parent()
+                 : nullptr;
+
+    if (!c) {
+        qWarning() << "no parent->parent found for light" << m_name;
+        return nullptr;
+    }
+
+    auto cc = qobject_cast<Controller*>(c);
+    if (!cc) {
+        qWarning() << "light parent->parent is not a controller: parent" << parent() << "parent->parent:" << parent()->parent();
+        return nullptr;
+    }
+    return cc;
 }
 
 void Light::setRoom(Room *room)
@@ -178,9 +191,43 @@ void Light::setColor(QColor color)
     set_blueValue(m_color.blue());
 
     m_colorUpdateEnabled = true;
+
+    setIsOn(m_color != Qt::black);
 }
 
-void Light::onRGBValueChanged()
+void Light::blink(int offset)
+{
+    auto c = controller();
+    if (c) {
+        c->blink(this, offset);
+    } else {
+        qWarning() << "no controller found for this light";
+        qWarning() << "parent:" << parent();
+        qWarning() << "parent->parent():" << parent()->parent();
+    }
+}
+
+void Light::setIsOn(bool isOn)
+{
+    if (m_isOn == isOn)
+        return;
+
+    m_isOn = isOn;
+    emit isOnChanged(m_isOn);
+}
+
+void Light::setValue(int value)
+{
+    if (m_value == value)
+        return;
+
+    m_value = value;
+    emit valueChanged(m_value);
+
+    setIsOn(m_value > 0);
+}
+
+void Light::updateColorValue()
 {
     switch (m_lightType) {
     case RGB:
@@ -190,6 +237,30 @@ void Light::onRGBValueChanged()
         qWarning() << "color changed but the light is not an RGB one";
         break;
     }
+}
+
+int Light::actualValue()
+{
+    return m_isOn ? ( m_value != 0 ? m_value : m_maxValue )
+                  : 0;
+}
+
+int Light::actualRedValue()
+{
+    return m_isOn ? ( m_color != Qt::black ? m_redValue : m_maxValue )
+                  : 0;
+}
+
+int Light::actualGreenValue()
+{
+    return m_isOn ? ( m_color != Qt::black ? m_greenValue : m_maxValue )
+                  : 0;
+}
+
+int Light::actualBlueValue()
+{
+    return m_isOn ? ( m_color != Qt::black ? m_blueValue : m_maxValue )
+                  : 0;
 }
 
 } // namespace il

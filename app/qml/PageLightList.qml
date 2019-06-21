@@ -29,12 +29,13 @@ Item {
 
         delegate: ILLight {
             width: parent.width
-            controllerName: model.controller !== undefined
+            controllerName: (light !== null && light.controller !== null)
                             ? (model.controller.name !== ""
                                ? model.controller.name
                                : model.controller.address)
                             : "controller"
-            light: model
+            light: listView.model.get(index)
+            enabled: (light !== null && light.controller !== null) ? !light.controller.isBusy : false
 
             onColorSwatchClicked: {
                 if (root.stack === null)
