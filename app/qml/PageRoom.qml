@@ -149,7 +149,7 @@ Item {
         visible: (room !== null && roomView.currentIndex < 0)
         TextField {
             id: roomNameTextField
-//            focus: true
+            focus: true
             anchors.fill: parent
             placeholderText: qsTr("Room Name")
             text: root.room !== null ? root.room.name : ""
