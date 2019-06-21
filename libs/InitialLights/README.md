@@ -23,3 +23,15 @@
 
 * All numbers values are encoded as hex strings
 * 1 value byte -> 2 hex chars
+
+
+## Version 2: TI Based Controller
+
+* Light Controller
+* 4 x PWM channels
+* 2 x 0-10V analog channels
+* 1 x PWM + 1 x RGB channels
+* 1 x RGBW channel
+* 1 X CW + 1 x WW channels
+
+Protocol TBD
