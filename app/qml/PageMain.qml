@@ -13,13 +13,14 @@ Item {
     property string title: qsTr("Initial Lights")
 
     property alias rooms: roomsRepeater.model
-    property alias scenes: scenesRepeater.model
     property alias mainButton: mainButton
+    property alias sceneCount: scenesRepeater.model
 
     property var extraToolbarItems: [
     ]
 
     signal roomClicked(int index, bool checked)
+    signal sceneClicked(int index, bool checked)
 
     GridLayout {
         id: roomsLayout
@@ -61,13 +62,13 @@ Item {
 
         Repeater {
             id: scenesRepeater
-            model: 8
+            model: 6
             delegate: ILToggleLedButton {
                 text: qsTr("Scene %1".arg(modelData + 1))
                 ledColor: root.ledColor
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignBottom
-                enabled: false
+                onClicked: root.sceneClicked(index, checked)
             }
         }
     }

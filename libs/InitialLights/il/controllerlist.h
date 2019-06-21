@@ -33,6 +33,7 @@ public:
 
 public slots:
     void scan();
+    void turnScene(int index, bool on);
 
 private:
     bool deviceAlreadyScanned(const QBluetoothDeviceInfo &info) const;

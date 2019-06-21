@@ -111,6 +111,19 @@ QByteArray Controller::updateDeviceCommand() const
     return command.toUpper().toUtf8();
 }
 
+QByteArray Controller::turnSceneCommand(int index, bool on) const
+{
+    const int maxSceneCount = SCENE_COUNT;
+    if (index < 0 || index >= maxSceneCount) {
+        qWarning() << "invalid scene index:" << index;
+        return QByteArray();
+    }
+
+    return on
+               ? QByteArray("UI") + QByteArray::number(index) + "\n"
+               : QByteArray("US0000000000\n");
+}
+
 void Controller::clear()
 {
     if (m_needsInitialState) {
@@ -208,6 +221,15 @@ void Controller::blink(Light *light, int offset)
     }
 
     writeToDevice("UB" + QByteArray::number(index) + "\n");
+}
+
+void Controller::turnScene(int index, bool on)
+{
+    QByteArray command = turnSceneCommand(index, on);
+
+    if (!command.isEmpty()) {
+        writeToDevice(command);
+    }
 }
 
 void Controller::connectToController()

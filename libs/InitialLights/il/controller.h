@@ -51,11 +51,14 @@ public:
     static bool isValidDevice(const QBluetoothDeviceInfo &info);
 
     void blink(Light *light, int offset);
+    void turnScene(int index, bool on);
+
+    QByteArray updateDeviceCommand() const;
+    QByteArray turnSceneCommand(int index, bool on) const;
 
 public slots:
     void connectToController();
     void disconnectFromController();
-    QByteArray updateDeviceCommand() const;
 
 private:
     //QLowEnergyController

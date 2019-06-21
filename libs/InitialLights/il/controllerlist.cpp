@@ -80,6 +80,14 @@ void ControllerList::scan()
     m_deviceDiscoveryAgent.start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
 }
 
+void ControllerList::turnScene(int index, bool on)
+{
+    for(int i = 0; i < m_controllers->count(); ++i) {
+        auto controller = m_controllers->at(i);
+        controller->turnScene(index, on);
+    }
+}
+
 bool ControllerList::deviceAlreadyScanned(const QBluetoothDeviceInfo &info) const
 {
     auto address = Controller::safeAddress(info);

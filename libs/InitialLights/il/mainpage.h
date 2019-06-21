@@ -15,6 +15,7 @@ class MainPage : public QObject, public ICodable
     Q_OBJECT
 
     QML_OBJMODEL_PROPERTY(il::Room, rooms)
+    Q_PROPERTY(int sceneCount READ sceneCount CONSTANT)
 
 public:
     explicit MainPage(RoomList* allRooms = nullptr, QObject *parent = nullptr);
@@ -22,6 +23,8 @@ public:
 
     void read(const QJsonObject &json) override;
     void write(QJsonObject &json) const override;
+
+    int sceneCount() const { return SCENE_COUNT; }
 
 public slots:
     void turnLights(int index, bool on);
