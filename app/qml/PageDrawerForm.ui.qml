@@ -7,7 +7,7 @@ import "Constants"
 Item {
     property string backgroundColor: "Orange"
     property alias roomsRepeater: roomsRepeater
-    property alias scenesRepeater: scenesRepeater
+    //    property alias scenesRepeater: scenesRepeater
     property alias home: home
     property alias settings: settings
     property alias controllerList: controllerList
@@ -54,24 +54,23 @@ Item {
                 id: roomsRepeater
             }
 
-            MenuSeparator {
-                bottomPadding: 0
-                topPadding: 0
-                Layout.fillWidth: true
-            }
+            //            MenuSeparator {
+            //                bottomPadding: 0
+            //                topPadding: 0
+            //                Layout.fillWidth: true
+            //            }
 
-            ItemDelegate {
-                id: sceneList
-                text: qsTr("Scenes")
-                enabled: false
-                Layout.fillWidth: true
-                icon.source: ILStyle.scenesIconSource
-            }
+            //            ItemDelegate {
+            //                id: sceneList
+            //                text: qsTr("Scenes")
+            //                enabled: false
+            //                Layout.fillWidth: true
+            //                icon.source: ILStyle.scenesIconSource
+            //            }
 
-            Repeater {
-                id: scenesRepeater
-            }
-
+            //            Repeater {
+            //                id: scenesRepeater
+            //            }
             MenuSeparator {
                 bottomPadding: 0
                 topPadding: 0
