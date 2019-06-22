@@ -105,6 +105,7 @@ Item {
         id: photosButton
         icon.source: "Images/material.io-baseline-photo_library-24px.svg"
         enabled: false // TODO: find out how to test if we can browse for photos
+        visible: false
     }
 
     Camera {
