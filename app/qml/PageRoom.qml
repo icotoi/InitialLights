@@ -122,6 +122,7 @@ Item {
 
     ILRoomView {
         id: roomView
+        visible: !capturingImage
 
         y: 0
         width: 330
@@ -137,11 +138,19 @@ Item {
         source: camera
         focus : visible // to receive focus and capture key events when visible
         anchors.fill: roomView
+        autoOrientation: true
 
         MouseArea {
             anchors.fill: parent;
             onClicked: camera.imageCapture.capture();
         }
+    }
+
+    Label {
+        text: qsTr("tap the image to use it")
+        anchors.top: roomView.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        visible: capturingImage
     }
 
     Pane {
