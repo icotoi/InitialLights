@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
 import QtQuick.Window 2.12
 import QtMultimedia 5.12
 
@@ -147,21 +148,28 @@ Item {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         visible: (room !== null && roomView.currentIndex < 0)
-        TextField {
-            id: roomNameTextField
-            focus: true
+        RowLayout {
             anchors.fill: parent
-            placeholderText: qsTr("Room Name")
-            text: root.room !== null ? root.room.name : ""
-            onEditingFinished: {
-                if (root.room !== null) { root.room.name = roomNameTextField.text }
-                root.updateMainToolbar()
+            TextField {
+                id: roomNameTextField
+                focus: true
+                Layout.fillWidth: true
+                placeholderText: qsTr("Room Name")
+                text: root.room !== null ? root.room.name : ""
+                onEditingFinished: {
+                    if (root.room !== null) { root.room.name = roomNameTextField.text }
+                    root.updateMainToolbar()
+                }
+            }
+            Switch {
+                checked: root.room !== null ? root.room.isOn : false
+                enabled: root.room !== null
+                onClicked: if (root.room !== null) root.room.isOn = checked
             }
         }
     }
 
     Pane {
-//        width: parent.width
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.bottom: parent.bottom
