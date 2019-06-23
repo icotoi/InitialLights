@@ -14,17 +14,12 @@ ApplicationWindow {
     property bool onStartPage: stackView.depth == 1
 
     function updateToolbarForCurrentItem() {
-        if (onStartPage) {
-            extraToolbarItems.children = []
-            toolbarLabel.text = window.title
-        } else {
-            extraToolbarItems.children = stackView.currentItem.extraToolbarItems
-                    ? stackView.currentItem.extraToolbarItems
-                    : []
-            toolbarLabel.text = stackView.currentItem.title
-                    ? stackView.currentItem.title
-                    : window.title
-        }
+        extraToolbarItems.children = stackView.currentItem.extraToolbarItems
+                ? stackView.currentItem.extraToolbarItems
+                : []
+        toolbarLabel.text = stackView.currentItem.title
+                ? stackView.currentItem.title
+                : window.title
     }
 
     function showHome() {
@@ -140,7 +135,13 @@ ApplicationWindow {
 
     Component {
         id: mainView
-        PageMain {}
+        PageMain {
+            rooms: backend.mainPage.rooms
+            sceneCount: backend.mainPage.sceneCount
+            onTurnAll: backend.mainPage.turnAllLights(checked)
+            onRoomClicked: backend.mainPage.turnLights(index, checked)
+            onSceneClicked: backend.controllerList.turnScene(index, checked)
+        }
     }
 
     Component {
@@ -250,7 +251,7 @@ ApplicationWindow {
         }
     }
 
-//    Component.onCompleted: {
+    Component.onCompleted: {
 //        showPage(settingsView, {})
 //        showPage(lightListView, {})
 //        var room = backend.rooms.get(0)
@@ -258,5 +259,6 @@ ApplicationWindow {
 //            stackView.push(roomView, { room: room })
 //            updateToolbarForCurrentItem()
 //        }
-//    }
+        updateToolbarForCurrentItem()
+    }
 }

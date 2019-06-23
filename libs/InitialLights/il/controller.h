@@ -1,7 +1,6 @@
 #pragma once
 
-#include "initiallights_global.h"
-
+#include "icodable.h"
 #include "light.h"
 
 #include "QQmlAutoPropertyHelpers.h"
@@ -12,7 +11,7 @@
 
 namespace il {
 
-class INITIALLIGHTSSHARED_EXPORT Controller : public QObject
+class INITIALLIGHTSSHARED_EXPORT Controller : public QObject, public ICodable
 {
 public:
     enum ControllerType {
@@ -40,11 +39,11 @@ public:
     explicit Controller(QObject *parent = nullptr);
     explicit Controller(bool offline, QObject *parent = nullptr);
     explicit Controller(const QBluetoothDeviceInfo &info, QObject *parent = nullptr);
-    ~Controller();
+    ~Controller() override;
 
     void clear();
-    void read(const QJsonObject& json);
-    void write(QJsonObject& json) const;
+    void read(const QJsonObject& json) override;
+    void write(QJsonObject& json) const override;
 
     // NOTE: when I try to use 'address' instead of 'safeAddress',
     //       the compiler fails to distinguish between this and the address() getter
@@ -52,11 +51,14 @@ public:
     static bool isValidDevice(const QBluetoothDeviceInfo &info);
 
     void blink(Light *light, int offset);
+    void turnScene(int index, bool on);
+
+    QByteArray updateDeviceCommand() const;
+    QByteArray turnSceneCommand(int index, bool on) const;
 
 public slots:
     void connectToController();
     void disconnectFromController();
-    QByteArray updateDeviceCommand() const;
 
 private:
     //QLowEnergyController

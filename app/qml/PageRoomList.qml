@@ -48,5 +48,16 @@ Item {
                 }
             }
         }
+
+        Connections {
+            target: listView.model
+            onRowsInserted: {
+                if (first == last) {
+                    showRoom(first)
+                } else {
+                    console.log("inserted %1 rows".arg(last - first + 1))
+                }
+            }
+        }
     }
 }

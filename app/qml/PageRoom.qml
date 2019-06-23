@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
 import QtQuick.Window 2.12
 import QtMultimedia 5.12
 
@@ -9,6 +10,8 @@ import "Constants"
 
 Item {
     id: root
+
+//    focus: true
 
     property var room: null
     property var lights: null
@@ -102,6 +105,7 @@ Item {
         id: photosButton
         icon.source: "Images/material.io-baseline-photo_library-24px.svg"
         enabled: false // TODO: find out how to test if we can browse for photos
+        visible: false
     }
 
     Camera {
@@ -116,27 +120,9 @@ Item {
         }
     }
 
-    ILLight {
-        id: lightConfigurator
-        visible: (room !== null && roomView.currentIndex >= 0)
-        light: (room !== null && roomView.currentIndex >= 0) ? room.lights.get(roomView.currentIndex) : null
-        width: parent.width
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        rgbChannelsVisible: true
-
-        onColorSwatchClicked: {
-            if (root.stack === null)
-                return;
-
-            root.stack.push(colorSelectionView, { inputColor: color })
-            root.updateMainToolbar()
-        }
-    }
-
     ILRoomView {
         id: roomView
+        visible: !capturingImage
 
         y: 0
         width: 330
@@ -152,10 +138,67 @@ Item {
         source: camera
         focus : visible // to receive focus and capture key events when visible
         anchors.fill: roomView
+        autoOrientation: true
 
         MouseArea {
             anchors.fill: parent;
             onClicked: camera.imageCapture.capture();
+        }
+    }
+
+    Label {
+        text: qsTr("tap the image to use it")
+        anchors.top: roomView.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        visible: capturingImage
+    }
+
+    Pane {
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        visible: (room !== null && roomView.currentIndex < 0)
+        RowLayout {
+            anchors.fill: parent
+            TextField {
+                id: roomNameTextField
+                focus: true
+                Layout.fillWidth: true
+                placeholderText: qsTr("Room Name")
+                text: root.room !== null ? root.room.name : ""
+                onEditingFinished: {
+                    if (root.room !== null) { root.room.name = roomNameTextField.text }
+                    root.updateMainToolbar()
+                }
+            }
+            Switch {
+                checked: root.room !== null ? root.room.isOn : false
+                enabled: root.room !== null
+                onClicked: if (root.room !== null) root.room.isOn = checked
+            }
+        }
+    }
+
+    Pane {
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+
+        visible: (room !== null && roomView.currentIndex >= 0)
+
+        ILLight {
+            id: lightConfigurator
+            anchors.fill: parent
+            light: (room !== null && roomView.currentIndex >= 0) ? room.lights.get(roomView.currentIndex) : null
+            rgbChannelsVisible: true
+
+            onColorSwatchClicked: {
+                if (root.stack === null)
+                    return;
+
+                root.stack.push(colorSelectionView, { inputColor: color })
+                root.updateMainToolbar()
+            }
         }
     }
 }

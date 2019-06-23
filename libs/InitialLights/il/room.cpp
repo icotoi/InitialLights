@@ -23,6 +23,10 @@ Room::Room(ControllerList* controllerList, QObject *parent)
 {
 }
 
+Room::~Room()
+{
+}
+
 void Room::read(const QJsonObject &json)
 {
     safeRead(json, jsonNameTag, QJsonValue::String, [&](const QJsonValue& json) { set_name(json.toString()); });
@@ -78,6 +82,21 @@ void Room::write(QJsonObject &json) const
         json[jsonControllerAddressTag] = controller->address();
         json[jsonLightIndexTag] = index;
     });
+}
+
+void Room::setIsOn(bool isOn)
+{
+    if (m_isOn == isOn)
+        return;
+
+    m_isOn = isOn;
+
+    for (int index = 0; index < m_lights->count(); ++index) {
+        auto light = m_lights->at(index);
+        light->setIsOn(m_isOn);
+    }
+
+    emit isOnChanged(m_isOn);
 }
 
 } // namespace il

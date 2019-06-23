@@ -12,7 +12,6 @@
         <file>DemoColorWheelForm.ui.qml</file>
         <file>Controls/ColorWheel.qml</file>
         <file>PageMain.qml</file>
-        <file>PageMainForm.ui.qml</file>
         <file>Controls/ILMainPowerButton.qml</file>
         <file>Images/power_off.png</file>
         <file>Images/power_off@2x.png</file>
@@ -59,5 +58,6 @@
         <file>PageLightSelection.qml</file>
         <file>PageColorSelection.qml</file>
         <file>Images/material.io-baseline-wb_incandescent-24px--blink.svg</file>
+        <file>Images/material.io-baseline-edit-24px.svg</file>
     </qresource>
 </RCC>

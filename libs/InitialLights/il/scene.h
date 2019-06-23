@@ -1,12 +1,12 @@
 #pragma once
 
-#include "initiallights_global.h"
+#include "icodable.h"
 
 #include "QQmlAutoPropertyHelpers.h"
 
 namespace il {
 
-class INITIALLIGHTSSHARED_EXPORT Scene : public QObject
+class INITIALLIGHTSSHARED_EXPORT Scene : public QObject, public ICodable
 {
     Q_OBJECT
 
@@ -14,9 +14,10 @@ class INITIALLIGHTSSHARED_EXPORT Scene : public QObject
 
 public:
     explicit Scene(QObject *parent = nullptr);
+    ~Scene() override;
 
-    void read(const QJsonObject& json);
-    void write(QJsonObject& json) const;
+    void read(const QJsonObject& json) override;
+    void write(QJsonObject& json) const override;
 };
 
 } // namespace il
