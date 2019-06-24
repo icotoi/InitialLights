@@ -88,6 +88,21 @@ void ControllerList::turnScene(int index, bool on)
     }
 }
 
+void ControllerList::setIsOnline(bool isOnline)
+{
+    if (m_isOnline == isOnline)
+        return;
+
+    m_isOnline = isOnline;
+
+    for (int i = 0; i < m_controllers->size(); ++i) {
+        auto controller = m_controllers->at(i);
+        controller->set_isOnline(m_isOnline);
+    }
+
+    emit isOnlineChanged(m_isOnline);
+}
+
 bool ControllerList::deviceAlreadyScanned(const QBluetoothDeviceInfo &info) const
 {
     auto address = Controller::safeAddress(info);
