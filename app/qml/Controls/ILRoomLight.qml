@@ -25,7 +25,6 @@ Item {
     property int buttonBorderWidth: 2
 
     property real lightIntensity: 0.3
-    property real lightTemperature: 0.7
     property int lightIndicatorWidth: 3
 
     signal toggled()
@@ -42,7 +41,7 @@ Item {
                 height: width
                 radius: width / 2
                 color: control.color
-                opacity: control.isOn ? control.onOpacity : control.offOpacity
+                opacity: lightIntensity // control.isOn ? control.onOpacity : control.offOpacity
             }
 
             Rectangle {
@@ -73,26 +72,6 @@ Item {
                 radius: width / 2
                 color: control.buttonBorderColor
             }
-
-            Rectangle {
-                id: temperatureBackground
-                x: intensityBackground.x + intensityBackground.width + control.lightIndicatorWidth / 2
-                height: control.size
-                width: control.lightIndicatorWidth
-                radius: width / 2
-                color: "black"
-                opacity: 0.5
-            }
-
-            Rectangle {
-                id: temperature
-                x: temperatureBackground.x
-                y: control.size - height
-                height: control.size * control.lightTemperature
-                width: control.lightIndicatorWidth
-                radius: width / 2
-                color: control.color
-            }
         }
 
         MouseArea {
@@ -106,12 +85,6 @@ Item {
             drag.minimumX: 0
             drag.minimumY: 0
             onPressed: held = true
-            onPositionChanged: {
-                if (!button.checked) {
-                    button.checked = true
-                    control.toggled()
-                }
-            }
             onReleased: held = false
             onClicked: {
                 button.toggle()

@@ -7,6 +7,8 @@ Item {
     width: 400
     height: 100
 
+    property alias checked: button.checked
+
     //////////////////////
     // horizontal indent
     property int horizontalIndentHeight: 50
@@ -24,6 +26,8 @@ Item {
     property int buttonSize: 100
     property url buttonOffImage: "../Images/power_off.png"
     property url buttonOnImage: "../Images/power_on.png"
+
+    signal clicked()
 
     Rectangle {
         id: horizontalIndent
@@ -57,10 +61,15 @@ Item {
                 anchors.centerIn: parent
                 width: button.width
                 height: width
-            source: button.checked
-                    ? control.buttonOnImage
-                    : control.buttonOffImage
+                source: button.checked
+                        ? control.buttonOnImage
+                        : control.buttonOffImage
+            }
         }
-        }
+    }
+
+    Connections {
+        target: button
+        onClicked: clicked()
     }
 }

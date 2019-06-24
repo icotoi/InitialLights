@@ -1,4 +1,9 @@
 TEMPLATE = subdirs
-SUBDIRS = old \
-    app \
-    demos
+CONFIG += ordered
+SUBDIRS = \
+    3rdparty \
+    libs \
+    old \
+    tests \
+    demos \
+    app
