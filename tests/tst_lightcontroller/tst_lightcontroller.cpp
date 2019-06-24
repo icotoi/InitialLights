@@ -26,7 +26,8 @@ private slots:
         QFETCH(int, valueChannel1);
         QFETCH(QByteArray, expectedCommand);
 
-        il::Controller dut(true);
+        il::Controller dut;
+        dut.set_isOffline(true);
         QJsonObject json = QJsonDocument::fromJson(
             "{ "
             "\"type\": \"V1_2x10V\", "
@@ -74,7 +75,9 @@ private slots:
         QFETCH(bool, rgbIsOn);
         QFETCH(QByteArray, expectedCommand);
 
-        il::Controller dut(true);
+        il::Controller dut;
+        dut.set_isOffline(true);
+
         QJsonObject json = QJsonDocument::fromJson(
                                "{ "
                                "\"type\": \"V1_1xPWM_1xRGB\", "

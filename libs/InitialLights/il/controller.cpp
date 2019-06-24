@@ -32,14 +32,9 @@ Controller::Controller(QObject *parent)
     , m_controllerType { UndefinedControllerType }
     , m_isBusy { false }
     , m_isConnected { false }
+    , m_isOffline { false }
     , m_lights { new QQmlObjectListModel<Light>(this) }
 {
-}
-
-Controller::Controller(bool offline, QObject *parent)
-    : Controller(parent)
-{
-    m_offline = offline;
 }
 
 Controller::Controller(const QBluetoothDeviceInfo &info, QObject *parent)
@@ -62,9 +57,12 @@ QByteArray Controller::updateDeviceCommand() const
     switch (controllerType()) {
     case V1_2x10V:
     {
-        Q_ASSERT(m_lights->size() == 2);
-        Q_ASSERT(m_lights->at(0)->lightType() == Light::Analogic);
-        Q_ASSERT(m_lights->at(1)->lightType() == Light::Analogic);
+        if (m_lights->size() != 2
+            || m_lights->at(0)->lightType() != Light::Analogic
+            || m_lights->at(1)->lightType() != Light::Analogic) {
+            qWarning() << "invalid" << m_controllerType << "config";
+            return QByteArray();
+        }
 
         command = QStringLiteral(u"US%1%2%3\n")
                       .arg(m_lights->at(0)->actualValue(), 2, 16, QChar('0'))
@@ -74,11 +72,14 @@ QByteArray Controller::updateDeviceCommand() const
         break;
     }
     case V1_4xPWM: {
-        Q_ASSERT(m_lights->size() == 4);
-        Q_ASSERT(m_lights->at(0)->lightType() == Light::PWM);
-        Q_ASSERT(m_lights->at(1)->lightType() == Light::PWM);
-        Q_ASSERT(m_lights->at(2)->lightType() == Light::PWM);
-        Q_ASSERT(m_lights->at(3)->lightType() == Light::PWM);
+        if (m_lights->size() != 4
+            || m_lights->at(0)->lightType() != Light::PWM
+            || m_lights->at(1)->lightType() != Light::PWM
+            || m_lights->at(2)->lightType() != Light::PWM
+            || m_lights->at(3)->lightType() != Light::PWM) {
+            qWarning() << "invalid" << m_controllerType << "config";
+            return QByteArray();
+        }
 
         command = QString("US%1%2%3%4%5\n")
                 .arg(m_lights->at(0)->actualValue(), 2, 16, QChar('0'))
@@ -89,9 +90,12 @@ QByteArray Controller::updateDeviceCommand() const
         break;
     }
     case V1_1xPWM_1xRGB: {
-        Q_ASSERT(m_lights->size() == 2);
-        Q_ASSERT(m_lights->at(0)->lightType() == Light::PWM);
-        Q_ASSERT(m_lights->at(1)->lightType() == Light::RGB);
+        if (m_lights->size() != 2
+            || m_lights->at(0)->lightType() != Light::PWM
+            || m_lights->at(1)->lightType() != Light::RGB) {
+            qWarning() << "invalid" << m_controllerType << "config";
+            return QByteArray();
+        }
 
         auto pwmLight = m_lights->at(0);
         auto rgbLight = m_lights->at(1);
@@ -234,6 +238,9 @@ void Controller::turnScene(int index, bool on)
 
 void Controller::connectToController()
 {
+    if (m_isOffline)
+        return;
+
     // just for safety
     clear();
 
@@ -257,6 +264,9 @@ void Controller::connectToController()
 
 void Controller::disconnectFromController()
 {
+    if (m_isOffline)
+        return;
+
     //disable notifications before disconnecting
     if (m_notificationDescriptor.isValid()
             && m_service
@@ -480,7 +490,7 @@ void Controller::updateDevice()
 
 bool Controller::writeToDevice(const QByteArray &data, bool clearReadBuffer)
 {
-    if (m_offline) {
+    if (m_isOffline) {
         return false;
     }
 
@@ -510,9 +520,10 @@ bool Controller::writeToDevice(const QByteArray &data, bool clearReadBuffer)
 
 bool Controller::connectIfNeeded()
 {
-    if (m_isConnected)
+    if (m_isConnected || m_isOffline)
         return true;
 
+    // NOTE: why have I set this to false here?!?
     m_needsInitialState = false;
 
     QEventLoop localEventLoop;
@@ -532,6 +543,7 @@ bool Controller::connectIfNeeded()
 
     qDebug() << "done";
 
+    // NOTE: and why have I set this to true here?!?
     m_needsInitialState = true;
 
     return true;
