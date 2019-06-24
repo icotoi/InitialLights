@@ -254,11 +254,10 @@ ApplicationWindow {
     Component.onCompleted: {
 //        showPage(settingsView, {})
 //        showPage(lightListView, {})
-//        var room = backend.rooms.get(0)
-//        if (room !== null) {
-//            stackView.push(roomView, { room: room })
-//            updateToolbarForCurrentItem()
-//        }
+        var room = backend.rooms.get(0)
+        if (room !== null) {
+            stackView.push(roomView, { room: room })
+        }
         updateToolbarForCurrentItem()
     }
 }
