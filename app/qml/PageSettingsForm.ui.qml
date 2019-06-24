@@ -14,6 +14,7 @@ Item {
     property alias clearLocalData: clearLocalData
     property alias reloadDemoData: reloadDemoData
     property alias roomList: roomList
+    property alias isOnlineSwitch: isOnlineSwitch
 
     ColumnLayout {
         spacing: 0
@@ -29,6 +30,7 @@ Item {
         ItemDelegate {
             id: scenesList
             text: qsTr("Scenes")
+            visible: false
             enabled: false
             Layout.fillWidth: true
             icon.source: ILStyle.scenesIconSource
@@ -52,6 +54,13 @@ Item {
             Layout.fillHeight: true
         }
 
+        Switch {
+            id: isOnlineSwitch
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            text: checked ? qsTr("Online") : qsTr("Offline")
+            Layout.fillWidth: true
+        }
+
         Button {
             id: clearLocalData
             text: qsTr("Clear Local Data")
@@ -69,6 +78,8 @@ Item {
         }
     }
 }
+
+
 
 
 

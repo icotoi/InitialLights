@@ -32,7 +32,7 @@ Controller::Controller(QObject *parent)
     , m_controllerType { UndefinedControllerType }
     , m_isBusy { false }
     , m_isConnected { false }
-    , m_isOffline { false }
+    , m_isOnline { true }
     , m_lights { new QQmlObjectListModel<Light>(this) }
 {
 }
@@ -238,7 +238,7 @@ void Controller::turnScene(int index, bool on)
 
 void Controller::connectToController()
 {
-    if (m_isOffline)
+    if (!m_isOnline)
         return;
 
     // just for safety
@@ -264,7 +264,7 @@ void Controller::connectToController()
 
 void Controller::disconnectFromController()
 {
-    if (m_isOffline)
+    if (!m_isOnline)
         return;
 
     //disable notifications before disconnecting
@@ -490,7 +490,7 @@ void Controller::updateDevice()
 
 bool Controller::writeToDevice(const QByteArray &data, bool clearReadBuffer)
 {
-    if (m_isOffline) {
+    if (!m_isOnline) {
         return false;
     }
 
@@ -520,7 +520,7 @@ bool Controller::writeToDevice(const QByteArray &data, bool clearReadBuffer)
 
 bool Controller::connectIfNeeded()
 {
-    if (m_isConnected || m_isOffline)
+    if (m_isConnected || !m_isOnline)
         return true;
 
     // NOTE: why have I set this to false here?!?

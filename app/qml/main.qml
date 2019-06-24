@@ -124,6 +124,11 @@ ApplicationWindow {
                 drawer.close()
                 showPage(lightListView, {})
             }
+
+            isOnlineSwitch {
+                checked: backend.controllerList.isOnline
+                onClicked: backend.controllerList.isOnline = isOnlineSwitch.checked
+            }
         }
     }
 
@@ -194,6 +199,12 @@ ApplicationWindow {
             reloadDemoData.onClicked: {
                 backend.clearLocalData()
                 backend.loadLocalData()
+                backend.controllerList.isOnline = false
+            }
+
+            isOnlineSwitch {
+                checked: backend.controllerList.isOnline
+                onClicked: backend.controllerList.isOnline = isOnlineSwitch.checked
             }
         }
     }
@@ -254,10 +265,10 @@ ApplicationWindow {
     Component.onCompleted: {
 //        showPage(settingsView, {})
 //        showPage(lightListView, {})
-        var room = backend.rooms.get(0)
-        if (room !== null) {
-            stackView.push(roomView, { room: room })
-        }
+//        var room = backend.rooms.get(0)
+//        if (room !== null) {
+//            stackView.push(roomView, { room: room })
+//        }
         updateToolbarForCurrentItem()
     }
 }

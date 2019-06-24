@@ -31,7 +31,7 @@ private:
 
     QML_READONLY_AUTO_PROPERTY(bool, isBusy)
     QML_READONLY_AUTO_PROPERTY(bool, isConnected)
-    QML_WRITABLE_AUTO_PROPERTY(bool, isOffline)
+    QML_WRITABLE_AUTO_PROPERTY(bool, isOnline)
     QML_READONLY_AUTO_PROPERTY(QString, message)
 
     QML_OBJMODEL_PROPERTY(il::Light, lights)

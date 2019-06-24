@@ -21,12 +21,13 @@ PageDrawerForm {
         }
     }
 
-//    scenesRepeater {
-//        model: scenes
-//        delegate: ItemDelegate {
-//            enabled: false
-//            Layout.fillWidth: true
-//            text: name
-//        }
-//    }
+    scenesRepeater {
+        model: scenes
+        delegate: ItemDelegate {
+            enabled: false
+            visible: false
+            Layout.fillWidth: true
+            text: name
+        }
+    }
 }

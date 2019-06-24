@@ -27,7 +27,7 @@ private slots:
         QFETCH(QByteArray, expectedCommand);
 
         il::Controller dut;
-        dut.set_isOffline(true);
+        dut.set_isOnline(false);
         QJsonObject json = QJsonDocument::fromJson(
             "{ "
             "\"type\": \"V1_2x10V\", "
@@ -76,7 +76,7 @@ private slots:
         QFETCH(QByteArray, expectedCommand);
 
         il::Controller dut;
-        dut.set_isOffline(true);
+        dut.set_isOnline(false);
 
         QJsonObject json = QJsonDocument::fromJson(
                                "{ "
