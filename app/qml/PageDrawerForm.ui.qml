@@ -7,12 +7,14 @@ import "Constants"
 Item {
     property string backgroundColor: "Orange"
     property alias roomsRepeater: roomsRepeater
-    //    property alias scenesRepeater: scenesRepeater
+    property alias scenesRepeater: scenesRepeater
     property alias home: home
     property alias settings: settings
     property alias controllerList: controllerList
     property alias lightList: lightList
     property alias roomList: roomList
+    property alias menuSeparator: menuSeparator
+    property alias isOnlineSwitch: isOnlineSwitch
 
     Rectangle {
         color: backgroundColor
@@ -54,24 +56,29 @@ Item {
                 id: roomsRepeater
             }
 
-            //            MenuSeparator {
-            //                bottomPadding: 0
-            //                topPadding: 0
-            //                Layout.fillWidth: true
-            //            }
-
-            //            ItemDelegate {
-            //                id: sceneList
-            //                text: qsTr("Scenes")
-            //                enabled: false
-            //                Layout.fillWidth: true
-            //                icon.source: ILStyle.scenesIconSource
-            //            }
-
-            //            Repeater {
-            //                id: scenesRepeater
-            //            }
             MenuSeparator {
+                visible: false
+                bottomPadding: 0
+                topPadding: 0
+                Layout.fillWidth: true
+            }
+
+            ItemDelegate {
+                visible: false
+                id: sceneList
+                text: qsTr("Scenes")
+                enabled: false
+                Layout.fillWidth: true
+                icon.source: ILStyle.scenesIconSource
+            }
+
+            Repeater {
+                id: scenesRepeater
+                visible: false
+            }
+
+            MenuSeparator {
+                id: menuSeparator
                 bottomPadding: 0
                 topPadding: 0
                 Layout.fillWidth: true
@@ -96,6 +103,12 @@ Item {
                 text: qsTr("Lights")
                 Layout.fillWidth: true
                 icon.source: ILStyle.lightsIconSource
+            }
+
+            SwitchDelegate {
+                id: isOnlineSwitch
+                text: checked ? qsTr("Online") : qsTr("Offline")
+                Layout.fillWidth: true
             }
         }
     }
