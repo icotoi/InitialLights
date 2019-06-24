@@ -1,6 +1,7 @@
 #include "controllerlist.h"
 
 #include "controller.h"
+#include "jsonhelpers.h"
 
 #include <QJsonArray>
 #include <QJsonObject>
@@ -9,6 +10,7 @@ namespace il {
 
 namespace  {
 const QString jsonControllersTag { "controllers" };
+const QString jsonIsOnlineTag { "isOnline" };
 }
 
 ControllerList::ControllerList(QObject *parent)
@@ -46,6 +48,12 @@ void ControllerList::read(const QJsonObject &json)
             m_controllers->append(controller);
         }
     }
+
+    bool online = false;
+    safeRead(json, jsonIsOnlineTag, QJsonValue::Bool, [&online](const QJsonValue& json){
+        online = json.toBool();
+    });
+    setIsOnline(online, true);
 }
 
 void ControllerList::write(QJsonObject &json) const
@@ -58,6 +66,7 @@ void ControllerList::write(QJsonObject &json) const
         controllerArray.append(controllerObject);
     }
     json[jsonControllersTag] = controllerArray;
+    json[jsonIsOnlineTag] = m_isOnline;
 }
 
 Controller *ControllerList::findControllerByAddress(const QString &address) const
@@ -88,9 +97,9 @@ void ControllerList::turnScene(int index, bool on)
     }
 }
 
-void ControllerList::setIsOnline(bool isOnline)
+void ControllerList::setIsOnline(bool isOnline, bool force)
 {
-    if (m_isOnline == isOnline)
+    if (m_isOnline == isOnline && !force)
         return;
 
     m_isOnline = isOnline;
@@ -102,6 +111,7 @@ void ControllerList::setIsOnline(bool isOnline)
 
     emit isOnlineChanged(m_isOnline);
 }
+
 
 bool ControllerList::deviceAlreadyScanned(const QBluetoothDeviceInfo &info) const
 {
