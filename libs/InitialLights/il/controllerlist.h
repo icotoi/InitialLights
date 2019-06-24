@@ -37,7 +37,7 @@ public:
 public slots:
     void scan();
     void turnScene(int index, bool on);
-    void setIsOnline(bool isOnline);
+    void setIsOnline(bool isOnline, bool force = false);
 
 signals:
     void isOnlineChanged(bool isOnline);
