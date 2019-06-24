@@ -220,7 +220,10 @@ ApplicationWindow {
             ToolButton {
                 id: bluetoothScanButton
                 icon.source: ILStyle.bluetoothScanIconSource
-                onClicked: backend.controllerList.scan()
+                onClicked: {
+                    backend.controllerList.isOnline = true
+                    backend.controllerList.scan()
+                }
                 enabled: !backend.controllerList.isBusy
             }
 
