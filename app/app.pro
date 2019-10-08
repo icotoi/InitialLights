@@ -16,6 +16,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 TARGET = InitialLights
 
+QMAKE_TARGET_BUNDLE_PREFIX = net.devicehub
+QMAKE_BUNDLE = InitialLights1
+
 SOURCES += \
         main.cpp
 
