@@ -26,6 +26,8 @@ class INITIALLIGHTSSHARED_EXPORT BackEnd : public QObject, public ICodable
     QML_OBJMODEL_PROPERTY(il::Room, frontPageRooms)
     QML_OBJMODEL_PROPERTY(il::Scene, frontPageScenes)
 
+    QML_WRITABLE_AUTO_PROPERTY(bool, showOnboarding)
+
     Q_PROPERTY(il::MainPage* mainPage READ mainPage CONSTANT)
 
 public:

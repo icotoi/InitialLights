@@ -24,6 +24,7 @@ const QString jsonControllersTag { "controllers" };
 const QString jsonRoomsTag { "rooms" };
 const QString jsonScenesTag { "scenes" };
 const QString jsonMainPageTag { "mainPage" };
+const QString jsonShowOnboarding { "showOnboarding" };
 
 QString localDataDirName()
 {
@@ -50,6 +51,7 @@ BackEnd::BackEnd(QObject *parent)
     , m_lights { new QQmlObjectListModel<Light>(this) }
     , m_frontPageRooms { new QQmlObjectListModel<Room>(this) }
     , m_frontPageScenes { new QQmlObjectListModel<Scene>(this) }
+    , m_showOnboarding { true }
     , m_mainPage { new MainPage(m_rooms, this) }
 {
     auto controllers = m_controllerList->get_controllers();
@@ -68,6 +70,7 @@ void BackEnd::clearLocalData()
     m_rooms->clear();
     m_scenes->clear();
     m_controllerList->clear();
+    set_showOnboarding(true);
 
     QFile::remove(localDataFileName());
 }
@@ -124,7 +127,11 @@ void BackEnd::addNewRoom()
 
 void BackEnd::read(const QJsonObject &json)
 {
-    READ_DECODABLE_OBJECT(json, jsonControllersTag, m_controllerList)
+    bool showOnboarding = m_showOnboarding;
+    il::readIfExists(json, jsonShowOnboarding, showOnboarding);
+    m_showOnboarding = showOnboarding;
+
+    m_controllerList->readIfExists(json, jsonControllersTag);
 
     if (json.contains(jsonRoomsTag) && json[jsonRoomsTag].isArray()) {
         QJsonArray roomArray { json[jsonRoomsTag].toArray() };
@@ -148,13 +155,13 @@ void BackEnd::read(const QJsonObject &json)
         }
     }
 
-    READ_DECODABLE_OBJECT(json, jsonMainPageTag, m_mainPage)
+    m_mainPage->readIfExists(json, jsonMainPageTag);
 }
 
 void BackEnd::write(QJsonObject &json) const
 {
-    WRITE_ENCODABLE_OBJECT(json, jsonControllersTag, m_controllerList)
-    WRITE_ENCODABLE_OBJECT(json, jsonMainPageTag, m_mainPage)
+    m_controllerList->writeTo(json, jsonControllersTag);
+    m_controllerList->writeTo(json, jsonMainPageTag);
 
     QJsonArray roomArray;
     for (auto it = m_rooms->constBegin(); it != m_rooms->constEnd(); ++it) {
@@ -173,6 +180,7 @@ void BackEnd::write(QJsonObject &json) const
         sceneArray.append(sceneObject);
     }
     json[jsonScenesTag] = sceneArray;
+    json[jsonShowOnboarding] = m_showOnboarding;
 }
 
 void BackEnd::onControllersInserted(const QModelIndex &/*parent*/, int first, int last)

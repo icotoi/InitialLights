@@ -135,7 +135,7 @@ ApplicationWindow {
     StackView {
         id: stackView
         anchors.fill: parent
-        initialItem: mainView
+//        initialItem: mainView
     }
 
     Component {
@@ -265,13 +265,35 @@ ApplicationWindow {
         }
     }
 
+    Component {
+        id: onboardingView
+        PageOnboarding {
+            onDone: {
+                header.visible = true
+                drawer.interactive = true
+                drawer.enabled = true
+                stackView.replace(mainView)
+                updateToolbarForCurrentItem()
+                backend.showOnboarding = false
+            }
+        }
+    }
+
     Component.onCompleted: {
+        if (backend.showOnboarding) {
+            header.visible = false
+            drawer.interactive = false
+            drawer.enabled = false
+            stackView.push(onboardingView, StackView.Immediate)
+        } else {
+            stackView.push(mainView, StackView.Immediate)
+            updateToolbarForCurrentItem()
+        }
 //        showPage(settingsView, {})
 //        showPage(lightListView, {})
 //        var room = backend.rooms.get(0)
 //        if (room !== null) {
 //            stackView.push(roomView, { room: room })
 //        }
-        updateToolbarForCurrentItem()
     }
 }

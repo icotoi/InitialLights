@@ -59,5 +59,10 @@
         <file>PageColorSelection.qml</file>
         <file>Images/material.io-baseline-wb_incandescent-24px--blink.svg</file>
         <file>Images/material.io-baseline-edit-24px.svg</file>
+        <file>PageOnboarding.qml</file>
+        <file>Controls/ILOnboardingItem.qml</file>
+        <file>Images/onboarding1.jpg</file>
+        <file>Images/onboarding2.jpg</file>
+        <file>Images/onboarding3.jpg</file>
     </qresource>
 </RCC>
