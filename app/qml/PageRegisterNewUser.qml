@@ -25,7 +25,12 @@ Item {
             anchors.fill: parent
 
             ILTitleLabel {
-                text: qsTr("Log in")
+                text: qsTr("Create a new account")
+            }
+
+            TextField {
+                Layout.fillWidth: true
+                placeholderText: qsTr("Full Name")
             }
 
             TextField {
@@ -38,25 +43,27 @@ Item {
                 placeholderText: qsTr("Password")
             }
 
-            RowLayout {
+            TextField {
                 Layout.fillWidth: true
-                ILSecondaryButton {
-                    text: qsTr("New account")
-                    Layout.fillWidth: true
-                    onClicked: registerNewUser()
-                }
+                placeholderText: qsTr("Password")
+            }
 
-                ILSecondaryButton {
-                    text: qsTr("Forgot password?")
-                    Layout.fillWidth: true
-                    onClicked: resetPassword()
-                }
+            TextField {
+                Layout.fillWidth: true
+                placeholderText: qsTr("Confirm Password")
+            }
+
+            ILInfoLabel {
+                text: qsTr("By creating an account you agree to our Terms of Service and Privacy Policy")
+                wrapMode: Text.WordWrap
+                Layout.fillWidth: true
+                horizontalAlignment: Text.AlignHCenter
             }
         }
     }
 
     Button {
-        text: qsTr("Log in")
+        text: qsTr("Continue")
         anchors.right: parent.right
         anchors.rightMargin: root.margin
         anchors.left: parent.left
@@ -68,6 +75,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}D{i:1;anchors_x:0;anchors_y:5}D{i:9;anchors_x:0}
+    D{i:0;autoSize:true;height:480;width:640}
 }
 ##^##*/

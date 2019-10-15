@@ -292,9 +292,31 @@ ApplicationWindow {
     }
 
     Component {
+        id: registerNewUserView
+        PageRegisterNewUser {
+            property string title: qsTr("Register")
+        }
+    }
+
+    Component {
+        id: resetPasswordView
+        PageResetPassword {
+            property string title: qsTr("Lost password")
+        }
+    }
+
+    Component {
         id: loginView
         PageLogin {
+            onResetPassword: {
+                stackView.push(resetPasswordView)
+                updateToolbarForCurrentItem()
+            }
 
+            onRegisterNewUser: {
+                stackView.push(registerNewUserView)
+                updateToolbarForCurrentItem()
+            }
         }
     }
 

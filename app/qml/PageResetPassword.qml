@@ -9,9 +9,6 @@ Item {
 
     property int margin: 20
 
-    signal resetPassword()
-    signal registerNewUser()
-
     ILPane {
         id: pane
         anchors.rightMargin: root.margin
@@ -25,7 +22,7 @@ Item {
             anchors.fill: parent
 
             ILTitleLabel {
-                text: qsTr("Log in")
+                text: qsTr("Reset your password")
             }
 
             TextField {
@@ -33,30 +30,16 @@ Item {
                 placeholderText: qsTr("Email")
             }
 
-            TextField {
+            ILInfoLabel {
+                text: qsTr("You will receive an email with instructions")
                 Layout.fillWidth: true
-                placeholderText: qsTr("Password")
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-                ILSecondaryButton {
-                    text: qsTr("New account")
-                    Layout.fillWidth: true
-                    onClicked: registerNewUser()
-                }
-
-                ILSecondaryButton {
-                    text: qsTr("Forgot password?")
-                    Layout.fillWidth: true
-                    onClicked: resetPassword()
-                }
+                horizontalAlignment: Text.AlignHCenter
             }
         }
     }
 
     Button {
-        text: qsTr("Log in")
+        text: qsTr("Continue")
         anchors.right: parent.right
         anchors.rightMargin: root.margin
         anchors.left: parent.left
@@ -68,6 +51,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}D{i:1;anchors_x:0;anchors_y:5}D{i:9;anchors_x:0}
+    D{i:0;autoSize:true;height:480;width:640}
 }
 ##^##*/

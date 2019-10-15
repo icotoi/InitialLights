@@ -69,5 +69,7 @@
         <file>Controls/ILInfoLabel.qml</file>
         <file>Controls/ILSecondaryButton.qml</file>
         <file>Controls/ILPane.qml</file>
+        <file>PageResetPassword.qml</file>
+        <file>PageRegisterNewUser.qml</file>
     </qresource>
 </RCC>
