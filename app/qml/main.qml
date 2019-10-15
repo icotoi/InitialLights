@@ -23,7 +23,7 @@ ApplicationWindow {
                 : window.title
     }
 
-    function showStartView() {
+    function updateStartView() {
         if (!backend.isUserLogged) {
             stackView.replace(loginView, StackView.Immediate)
             header.visible = true
@@ -286,7 +286,7 @@ ApplicationWindow {
         PageOnboarding {
             onDone: {
                 backend.showOnboarding = false
-                showStartView()
+                updateStartView()
             }
         }
     }
@@ -331,7 +331,7 @@ ApplicationWindow {
         if (backend.showOnboarding) {
             stackView.push(onboardingView, StackView.Immediate)
         } else {
-            showStartView()
+            updateStartView()
         }
 //        showPage(settingsView, {})
 //        showPage(lightListView, {})
@@ -339,5 +339,15 @@ ApplicationWindow {
 //        if (room !== null) {
 //            stackView.push(roomView, { room: room })
 //        }
+    }
+
+    Connections {
+        target: backend
+        onIsUserLoggedChanged: {
+            console.log("backend.isUserLogged =", backend.isUserLogged)
+            if (backend.isUserLogged) {
+                updateStartView()
+            }
+        }
     }
 }
