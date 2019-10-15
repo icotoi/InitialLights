@@ -23,10 +23,19 @@ ApplicationWindow {
                 : window.title
     }
 
+    function showOnboarding() {
+        header.visible = false
+        drawer.interactive = false
+        drawer.enabled = false
+        stackView.replace(null, onboardingView, StackView.Immediate)
+    }
+
     function updateStartView() {
         if (!backend.isUserLogged) {
+            header.visible = false
+            drawer.interactive = false
+            drawer.enabled = false
             stackView.replace(null, loginView, StackView.Immediate)
-            header.visible = true
         } else {
             header.visible = true
             hamburgerButton.visible = true
@@ -325,11 +334,8 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        header.visible = false
-        drawer.interactive = false
-        drawer.enabled = false
         if (backend.showOnboarding) {
-            stackView.push(onboardingView, StackView.Immediate)
+            showOnboarding()
         } else {
             updateStartView()
         }
@@ -343,9 +349,17 @@ ApplicationWindow {
 
     Connections {
         target: backend
+
+        onShowOnboardingChanged: {
+            if (backend.showOnboarding) {
+                showOnboarding()
+            }
+        }
+
         onIsUserLoggedChanged: {
-            console.log("backend.isUserLogged =", backend.isUserLogged)
-            updateStartView()
+            if (!backend.showOnboarding) {
+                updateStartView()
+            }
         }
     }
 }
