@@ -54,6 +54,7 @@ QtObject {
     property string controllersIconSource: "Images/material.io-baseline-settings_input_svideo-24px.svg"
     property string lightsIconSource: "Images/material.io-baseline-wb_incandescent-24px.svg"
     property string bluetoothScanIconSource: "Images/material.io-sharp-bluetooth_searching-24px.svg"
+    property string logoutIconSource: "Images/fontawesome-user-times.svg"
 
     property string refreshControllerLightConfigurationSource: "Images/material.io-baseline-refresh-24px.svg"
 

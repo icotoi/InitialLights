@@ -157,6 +157,13 @@ void BackEnd::registerNewUser(const QString &user, const QString &password, cons
              << "\n   name:" << fullName;
 }
 
+void BackEnd::logout()
+{
+    // TODO: do we need to notify the server about the logout?
+    set_isUserLogged(false);
+    qDebug() << ">>> Logout user";
+}
+
 void BackEnd::read(const QJsonObject &json)
 {
     bool temporaryBool = m_showOnboarding;

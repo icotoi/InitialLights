@@ -34,6 +34,7 @@ ApplicationWindow {
         if (!backend.isUserLogged) {
             header.visible = false
             drawer.interactive = false
+            drawer.visible = false
             drawer.enabled = false
             stackView.replace(null, loginView, StackView.Immediate)
         } else {
@@ -153,6 +154,10 @@ ApplicationWindow {
             isOnlineSwitch {
                 checked: backend.controllerList.isOnline
                 onClicked: backend.controllerList.isOnline = isOnlineSwitch.checked
+            }
+
+            logout.onClicked: {
+                backend.logout()
             }
         }
     }

@@ -47,6 +47,7 @@ public slots:
     void login(const QString& user, const QString& password);
     void resetPassword(const QString& user);
     void registerNewUser(const QString& user, const QString& password, const QString& fullName);
+    void logout();
 
 private:
     void read(const QJsonObject& json) override;

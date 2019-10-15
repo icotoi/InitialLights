@@ -15,6 +15,7 @@ Item {
     property alias roomList: roomList
     property alias menuSeparator: menuSeparator
     property alias isOnlineSwitch: isOnlineSwitch
+    property alias logout: logout
 
     Rectangle {
         color: backgroundColor
@@ -105,6 +106,13 @@ Item {
                 icon.source: ILStyle.lightsIconSource
             }
 
+            ItemDelegate {
+                id: logout
+                text: qsTr("Logout")
+                Layout.fillWidth: true
+                icon.source: ILStyle.logoutIconSource
+            }
+
             SwitchDelegate {
                 id: isOnlineSwitch
                 text: checked ? qsTr("Online") : qsTr("Offline")
@@ -114,10 +122,9 @@ Item {
     }
 }
 
-
-
-
-/*##^## Designer {
+/*##^##
+Designer {
     D{i:0;autoSize:true;height:480;width:640}D{i:1;invisible:true}
 }
- ##^##*/
+##^##*/
+
