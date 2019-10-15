@@ -31,20 +31,18 @@ ApplicationWindow {
     }
 
     function updateStartView() {
+        header.visible = true
         if (!backend.isUserLogged) {
-            header.visible = false
             drawer.interactive = false
             drawer.visible = false
             drawer.enabled = false
             stackView.replace(null, loginView, StackView.Immediate)
         } else {
-            header.visible = true
-            hamburgerButton.visible = true
             drawer.interactive = true
             drawer.enabled = true
             stackView.replace(null, mainView, StackView.Immediate)
-            updateToolbarForCurrentItem()
         }
+        updateToolbarForCurrentItem()
     }
 
     function showHome() {
