@@ -25,14 +25,14 @@ ApplicationWindow {
 
     function updateStartView() {
         if (!backend.isUserLogged) {
-            stackView.replace(loginView, StackView.Immediate)
+            stackView.replace(null, loginView, StackView.Immediate)
             header.visible = true
         } else {
             header.visible = true
             hamburgerButton.visible = true
             drawer.interactive = true
             drawer.enabled = true
-            stackView.replace(mainView, StackView.Immediate)
+            stackView.replace(null, mainView, StackView.Immediate)
             updateToolbarForCurrentItem()
         }
     }
@@ -345,9 +345,7 @@ ApplicationWindow {
         target: backend
         onIsUserLoggedChanged: {
             console.log("backend.isUserLogged =", backend.isUserLogged)
-            if (backend.isUserLogged) {
-                updateStartView()
-            }
+            updateStartView()
         }
     }
 }
