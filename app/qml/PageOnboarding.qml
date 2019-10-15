@@ -13,7 +13,7 @@ Item {
         id: rowLayout
         anchors.fill: parent
 
-        Button {
+        ILSecondaryButton {
             id: skipButton
             text: qsTr("Skip")
             Layout.alignment: Qt.AlignRight | Qt.AlignVCenter

@@ -64,5 +64,12 @@
         <file>Images/onboarding1.jpg</file>
         <file>Images/onboarding2.jpg</file>
         <file>Images/onboarding3.jpg</file>
+        <file>PageLogin.qml</file>
+        <file>Controls/ILTitleLabel.qml</file>
+        <file>Controls/ILInfoLabel.qml</file>
+        <file>Controls/ILSecondaryButton.qml</file>
+        <file>Controls/ILPane.qml</file>
+        <file>PageResetPassword.qml</file>
+        <file>PageRegisterNewUser.qml</file>
     </qresource>
 </RCC>

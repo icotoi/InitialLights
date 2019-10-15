@@ -19,18 +19,9 @@ Item {
             source: "qrc:/qtquickplugin/images/template_image.png"
         }
 
-        Label {
+        ILTitleLabel {
             id: title
             text: qsTr("Title")
-            topPadding: 20
-            rightPadding: 20
-            leftPadding: 20
-            font.weight: Font.DemiBold
-            horizontalAlignment: Text.AlignHCenter
-            wrapMode: Text.WordWrap
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            font.pixelSize: 22
         }
 
         Label {

@@ -27,6 +27,7 @@ class INITIALLIGHTSSHARED_EXPORT BackEnd : public QObject, public ICodable
     QML_OBJMODEL_PROPERTY(il::Scene, frontPageScenes)
 
     QML_WRITABLE_AUTO_PROPERTY(bool, showOnboarding)
+    QML_WRITABLE_AUTO_PROPERTY(bool, isUserLogged)
 
     Q_PROPERTY(il::MainPage* mainPage READ mainPage CONSTANT)
 
@@ -42,6 +43,10 @@ public slots:
     void saveLocalData();
 
     void addNewRoom();
+
+    void login(const QString& user, const QString& password);
+    void resetPassword(const QString& user);
+    void registerNewUser(const QString& user, const QString& password, const QString& fullName);
 
 private:
     void read(const QJsonObject& json) override;
