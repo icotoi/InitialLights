@@ -74,6 +74,7 @@ void BackEnd::clearLocalData()
     m_scenes->clear();
     m_controllerList->clear();
     set_showOnboarding(true);
+    set_isUserLogged(false);
 
     QFile::remove(localDataFileName());
 }
