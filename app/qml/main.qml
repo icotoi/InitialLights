@@ -12,6 +12,7 @@ ApplicationWindow {
     title: qsTr("Initial Lights")
 
     property bool onStartPage: stackView.depth == 1
+    property bool showHamburgerMenu: backend.isUserLogged
 
     function updateToolbarForCurrentItem() {
         extraToolbarItems.children = stackView.currentItem.extraToolbarItems
@@ -20,6 +21,20 @@ ApplicationWindow {
         toolbarLabel.text = stackView.currentItem.title
                 ? stackView.currentItem.title
                 : window.title
+    }
+
+    function showStartView() {
+        if (!backend.isUserLogged) {
+            stackView.replace(loginView, StackView.Immediate)
+            header.visible = true
+        } else {
+            header.visible = true
+            hamburgerButton.visible = true
+            drawer.interactive = true
+            drawer.enabled = true
+            stackView.replace(mainView, StackView.Immediate)
+            updateToolbarForCurrentItem()
+        }
     }
 
     function showHome() {
@@ -52,9 +67,10 @@ ApplicationWindow {
             // a hamburger button that rotates
             ToolButton {
                 id: hamburgerButton
-                icon.source: onStartPage ? ILStyle.hamburgerIconSource : ILStyle.backIconSource
+                enabled: showHamburgerMenu || !onStartPage
+                icon.source: onStartPage ? (showHamburgerMenu ? ILStyle.hamburgerIconSource : "") : ILStyle.backIconSource
                 onClicked: {
-                    if (onStartPage) {
+                    if (onStartPage && showHamburgerMenu) {
                         drawer.visible ? drawer.close() : drawer.open()
                     } else {
                         stackView.pop()
@@ -269,25 +285,27 @@ ApplicationWindow {
         id: onboardingView
         PageOnboarding {
             onDone: {
-                header.visible = true
-                drawer.interactive = true
-                drawer.enabled = true
-                stackView.replace(mainView)
-                updateToolbarForCurrentItem()
                 backend.showOnboarding = false
+                showStartView()
             }
         }
     }
 
+    Component {
+        id: loginView
+        PageLogin {
+
+        }
+    }
+
     Component.onCompleted: {
+        header.visible = false
+        drawer.interactive = false
+        drawer.enabled = false
         if (backend.showOnboarding) {
-            header.visible = false
-            drawer.interactive = false
-            drawer.enabled = false
             stackView.push(onboardingView, StackView.Immediate)
         } else {
-            stackView.push(mainView, StackView.Immediate)
-            updateToolbarForCurrentItem()
+            showStartView()
         }
 //        showPage(settingsView, {})
 //        showPage(lightListView, {})
