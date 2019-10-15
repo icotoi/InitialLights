@@ -295,6 +295,7 @@ ApplicationWindow {
         id: registerNewUserView
         PageRegisterNewUser {
             property string title: qsTr("Register")
+            onDone: backend.registerNewUser(user, password, fullName)
         }
     }
 
@@ -302,6 +303,7 @@ ApplicationWindow {
         id: resetPasswordView
         PageResetPassword {
             property string title: qsTr("Lost password")
+            onDone: backend.resetPassword(user)
         }
     }
 
@@ -317,6 +319,8 @@ ApplicationWindow {
                 stackView.push(registerNewUserView)
                 updateToolbarForCurrentItem()
             }
+
+            onDone: backend.login(user, password)
         }
     }
 

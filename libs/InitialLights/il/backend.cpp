@@ -9,6 +9,7 @@
 
 #include "jsonhelpers.h"
 
+#include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QJsonArray>
@@ -125,6 +126,34 @@ void BackEnd::addNewRoom()
     auto room = new Room(m_controllerList);
     room->set_name("Room");
     m_rooms->append(room);
+}
+
+void BackEnd::login(const QString &user, const QString &password)
+{
+    // TODO: implement login
+    qDebug() << ">>> Login user";
+    if (user == "xxx" && password == "xxx") {
+        set_isUserLogged(true);
+    } else {
+        qDebug() << ">>> Invalid login request:"
+                 << "\n   user:" << user
+                 << "\n   password:" << password;
+    }
+}
+
+void BackEnd::resetPassword(const QString &user)
+{
+    // TODO: implement password reset
+    qDebug() << ">>> Requested password reset for user:" << user;
+}
+
+void BackEnd::registerNewUser(const QString &user, const QString &password, const QString &fullName)
+{
+    // TODO: implement new user registration
+    qDebug() << ">>> Requested new user registration for"
+             << "\n   user:" << user
+             << "\n   password:" << password
+             << "\n   name:" << fullName;
 }
 
 void BackEnd::read(const QJsonObject &json)

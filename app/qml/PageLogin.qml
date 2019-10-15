@@ -9,8 +9,14 @@ Item {
 
     property int margin: 20
 
+    property alias user: user.text
+    property alias password: password.text
+    property bool hasValidInput: user.text != "" &&
+                                 password.text != ""
+
     signal resetPassword()
     signal registerNewUser()
+    signal done()
 
     ILPane {
         id: pane
@@ -29,11 +35,13 @@ Item {
             }
 
             TextField {
+                id: user
                 Layout.fillWidth: true
                 placeholderText: qsTr("Email")
             }
 
             TextField {
+                id: password
                 Layout.fillWidth: true
                 placeholderText: qsTr("Password")
             }
@@ -57,12 +65,14 @@ Item {
 
     Button {
         text: qsTr("Log in")
+        enabled: hasValidInput
         anchors.right: parent.right
         anchors.rightMargin: root.margin
         anchors.left: parent.left
         anchors.leftMargin: root.margin
         anchors.bottom: parent.bottom
         anchors.bottomMargin: root.margin
+        onClicked: if (hasValidInput) done()
     }
 }
 

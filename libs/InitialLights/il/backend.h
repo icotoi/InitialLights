@@ -44,6 +44,10 @@ public slots:
 
     void addNewRoom();
 
+    void login(const QString& user, const QString& password);
+    void resetPassword(const QString& user);
+    void registerNewUser(const QString& user, const QString& password, const QString& fullName);
+
 private:
     void read(const QJsonObject& json) override;
     void write(QJsonObject& json) const override;

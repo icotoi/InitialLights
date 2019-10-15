@@ -9,6 +9,11 @@ Item {
 
     property int margin: 20
 
+    property alias user: user.text
+    property bool hasValidInput: user.text != ""
+
+    signal done()
+
     ILPane {
         id: pane
         anchors.rightMargin: root.margin
@@ -26,6 +31,7 @@ Item {
             }
 
             TextField {
+                id: user
                 Layout.fillWidth: true
                 placeholderText: qsTr("Email")
             }
@@ -40,12 +46,14 @@ Item {
 
     Button {
         text: qsTr("Continue")
+        enabled: hasValidInput
         anchors.right: parent.right
         anchors.rightMargin: root.margin
         anchors.left: parent.left
         anchors.leftMargin: root.margin
         anchors.bottom: parent.bottom
         anchors.bottomMargin: root.margin
+        onClicked: if (hasValidInput) done()
     }
 }
 
