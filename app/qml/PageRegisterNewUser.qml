@@ -52,12 +52,14 @@ Item {
 
             TextField {
                 id: password
+                echoMode: TextInput.Password
                 Layout.fillWidth: true
                 placeholderText: qsTr("Password")
             }
 
             TextField {
                 id: passwordConfirmation
+                echoMode: TextInput.Password
                 Layout.fillWidth: true
                 placeholderText: qsTr("Confirm Password")
             }
