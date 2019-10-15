@@ -25,6 +25,7 @@ const QString jsonRoomsTag { "rooms" };
 const QString jsonScenesTag { "scenes" };
 const QString jsonMainPageTag { "mainPage" };
 const QString jsonShowOnboarding { "showOnboarding" };
+const QString jsonIsUserLogged { "isUserLogged" };
 
 QString localDataDirName()
 {
@@ -52,6 +53,7 @@ BackEnd::BackEnd(QObject *parent)
     , m_frontPageRooms { new QQmlObjectListModel<Room>(this) }
     , m_frontPageScenes { new QQmlObjectListModel<Scene>(this) }
     , m_showOnboarding { true }
+    , m_isUserLogged { false }
     , m_mainPage { new MainPage(m_rooms, this) }
 {
     auto controllers = m_controllerList->get_controllers();
@@ -127,9 +129,13 @@ void BackEnd::addNewRoom()
 
 void BackEnd::read(const QJsonObject &json)
 {
-    bool showOnboarding = m_showOnboarding;
-    il::readIfExists(json, jsonShowOnboarding, showOnboarding);
-    m_showOnboarding = showOnboarding;
+    bool temporaryBool = m_showOnboarding;
+    il::readIfExists(json, jsonShowOnboarding, temporaryBool);
+    set_showOnboarding(temporaryBool);
+
+    temporaryBool = m_isUserLogged;
+    il::readIfExists(json, jsonIsUserLogged, temporaryBool);
+    set_isUserLogged(temporaryBool);
 
     m_controllerList->readIfExists(json, jsonControllersTag);
 
@@ -181,6 +187,7 @@ void BackEnd::write(QJsonObject &json) const
     }
     json[jsonScenesTag] = sceneArray;
     json[jsonShowOnboarding] = m_showOnboarding;
+    json[jsonIsUserLogged] = m_isUserLogged;
 }
 
 void BackEnd::onControllersInserted(const QModelIndex &/*parent*/, int first, int last)
