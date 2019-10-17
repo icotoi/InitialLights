@@ -2,13 +2,15 @@ syntax = "proto3";
 
 package initiallights;
 
-// User service definition
-service User {
+// Authorization service definition
+service Authorization {
     rpc Login (LoginRequest) returns (LoginResponse);
 
     rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
 
     rpc RegisterNewUser(RegisterNewUserRequest) returns (RegisterNewUserResponse);
+
+    rpc Logout(LogoutRequest) returns (LogoutResponse);
 }
 
 message LoginRequest {
@@ -19,7 +21,7 @@ message LoginRequest {
 message LoginResponse {
     bool success = 1; // true: user login ok
     string email = 2; // the user the request came from, for verifying authentication was successful.
-    string login_token = 3; // on success, some login token
+    string token = 3; // on success, some login token; should be managed (stored) by server
     string message = 4; // on success, empty; on failure, some message for the user or debug
 }
 
@@ -34,10 +36,19 @@ message ResetPasswordResponse {
 message RegisterNewUserRequest {
     string email = 1;
     string password = 2;
-    string full_name = 3; // user's full name
+    string fullName = 3; // user's full name
 }
 
 message RegisterNewUserResponse {
     bool success = 1; // true if user registered successfully
     string message = 2; // on success, empty; on failure, some message for the user or for debug
+}
+
+message LogoutRequest {
+    string email = 1;
+    string token = 2;
+}
+
+message LogoutResponse {
+    // we use an empty response just in case we need something more in the future
 }
