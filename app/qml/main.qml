@@ -12,6 +12,8 @@ ApplicationWindow {
     title: qsTr("Initial Lights")
 
     function showOnboarding() {
+        console.log("Onboarding")
+        stackView.replace(null, onboardingView, StackView.Immediate)
     }
 
     function showLoginOrStartView() {
@@ -23,9 +25,32 @@ ApplicationWindow {
     }
 
     function showLoginView() {
+        stackView.replace(null, loginView, StackView.Immediate)
     }
 
     function showStartView() {
+    }
+
+    StackView {
+        id: stackView
+        anchors.fill: parent
+    }
+
+    Component {
+        id: onboardingView
+        PageOnboarding {
+            onDone: {
+//                backend.showOnboarding = false
+                showLoginOrStartView()
+            }
+        }
+    }
+
+    Component {
+        id: loginView
+        PageLogin {
+            onDone: backend.login(user, password)
+        }
     }
 
     Component.onCompleted: {

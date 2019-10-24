@@ -9,6 +9,29 @@ Item {
     id: root
     signal done()
 
+    SwipeView {
+        id: swipeView
+        anchors.fill: parent
+
+        ILOnboardingItem {
+            image: "Images/onboarding1.jpg"
+            title: "All the lights are now in one single place"
+            message: "With Initial Lights you have all your rooms and their lights connected in one single app."
+        }
+
+        ILOnboardingItem {
+            image: "Images/onboarding2.jpg"
+            title: "Eco-friendly with our scenes and schedules"
+            message: "You can reduce the electricity consumption by using Scenes and Smart Schedules."
+        }
+
+        ILOnboardingItem {
+            image: "Images/onboarding3.jpg"
+            title: "Easy monitor everything with remote control"
+            message: "You can easy check now if your lights are On even when you are away from home."
+        }
+    }
+
     ColumnLayout {
         id: rowLayout
         anchors.fill: parent
@@ -18,30 +41,6 @@ Item {
             text: qsTr("Skip")
             Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
             onClicked: root.done()
-        }
-
-        SwipeView {
-            id: swipeView
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-
-            ILOnboardingItem {
-                image: "Images/onboarding1.jpg"
-                title: "All the lights in a single place"
-                message: "With Initial Lights you have all your rooms and their lights in one single app."
-            }
-
-            ILOnboardingItem {
-                image: "Images/onboarding2.jpg"
-                title: "Smart scenes"
-                message: "You can easily dim lights, change colours and even create right scenes."
-            }
-
-            ILOnboardingItem {
-                image: "Images/onboarding3.jpg"
-                title: "Multiple setups"
-                message: "Your rooms with scenes can ..."
-            }
         }
 
         PageIndicator {
