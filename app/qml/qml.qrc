@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
+        <file>main-old.qml</file>
         <file>Constants/ILStyle.qml</file>
         <file>Constants/qmldir</file>
         <file>qtquickcontrols2.conf</file>
@@ -73,5 +73,6 @@
         <file>PageRegisterNewUser.qml</file>
         <file>Images/fontawesome-user-times.svg</file>
         <file>Controls/ILButton.qml</file>
+        <file>main.qml</file>
     </qresource>
 </RCC>
