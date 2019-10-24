@@ -8,6 +8,9 @@ Item {
     property alias title: title.text
     property alias message: message.text
 
+    property int textHorizontalMargin: 20
+    property int textTopMargin: 120
+
     Image {
         id: image
         anchors.fill: parent
@@ -18,20 +21,21 @@ Item {
     ColumnLayout {
         id: columnLayout
         anchors.top: parent.top
-        anchors.topMargin: 100
+        anchors.topMargin: textTopMargin
         anchors.right: parent.right
-        anchors.rightMargin: 20
+        anchors.rightMargin: textHorizontalMargin
         anchors.left: parent.left
-        anchors.leftMargin: 20
+        anchors.leftMargin: textHorizontalMargin
 
         spacing: 16
 
         Label {
             id: title
-            text: qsTr("Title")
+            text: qsTr("Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
+            lineHeight: 1.1
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            font.pixelSize: 24
+            font.pixelSize: 26
             font.bold: true
         }
 
