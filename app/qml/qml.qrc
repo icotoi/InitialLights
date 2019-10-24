@@ -72,5 +72,6 @@
         <file>PageResetPassword.qml</file>
         <file>PageRegisterNewUser.qml</file>
         <file>Images/fontawesome-user-times.svg</file>
+        <file>Controls/ILButton.qml</file>
     </qresource>
 </RCC>
