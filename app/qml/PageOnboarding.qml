@@ -67,7 +67,7 @@ Item {
                        }
         }
 
-        PageIndicator {
+        ILPageIndicator {
             id: pageIndicator
             Layout.topMargin: 20
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter

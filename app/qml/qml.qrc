@@ -74,5 +74,6 @@
         <file>Images/fontawesome-user-times.svg</file>
         <file>Controls/ILButton.qml</file>
         <file>main.qml</file>
+        <file>Controls/ILPageIndicator.qml</file>
     </qresource>
 </RCC>
