@@ -2,9 +2,60 @@ pragma Singleton
 
 import QtQuick 2.12
 
+//    family: "Inter"
+//    style: "Bold Italic" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Bold" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Black" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Medium Italic" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Light BETA" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Thin Italic BETA" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Extra Light BETA" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Black Italic" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Semi Bold" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Medium" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Light Italic BETA" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Regular" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Italic" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Semi Bold Italic" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Thin BETA" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Extra Bold" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Extra Bold Italic" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+//    style: "Extra Light Italic BETA" "9 10 11 12 13 14 18 24 36 48 64 72 96 144 288"
+
 QtObject {
     id: root
 
+    property color titleTextColor: "#17191D"
+    property font titleTextFont: Qt.font({ family: "Inter", styleName: "Bold", pointSize: 24 })
+    property real titleTextLineHeight: 1.15
+
+    property color defaultTextColor: "#5C6670"
+    property font defaultTextFont: Qt.font({ family: "Inter", styleName: "Regular", pointSize: 18 })
+    property real defaultTextLineHeight: 1.1
+
+    // ILButton styling
+    property int buttonImplicitHeight: 48
+
+    property font flatButtonTextBoldFont: Qt.font({ family: "Inter", styleName: "Bold", pointSize: 14 })
+    property font flatButtonTextFont: Qt.font({ family: "Inter", styleName: "Regular", pointSize: 14 })
+    property font defaultButtonTextFont: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 16 })
+
+    property color flatButtonTextColor: "#80000000"
+    property color highlighteButtonTextColor: "#FFFFFF"
+    property color defaultButtonTextColor: "#056CF9"
+
+    property color highlightedButtonBackgroundColor: "#056CF9"
+    property color defaultButtonBackgroundColor: "#F1F8FF"
+
+    property color highlightedButtonBorderColor: "#056CF9"
+    property color defaultButtonBorderColor: "#056CF9"
+
+    property color highlightedButtonShadowColor: "#80000000"
+    property color defaultButtonShadowColor: "#80000000"
+
+    /////
+    // old styles below
+    // if you need to reuse a name copy it above
     property color windowBackground: "#303030"
     property color textColor: "#fbfbfb"
 
