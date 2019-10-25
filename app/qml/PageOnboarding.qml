@@ -2,58 +2,66 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
+import "Constants"
 import "Controls"
 import "Images"
 
 Item {
     id: root
-    signal done()
 
-    property int itemHorizontalMargin: 20
+    width: 360
+    height: 640
+
+    signal done()
 
     SwipeView {
         id: swipeView
         anchors.fill: parent
 
         ILOnboardingItem {
-            image: "Images/onboarding1.jpg"
+            image: "Images/background-onboarding-1.jpg"
             title: "All your lights are now in one single place"
             message: "With Initial Lights you have all your rooms and their lights connected in one single app."
-            textHorizontalMargin: itemHorizontalMargin
+            textHorizontalMargin: 20
         }
 
         ILOnboardingItem {
-            image: "Images/onboarding2.jpg"
+            image: "Images/background-onboarding-2.jpg"
             title: "Eco-friendly with our scenes and schedules"
             message: "You can reduce the electricity consumption by using Scenes and Smart Schedules."
-            textHorizontalMargin: itemHorizontalMargin
+            textHorizontalMargin: 20
         }
 
         ILOnboardingItem {
-            image: "Images/onboarding3.jpg"
+            image: "Images/background-onboarding-3.jpg"
             title: "Easy monitor everything with remote control"
             message: "You can easy check now if your lights are On even when you are away from home."
-            textHorizontalMargin: itemHorizontalMargin
+            textHorizontalMargin: 20
         }
+    }
+
+    ILButton {
+        id: skipButton
+        flat: true
+        text: qsTr("SKIP")
+        anchors.top: parent.top
+        anchors.topMargin: 48
+        anchors.right: parent.right
+        anchors.rightMargin: 8
+        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+        onClicked: root.done()
+        font: ILStyle.flatButtonTextBoldFont
     }
 
     ColumnLayout {
         id: rowLayout
-        anchors.rightMargin: itemHorizontalMargin
-        anchors.leftMargin: itemHorizontalMargin
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.rightMargin: 20
+        anchors.leftMargin: 20
         anchors.bottomMargin: 10
-        anchors.topMargin: itemHorizontalMargin
-        anchors.fill: parent
 
-        ILButton {
-            id: skipButton
-            flat: true
-            text: qsTr("Skip")
-            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-            onClicked: root.done()
-        }
-
-        Item { Layout.fillHeight: true}
 
         ILButton {
             id: nextButton
@@ -77,9 +85,3 @@ Item {
 
     }
 }
-
-/*##^##
-Designer {
-    D{i:0;autoSize:true;height:640;width:360}
-}
-##^##*/

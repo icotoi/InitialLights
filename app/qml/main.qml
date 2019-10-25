@@ -49,7 +49,7 @@ ApplicationWindow {
     Component {
         id: loginView
         PageLogin {
-            onDone: backend.login(user, password)
+//            onDone: backend.login(user, password)
         }
     }
 

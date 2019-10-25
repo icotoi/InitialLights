@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 
+import "../Constants"
+
 Item {
     id: element
     property alias image: image.source
@@ -9,13 +11,16 @@ Item {
     property alias message: message.text
 
     property int textHorizontalMargin: 20
-    property int textTopMargin: 120
+    property int textTopMargin: 130
+
+    width: 360
+    height: 640
 
     Image {
         id: image
         anchors.fill: parent
         fillMode: Image.PreserveAspectFit
-        source: "qrc:/qtquickplugin/images/template_image.png"
+        source: "../Images/background-onboarding-1.jpg"
     }
 
     ColumnLayout {
@@ -27,33 +32,25 @@ Item {
         anchors.left: parent.left
         anchors.leftMargin: textHorizontalMargin
 
-        spacing: 16
-
-        Label {
+        Text {
             id: title
-            text: qsTr("Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
+            text: qsTr("All your lightes are now in one single place")
+            bottomPadding: 6
+            lineHeight: 1.15
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+            font: ILStyle.titleTextFont
+            color: ILStyle.titleTextColor
+        }
+
+        Text {
+            id: message
+            text: qsTr("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sed dui in nulla auctor volutpat vitae non sem. In hac.")
             lineHeight: 1.1
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            font.pixelSize: 26
-            font.bold: true
+            font: ILStyle.defaultTextFont
+            color: ILStyle.defaultTextColor
         }
-
-        Label {
-            id: message
-            text: qsTr("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sed dui in nulla auctor volutpat vitae non sem. In hac.")
-            Layout.fillWidth: true
-            wrapMode: Text.WordWrap
-            font.pixelSize: 20
-            opacity: .8
-        }
-
     }
-
 }
-
-/*##^##
-Designer {
-    D{i:0;autoSize:true;height:640;width:360}
-}
-##^##*/

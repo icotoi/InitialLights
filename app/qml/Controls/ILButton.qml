@@ -1,52 +1,53 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtGraphicalEffects 1.0
+
+import "../Constants"
 
 Button {
     id: control
+
     text: qsTr("Button")
+    font: flat ? ILStyle.flatButtonTextFont : ILStyle.defaultButtonTextFont
+    leftPadding: flat ? 0 : 8
+    rightPadding: flat ? 0 : 8
 
-    font.pointSize: flat ? 14: 18
-    font.bold: flat
-    font.capitalization: flat ? Font.AllUppercase : Font.MixedCase
-
-    property color borderColor: "#056CF9"
-    property color backgroundColorHighlighted: "#056CF9"
-    property color backgroundColor: "#F1F8FF"
-
-    property color textColor: "#056CF9"
-    property color textColorHighlighted: "#FFF"
-    property color textColorFlat: "#000"
-
-    // TODO: check if this is ok or another way of interaction feedback is required
-    transform: Translate {
-        x: control.down ? 1 : 0
-        y: control.down ? 1 : 0
-    }
+    property color textColor: flat
+                              ? ILStyle.flatButtonTextColor
+                              : (highlighted ? ILStyle.highlighteButtonTextColor : ILStyle.defaultButtonTextColor)
+    property color backgroundColor: highlighted ? ILStyle.highlightedButtonBackgroundColor : ILStyle.defaultButtonBackgroundColor
+    property color borderColor: highlighted ? ILStyle.highlightedButtonBorderColor : ILStyle.defaultButtonBorderColor
+    property bool dropShadow: enabled && !down && !flat
 
     contentItem: Text {
         text: control.text
         font: control.font
-        opacity: flat
-                 ? (enabled ? 0.6 : 0.3)
-                 : (enabled ? 1.0 : 0.3)
-        color: flat
-               ? textColorFlat
-               : (control.highlighted ? textColorHighlighted : textColor)
-
+        opacity: enabled ? 1.0 : 0.3
+        color: textColor
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
+
     }
 
     background: Rectangle {
-        implicitWidth: flat ? 0 : 100
-        implicitHeight: flat ? 0 : 48
         visible: !flat
+        implicitWidth: !flat ? 100 : 0
+        implicitHeight: !flat ? ILStyle.buttonImplicitHeight : 0
         opacity: enabled ? 1 : 0.3
         border.color: borderColor
-        color: control.highlighted ? backgroundColorHighlighted : backgroundColor
+        color: backgroundColor
         border.width: 1
         radius: height * 0.5
+
+        // button drop shadow when button not pressed
+        layer.enabled: dropShadow
+        layer.effect: DropShadow {
+            verticalOffset: 1
+            color: highlighted ? ILStyle.highlightedButtonShadowColor : ILStyle.defaultButtonShadowColor
+            samples: 9
+            radius: 4
+        }
     }
 }
 
