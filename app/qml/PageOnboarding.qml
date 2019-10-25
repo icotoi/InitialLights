@@ -48,6 +48,7 @@ Item {
         anchors.topMargin: 48
         anchors.right: parent.right
         anchors.rightMargin: 8
+        padding: 0
         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
         onClicked: root.done()
         font: ILStyle.flatButtonTextBoldFont

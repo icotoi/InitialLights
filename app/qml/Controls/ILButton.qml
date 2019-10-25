@@ -9,8 +9,6 @@ Button {
 
     text: qsTr("Button")
     font: flat ? ILStyle.flatButtonTextFont : ILStyle.defaultButtonTextFont
-    leftPadding: flat ? 0 : 8
-    rightPadding: flat ? 0 : 8
 
     property color textColor: flat
                               ? ILStyle.flatButtonTextColor

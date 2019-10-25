@@ -49,6 +49,9 @@ ApplicationWindow {
     Component {
         id: loginView
         PageLogin {
+            onLogin: console.log("TODO: login")
+            onRegisterNewUser: console.log("TODO: register new user")
+            onResetPassword: console.log("TODO: reset password")
 //            onDone: backend.login(user, password)
         }
     }
