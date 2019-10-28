@@ -2,46 +2,55 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 
+import "../Constants"
+
 Item {
+    id: element
     property alias image: image.source
     property alias title: title.text
     property alias message: message.text
 
-    ColumnLayout {
-        id: columnLayout
+    property int textHorizontalMargin: 20
+    property int textTopMargin: 130
+
+    width: 360
+    height: 640
+
+    Image {
+        id: image
         anchors.fill: parent
-
-        Image {
-            id: image
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            fillMode: Image.PreserveAspectFit
-            source: "qrc:/qtquickplugin/images/template_image.png"
-        }
-
-        ILTitleLabel {
-            id: title
-            text: qsTr("Title")
-        }
-
-        Label {
-            id: message
-            text: qsTr("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sed dui in nulla auctor volutpat vitae non sem. In hac.")
-            rightPadding: 20
-            leftPadding: 20
-            bottomPadding: 20
-            Layout.fillWidth: true
-            horizontalAlignment: Text.AlignHCenter
-            wrapMode: Text.WordWrap
-            font.pixelSize: 14
-        }
-
+        fillMode: Image.PreserveAspectFit
+        source: "../Images/background-onboarding-1.jpg"
     }
 
-}
+    ColumnLayout {
+        id: columnLayout
+        anchors.top: parent.top
+        anchors.topMargin: textTopMargin
+        anchors.right: parent.right
+        anchors.rightMargin: textHorizontalMargin
+        anchors.left: parent.left
+        anchors.leftMargin: textHorizontalMargin
 
-/*##^##
-Designer {
-    D{i:0;autoSize:true;height:480;width:640}D{i:1;anchors_height:100;anchors_width:100;anchors_x:254;anchors_y:255}
+        Text {
+            id: title
+            text: qsTr("All your lightes are now in one single place")
+            bottomPadding: 6
+            lineHeight: 1.15
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+            font: ILStyle.titleTextFont
+            color: ILStyle.titleTextColor
+        }
+
+        Text {
+            id: message
+            text: qsTr("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sed dui in nulla auctor volutpat vitae non sem. In hac.")
+            lineHeight: 1.1
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+            font: ILStyle.defaultTextFont
+            color: ILStyle.defaultTextColor
+        }
+    }
 }
-##^##*/

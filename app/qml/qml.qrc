@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
+        <file>main-old.qml</file>
         <file>Constants/ILStyle.qml</file>
         <file>Constants/qmldir</file>
         <file>qtquickcontrols2.conf</file>
@@ -61,10 +61,7 @@
         <file>Images/material.io-baseline-edit-24px.svg</file>
         <file>PageOnboarding.qml</file>
         <file>Controls/ILOnboardingItem.qml</file>
-        <file>Images/onboarding1.jpg</file>
-        <file>Images/onboarding2.jpg</file>
-        <file>Images/onboarding3.jpg</file>
-        <file>PageLogin.qml</file>
+        <file>PageLogin2.qml</file>
         <file>Controls/ILTitleLabel.qml</file>
         <file>Controls/ILInfoLabel.qml</file>
         <file>Controls/ILSecondaryButton.qml</file>
@@ -72,5 +69,16 @@
         <file>PageResetPassword.qml</file>
         <file>PageRegisterNewUser.qml</file>
         <file>Images/fontawesome-user-times.svg</file>
+        <file>Controls/ILButton.qml</file>
+        <file>main.qml</file>
+        <file>Controls/ILPageIndicator.qml</file>
+        <file>Fonts/Inter-Medium.otf</file>
+        <file>Fonts/Inter-Regular.otf</file>
+        <file>Fonts/Inter-Bold.otf</file>
+        <file>PageLogin.qml</file>
+        <file>Images/background-login-1.jpg</file>
+        <file>Images/background-onboarding-1.jpg</file>
+        <file>Images/background-onboarding-2.jpg</file>
+        <file>Images/background-onboarding-3.jpg</file>
     </qresource>
 </RCC>

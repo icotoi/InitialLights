@@ -2,58 +2,72 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
+import "Constants"
 import "Controls"
 import "Images"
 
 Item {
     id: root
+
+    width: 360
+    height: 640
+
     signal done()
+
+    SwipeView {
+        id: swipeView
+        anchors.fill: parent
+
+        ILOnboardingItem {
+            image: "Images/background-onboarding-1.jpg"
+            title: "All your lights are now in one single place"
+            message: "With Initial Lights you have all your rooms and their lights connected in one single app."
+            textHorizontalMargin: 20
+        }
+
+        ILOnboardingItem {
+            image: "Images/background-onboarding-2.jpg"
+            title: "Eco-friendly with our scenes and schedules"
+            message: "You can reduce the electricity consumption by using Scenes and Smart Schedules."
+            textHorizontalMargin: 20
+        }
+
+        ILOnboardingItem {
+            image: "Images/background-onboarding-3.jpg"
+            title: "Easy monitor everything with remote control"
+            message: "You can easy check now if your lights are On even when you are away from home."
+            textHorizontalMargin: 20
+        }
+    }
+
+    ILButton {
+        id: skipButton
+        flat: true
+        text: qsTr("SKIP")
+        anchors.top: parent.top
+        anchors.topMargin: 48
+        anchors.right: parent.right
+        anchors.rightMargin: 8
+        padding: 0
+        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+        onClicked: root.done()
+        font: ILStyle.flatButtonTextBoldFont
+    }
 
     ColumnLayout {
         id: rowLayout
-        anchors.fill: parent
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.rightMargin: 20
+        anchors.leftMargin: 20
+        anchors.bottomMargin: 10
 
-        ILSecondaryButton {
-            id: skipButton
-            text: qsTr("Skip")
-            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-            onClicked: root.done()
-        }
 
-        SwipeView {
-            id: swipeView
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-
-            ILOnboardingItem {
-                image: "Images/onboarding1.jpg"
-                title: "All the lights in a single place"
-                message: "With Initial Lights you have all your rooms and their lights in one single app."
-            }
-
-            ILOnboardingItem {
-                image: "Images/onboarding2.jpg"
-                title: "Smart scenes"
-                message: "You can easily dim lights, change colours and even create right scenes."
-            }
-
-            ILOnboardingItem {
-                image: "Images/onboarding3.jpg"
-                title: "Multiple setups"
-                message: "Your rooms with scenes can ..."
-            }
-        }
-
-        PageIndicator {
-            id: pageIndicator
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            count: swipeView.count
-            currentIndex: swipeView.currentIndex
-        }
-
-        Button {
+        ILButton {
             id: nextButton
             text: qsTr("Next")
+            highlighted: true
             Layout.fillWidth: true
             onClicked: if (swipeView.currentIndex == swipeView.count - 1) {
                            root.done()
@@ -61,11 +75,14 @@ Item {
                            swipeView.currentIndex += 1
                        }
         }
+
+        ILPageIndicator {
+            id: pageIndicator
+            Layout.topMargin: 20
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            count: swipeView.count
+            currentIndex: swipeView.currentIndex
+        }
+
     }
 }
-
-/*##^##
-Designer {
-    D{i:0;autoSize:true;height:480;width:640}
-}
-##^##*/
