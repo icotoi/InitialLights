@@ -41,7 +41,7 @@ ApplicationWindow {
         id: onboardingView
         PageOnboarding {
             onDone: {
-//                backend.showOnboarding = false
+                backend.showOnboarding = false
                 showLoginOrStartView()
             }
         }
