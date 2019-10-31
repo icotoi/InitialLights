@@ -1,5 +1,7 @@
 #include "backend.h"
 
+#include "jsonhelper.h"
+
 #include <QDebug>
 #include <QDir>
 #include <QFile>
@@ -11,6 +13,14 @@
 namespace il {
 
 namespace  {
+
+#define READ_BOOL_PROPERTY_IF_EXISTS(json, name, property) \
+    { \
+        bool value = m_ ## property; \
+        readIfExists(json, name, value); \
+        set_ ## property(value); \
+        qDebug() << " >>>" << #property << "(bool):" << m_ ## property; \
+    }
 
 const QString jsonShowOnboarding { "showOnboarding" };
 const QString jsonIsUserLogged { "isUserLogged" };
@@ -132,13 +142,8 @@ void BackEnd::logout()
 
 void BackEnd::read(const QJsonObject &json)
 {
-    bool temporaryBool = m_showOnboarding;
-    il::readIfExists(json, jsonShowOnboarding, temporaryBool);
-    set_showOnboarding(temporaryBool);
-
-    temporaryBool = m_isUserLogged;
-    il::readIfExists(json, jsonIsUserLogged, temporaryBool);
-    set_isUserLogged(temporaryBool);
+    READ_BOOL_PROPERTY_IF_EXISTS(json, jsonShowOnboarding, showOnboarding)
+    READ_BOOL_PROPERTY_IF_EXISTS(json, jsonIsUserLogged, isUserLogged)
 }
 
 void BackEnd::write(QJsonObject &json) const

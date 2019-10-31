@@ -1,13 +1,12 @@
 #pragma once
 
-#include "icodable.h"
-
+#include "initiallights_global.h"
 #include "QQmlAutoPropertyHelpers.h"
 #include "QQmlObjectListModel.h"
 
 namespace il {
 
-class INITIALLIGHTSSHARED_EXPORT BackEnd : public QObject, public ICodable
+class INITIALLIGHTSSHARED_EXPORT BackEnd : public QObject
 {
     Q_OBJECT
 
@@ -31,8 +30,8 @@ public slots:
     void logout();
 
 private:
-    void read(const QJsonObject& json) override;
-    void write(QJsonObject& json) const override;
+    void read(const QJsonObject& json);
+    void write(QJsonObject& json) const;
 };
 
 } // namespace il
