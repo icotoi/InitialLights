@@ -12,7 +12,7 @@
         <file>Images/background-onboarding-2.jpg</file>
         <file>Images/background-onboarding-3.jpg</file>
         <file>main.qml</file>
-        <file>PageLogin.qml</file>
+        <file>PageLoginLobby.qml</file>
         <file>PageOnboarding.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>Constants/ILStyle.qml</file>

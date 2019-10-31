@@ -17,16 +17,16 @@ ApplicationWindow {
         stackView.replace(null, onboardingView, StackView.Immediate)
     }
 
-    function showLoginOrStartView() {
+    function showLoginLobbyOrStartView() {
         if (!backend.isUserLogged) {
-            showLoginView()
+            showLoginLobbyView()
         } else {
             showStartView()
         }
     }
 
-    function showLoginView() {
-        stackView.replace(null, loginView, StackView.Immediate)
+    function showLoginLobbyView() {
+        stackView.replace(null, loginLobbyView, StackView.Immediate)
     }
 
     function showStartView() {
@@ -42,14 +42,14 @@ ApplicationWindow {
         PageOnboarding {
             onDone: {
                 backend.showOnboarding = false
-                showLoginOrStartView()
+                showLoginLobbyOrStartView()
             }
         }
     }
 
     Component {
-        id: loginView
-        PageLogin {
+        id: loginLobbyView
+        PageLoginLobby {
             onLogin: console.log("TODO: login")
             onRegisterNewUser: console.log("TODO: register new user")
             onResetPassword: console.log("TODO: reset password")
@@ -61,7 +61,7 @@ ApplicationWindow {
         if (backend.showOnboarding) {
             showOnboarding()
         } else {
-            showLoginOrStartView()
+            showLoginLobbyOrStartView()
         }
     }
 
@@ -74,6 +74,6 @@ ApplicationWindow {
             }
         }
 
-        onIsUserLoggedChanged: showLoginOrStartView()
+        onIsUserLoggedChanged: showLoginLobbyOrStartView()
     }
 }
