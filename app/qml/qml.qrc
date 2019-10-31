@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Constants/qmldir</file>
+        <file>Controls/ILButton.qml</file>
+        <file>Controls/ILOnboardingItem.qml</file>
+        <file>Controls/ILPageIndicator.qml</file>
+        <file>Fonts/Inter-Bold.otf</file>
+        <file>Fonts/Inter-Medium.otf</file>
+        <file>Fonts/Inter-Regular.otf</file>
+        <file>Images/background-login-1.jpg</file>
+        <file>Images/background-onboarding-1.jpg</file>
+        <file>Images/background-onboarding-2.jpg</file>
+        <file>Images/background-onboarding-3.jpg</file>
+        <file>main.qml</file>
+        <file>PageLogin.qml</file>
+        <file>PageOnboarding.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>Constants/ILStyle.qml</file>
+    </qresource>
+</RCC>
