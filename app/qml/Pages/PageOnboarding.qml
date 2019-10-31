@@ -2,11 +2,11 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
-import "Constants"
-import "Controls"
-import "Images"
+import "../Constants"
+import "../Controls"
+import "../Images"
 
-Item {
+Page {
     id: root
 
     implicitWidth: 360

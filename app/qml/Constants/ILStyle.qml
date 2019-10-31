@@ -25,6 +25,10 @@ import QtQuick 2.12
 QtObject {
     id: root
 
+    property color backgroundColor: "#F3F4F5"
+    property color defaultActionableItemColor: "#056CF9"
+    property color defaultShadowColor: "#80000000"
+
     property color titleTextColor: "#17191D"
     property font titleTextFont: Qt.font({ family: "Inter", styleName: "Bold", pointSize: 24 })
     property real titleTextLineHeight: 1.15
@@ -33,87 +37,53 @@ QtObject {
     property font defaultTextFont: Qt.font({ family: "Inter", styleName: "Regular", pointSize: 18 })
     property real defaultTextLineHeight: 1.1
 
+    property font smallTextFont: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 11 })
+    property color smallTextColor: "#8F99A3"
+    property color smallTextLinkColor: "#3889FA"
+
+    // ILTextField
+
+    property int textFieldImplicitHeight: 56
+    property int textFieldTextPaddingHasText: 20
+
+    property color textFieldColor: "#292C33"
+    property font textFieldFont: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 16 })
+
+    property color textFieldPlaceholderTextColor: "#ACB4BF"
+
+    property font textFieldSmallPlaceholderTextFont: Qt.font({ family: "Inter", styleName: "Regular", pointSize: 10 })
+    property int textFieldSmallPlaceholderTopPadding: 8
+
+    property color textFieldBoderColor: "#DFE1E6"
+    property int textFieldBorderRadius: 4
+
+    property color textFieldBackgroundFocus: "#0A0080FF"
+    property color textFieldBorderColorFocus: defaultActionableItemColor
+
+    // ILToolBar styling
+    property int toolbarHeight: 48
+    property color toolbarBackgroundColor: backgroundColor
+    property color toolbarShadowColor: "#0D17191D"
+
+    property font toolbarTitleFont: Qt.font({ family: "Inter", styleName: "Bold", pointSize: 14 })
+    property color toolbarTitleColor: defaultTextColor
+
     // ILButton styling
     property int buttonImplicitHeight: 48
-
 
     property font flatButtonTextFont: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 16 })
     property font defaultButtonTextFont: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 18 })
 
-    property color flatButtonTextColor: "#056CF9"
+    property color flatButtonTextColor: defaultActionableItemColor
     property color highlighteButtonTextColor: "#FFFFFF"
-    property color defaultButtonTextColor: "#056CF9"
+    property color defaultButtonTextColor: defaultActionableItemColor
 
-    property color highlightedButtonBackgroundColor: "#056CF9"
+    property color highlightedButtonBackgroundColor: defaultActionableItemColor
     property color defaultButtonBackgroundColor: "#F1F8FF"
 
-    property color highlightedButtonBorderColor: "#056CF9"
-    property color defaultButtonBorderColor: "#056CF9"
+    property color highlightedButtonBorderColor: defaultActionableItemColor
+    property color defaultButtonBorderColor: defaultActionableItemColor
 
-    property color highlightedButtonShadowColor: "#80000000"
-    property color defaultButtonShadowColor: "#80000000"
-
-    /////
-    // old styles below
-    // if you need to reuse a name copy it above
-    property color windowBackground: "#303030"
-    property color textColor: "#fbfbfb"
-
-    property color borderColor: "#b0b0b0"
-
-    // ILToggleLightButton
-    property QtObject toggleLedButton: QtObject {
-        property int labelVerticalOffset: -3
-
-        property int ledVerticalMargin: 3
-        property int letHorizontalMargin: 3
-        property int ledHeight: 5
-        property int ledRadius: 2
-
-        property color backgroundDownColor: "#707070"
-        property color backgroundHoveredColor: "#626262"
-        property color backgroundDefaultColor: "#505050"
-
-        property color dropShadowColor: "#202020"
-    }
-
-    // ILColorWheel
-    property QtObject colorWheel: QtObject {
-        property color borderColor: root.borderColor
-    }
-
-    // ILCircularToggleLedButton
-    property QtObject circularToggleLedButton: QtObject {
-        property color borderColor: root.borderColor
-    }
-
-    // Color Sampler
-    property QtObject colorRectangle: QtObject {
-        property int size: 40
-        property int radius: 4
-        property int borderWidth: 2
-        property color borderColor: root.borderColor
-    }
-
-    // Icons
-    property string hamburgerIconSource: "Images/material.io-baseline-menu-24px.svg"
-    property string backIconSource: "Images/material.io-baseline-arrow_back-24px.svg"
-    property string homeIconSource: "Images/material.io-sharp-home-24px.svg"
-    property string roomsIconSource: "Images/material.io-baseline-location_city-24px.svg"
-    property string scenesIconSource: "Images/material.io-baseline-weekend-48px.svg"
-    property string settingsIconSource: "Images/material.io-sharp-settings-24px.svg"
-    property string controllersIconSource: "Images/material.io-baseline-settings_input_svideo-24px.svg"
-    property string lightsIconSource: "Images/material.io-baseline-wb_incandescent-24px.svg"
-    property string bluetoothScanIconSource: "Images/material.io-sharp-bluetooth_searching-24px.svg"
-    property string logoutIconSource: "Images/fontawesome-user-times.svg"
-
-    property string refreshControllerLightConfigurationSource: "Images/material.io-baseline-refresh-24px.svg"
-
-    property string addIconSource: "Images/material.io-sharp-add-24px.svg"
-
-    property string editIconSource: "Images/material.io-baseline-edit-24px.svg"
-
-    // Demo stuff
-    property string clearLocalDataIconSource: "Images/material.io-baseline-delete-24px.svg"
-    property string reloadDemoDataIconSource: "Images/material.io-baseline-refresh-24px.svg"
+    property color highlightedButtonShadowColor: defaultShadowColor
+    property color defaultButtonShadowColor: defaultShadowColor
 }

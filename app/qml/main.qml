@@ -3,6 +3,8 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
 import "Constants"
+import "Pages"
+import "Pages/Login"
 
 ApplicationWindow {
     id: window
@@ -14,7 +16,7 @@ ApplicationWindow {
 
     function showOnboarding() {
         console.log("Onboarding")
-        stackView.replace(null, onboardingView, StackView.Immediate)
+        mainStackView.replace(null, onboardingView, StackView.Immediate)
     }
 
     function showLoginLobbyOrStartView() {
@@ -26,14 +28,14 @@ ApplicationWindow {
     }
 
     function showLoginLobbyView() {
-        stackView.replace(null, loginLobbyView, StackView.Immediate)
+        mainStackView.replace(null, loginLobbyView, StackView.Immediate)
     }
 
     function showStartView() {
     }
 
     StackView {
-        id: stackView
+        id: mainStackView
         anchors.fill: parent
     }
 
@@ -50,10 +52,7 @@ ApplicationWindow {
     Component {
         id: loginLobbyView
         PageLoginLobby {
-            onLogin: console.log("TODO: login")
-            onRegisterNewUser: console.log("TODO: register new user")
-            onResetPassword: console.log("TODO: reset password")
-//            onDone: backend.login(user, password)
+            stackView: mainStackView
         }
     }
 

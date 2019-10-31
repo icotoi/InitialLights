@@ -12,9 +12,15 @@
         <file>Images/background-onboarding-2.jpg</file>
         <file>Images/background-onboarding-3.jpg</file>
         <file>main.qml</file>
-        <file>PageLoginLobby.qml</file>
-        <file>PageOnboarding.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>Constants/ILStyle.qml</file>
+        <file>Pages/Login/PageRegisterNewUser.qml</file>
+        <file>Pages/Login/PageLoginLobby.qml</file>
+        <file>Pages/PageOnboarding.qml</file>
+        <file>Controls/ILToolBar.qml</file>
+        <file>Images/Icon-16-Arrow-Right.svg</file>
+        <file>Controls/ILToolBarBackButton.qml</file>
+        <file>Controls/ILToolBarTitle.qml</file>
+        <file>Controls/ILTextField.qml</file>
     </qresource>
 </RCC>

@@ -2,23 +2,37 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
-import "Controls"
-import "Images"
+import "../../Controls"
 
-Item {
+Page {
     id: root
 
     implicitWidth: 360
     implicitHeight: 640
 
-    signal login()
-    signal registerNewUser()
-    signal resetPassword()
+    property var stackView
+
+    function login() {}
+
+    function registerNewUser() {
+        if (stackView) {
+            stackView.push(registerNewUserView)
+        }
+    }
+
+    function resetPassword() {}
+
+    Component {
+        id: registerNewUserView
+        PageRegisterNewUser {
+            stackView: root.stackView
+        }
+    }
 
     Image {
         id: image
         anchors.fill: parent
-        source: "Images/background-login-1.jpg"
+        source: "../../Images/background-login-1.jpg"
         fillMode: Image.PreserveAspectCrop
     }
 
