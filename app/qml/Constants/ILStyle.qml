@@ -36,11 +36,11 @@ QtObject {
     // ILButton styling
     property int buttonImplicitHeight: 48
 
-    property font flatButtonTextBoldFont: Qt.font({ family: "Inter", styleName: "Bold", pointSize: 14 })
-    property font flatButtonTextFont: Qt.font({ family: "Inter", styleName: "Regular", pointSize: 14 })
-    property font defaultButtonTextFont: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 16 })
 
-    property color flatButtonTextColor: "#80000000"
+    property font flatButtonTextFont: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 16 })
+    property font defaultButtonTextFont: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 18 })
+
+    property color flatButtonTextColor: "#056CF9"
     property color highlighteButtonTextColor: "#FFFFFF"
     property color defaultButtonTextColor: "#056CF9"
 

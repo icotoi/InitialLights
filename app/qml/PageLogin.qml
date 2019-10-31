@@ -11,8 +11,6 @@ Item {
     implicitWidth: 360
     implicitHeight: 640
 
-    property int itemHorizontalMargin: 20
-
     signal login()
     signal registerNewUser()
     signal resetPassword()
@@ -29,9 +27,9 @@ Item {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
 
-        anchors.rightMargin: itemHorizontalMargin
-        anchors.leftMargin: itemHorizontalMargin
-        anchors.bottomMargin: itemHorizontalMargin
+        anchors.rightMargin: 20
+        anchors.leftMargin: 20
+        anchors.bottomMargin: 34
 
         ILButton {
             highlighted: true
@@ -41,11 +39,10 @@ Item {
         }
 
         ILButton {
-//            flat: true
             text: qsTr("Login")
             backgroundColor: "transparent"
-            dropShadow: false
-            Layout.topMargin: 10
+            dropShadowVisible: false
+            Layout.topMargin: 11
             Layout.fillWidth: true
             onClicked: login()
         }
@@ -53,7 +50,7 @@ Item {
         ILButton {
             flat: true
             text: qsTr("Forgot your password?")
-            Layout.topMargin: 34
+            Layout.topMargin: 16
             Layout.fillWidth: true
             onClicked: resetPassword()
         }
@@ -62,6 +59,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:1;anchors_height:100;anchors_width:100;anchors_x:130;anchors_y:204}
+    D{i:0;autoSize:true;height:480;width:640}
 }
 ##^##*/
