@@ -8,6 +8,7 @@ ApplicationWindow {
     id: window
     visible: true
     width: 360
+//    width: 480
     height: 640
     title: qsTr("Initial Lights")
 

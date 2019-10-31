@@ -8,8 +8,8 @@ import "Images"
 Item {
     id: root
 
-    width: 360
-    height: 640
+    implicitWidth: 360
+    implicitHeight: 640
 
     property int itemHorizontalMargin: 20
 
@@ -21,7 +21,7 @@ Item {
         id: image
         anchors.fill: parent
         source: "Images/background-login-1.jpg"
-        fillMode: Image.PreserveAspectFit
+        fillMode: Image.PreserveAspectCrop
     }
 
     ColumnLayout {

@@ -9,8 +9,8 @@ import "Images"
 Item {
     id: root
 
-    width: 360
-    height: 640
+    implicitWidth: 360
+    implicitHeight: 640
 
     signal done()
 

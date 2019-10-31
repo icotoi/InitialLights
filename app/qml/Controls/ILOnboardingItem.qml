@@ -13,13 +13,13 @@ Item {
     property int textHorizontalMargin: 20
     property int textTopMargin: 130
 
-    width: 360
-    height: 640
+    implicitWidth: 360
+    implicitHeight: 640
 
     Image {
         id: image
         anchors.fill: parent
-        fillMode: Image.PreserveAspectFit
+        fillMode: Image.PreserveAspectCrop
         source: "../Images/background-onboarding-1.jpg"
     }
 
