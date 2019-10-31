@@ -87,10 +87,10 @@ Page {
         anchors.leftMargin: 20
         anchors.bottom: parent.bottom
         wrapMode: Text.WordWrap
-        onLinkActivated: Qt.openUrlExternally(link)
         font: ILStyle.smallTextFont
         color: ILStyle.smallTextColor
         lineHeight: 1.3
+        onLinkActivated: Qt.openUrlExternally(link)
     }
 
 }
