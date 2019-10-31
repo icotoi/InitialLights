@@ -54,7 +54,7 @@ QtObject {
     property font textFieldSmallPlaceholderTextFont: Qt.font({ family: "Inter", styleName: "Regular", pointSize: 10 })
     property int textFieldSmallPlaceholderTopPadding: 8
 
-    property color textFieldBoderColor: "#DFE1E6"
+    property color textFieldBorderColor: "#DFE1E6"
     property int textFieldBorderRadius: 4
 
     property color textFieldBackgroundFocus: "#0A0080FF"

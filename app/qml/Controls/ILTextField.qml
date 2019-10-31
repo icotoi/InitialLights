@@ -6,13 +6,15 @@ import "../Constants"
 TextField {
     id: control
 
-    placeholderText: "Placeholder"
+    property string extraPlaceholderText: "Placeholder"
+
+    placeholderText: activeFocus ? "" : extraPlaceholderText
 
     Text {
-        text: control.placeholderText
+        text: control.extraPlaceholderText
         color: control.placeholderTextColor
         font: ILStyle.textFieldSmallPlaceholderTextFont
-        visible: control.text !== ""
+        visible: control.activeFocus
         x: control.leftPadding
         y: ILStyle.textFieldSmallPlaceholderTopPadding
     }
@@ -22,12 +24,12 @@ TextField {
     color: ILStyle.textFieldColor
     font: ILStyle.textFieldFont
 
-    topPadding: text !== "" ? ILStyle.textFieldTextPaddingHasText : control.bottomPadding
+    topPadding: control.activeFocus ? ILStyle.textFieldTextPaddingHasText : control.bottomPadding
     background: Rectangle {
         implicitWidth: 200
         implicitHeight: ILStyle.textFieldImplicitHeight
         color: control.activeFocus ? ILStyle.textFieldBackgroundFocus : "transparent"
-        border.color: control.activeFocus ? ILStyle.textFieldBorderColorFocus : ILStyle.textFieldBoderColor
+        border.color: control.activeFocus ? ILStyle.textFieldBorderColorFocus : ILStyle.textFieldBorderColor
         radius: ILStyle.textFieldBorderRadius
     }
 }

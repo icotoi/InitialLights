@@ -44,19 +44,19 @@ Page {
         spacing: 16
 
         ILTextField {
-            placeholderText: qsTr("Email address")
+            extraPlaceholderText: qsTr("Email address")
             Layout.fillWidth: true
         }
 
         ILTextField {
             Layout.fillWidth: true
-            placeholderText: qsTr("Password")
+            extraPlaceholderText: qsTr("Password")
             echoMode: TextInput.Password
         }
 
         ILTextField {
             Layout.fillWidth: true
-            placeholderText: qsTr("Confirm password")
+            extraPlaceholderText: qsTr("Confirm password")
             echoMode: TextInput.Password
         }
 
