@@ -11,6 +11,7 @@ class INITIALLIGHTSSHARED_EXPORT User : public QObject
     Q_OBJECT
 
     QML_WRITABLE_AUTO_PROPERTY(bool, isLogged)
+    QML_READONLY_AUTO_PROPERTY(bool, isOperationPending)
 
 public:
     explicit User(QObject *parent = nullptr);
@@ -19,6 +20,9 @@ public:
     void read(const QJsonObject& json);
     void write(QJsonObject& json) const;
     void clearLocalData();
+
+signals:
+    void loginRequestFinished();
 
 public slots:
     QString validateEmail(QString email) const;

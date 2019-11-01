@@ -24,5 +24,7 @@
         <file>Controls/ILTextField.qml</file>
         <file>Images/Icon-16-Error.svg</file>
         <file>Pages/Login/PageUserRegistered.qml</file>
+        <file>Pages/Login/PageLogin.qml</file>
+        <file>Pages/PageMain.qml</file>
     </qresource>
 </RCC>

@@ -4,7 +4,6 @@ import QtQuick.Layouts 1.12
 
 import "../Constants"
 import "../Controls"
-import "../Images"
 
 Page {
     id: root

@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QJsonObject>
 #include <QRegularExpression>
+#include <QTimer>
 
 namespace il {
 
@@ -16,6 +17,7 @@ const QString jsonIsLogged { "isLogged" };
 User::User(QObject *parent)
     : QObject(parent)
     , m_isLogged(false)
+    , m_isOperationPending(false)
 {
 }
 
@@ -65,14 +67,19 @@ QString User::validatePassword(QString password) const
 void User::login(const QString &user, const QString &password)
 {
     // TODO: implement login
-    qDebug() << ">>> Login user";
-    if (user == "xxx" && password == "xxx") {
-        set_isLogged(true);
-    } else {
-        qDebug() << ">>> Invalid login request:"
-                 << "\n   user:" << user
-                 << "\n   password:" << password;
-    }
+    update_isOperationPending(true);
+    QTimer::singleShot(1000, [this, user, password]() {
+        qDebug() << ">>> Login user";
+        if (user == "xxx" && password == "xxx") {
+            set_isLogged(true);
+        } else {
+            qDebug() << ">>> Invalid login request:"
+                     << "\n   user:" << user
+                     << "\n   password:" << password;
+        }
+        emit loginRequestFinished();
+        update_isOperationPending(false);
+    });
 }
 
 void User::resetPassword(const QString &user)

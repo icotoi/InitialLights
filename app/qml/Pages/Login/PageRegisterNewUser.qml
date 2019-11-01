@@ -18,11 +18,6 @@ Page {
 
     signal registerNewUser(string email, string password)
 
-    function back() {
-        if (stackView)
-            stackView.pop()
-    }
-
     function validateEmailTextField(email) {
         if (user) {
             emailTextField.errorText = user.validateEmail(email)
@@ -46,7 +41,10 @@ Page {
 
     header: ILToolBar {
         ILToolBarBackButton {
-            onClicked: back()
+            onClicked: {
+                if (stackView)
+                    stackView.pop()
+            }
         }
 
         ILToolBarTitle {

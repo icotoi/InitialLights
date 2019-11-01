@@ -20,7 +20,7 @@ ApplicationWindow {
     }
 
     function showLoginLobbyOrStartView() {
-        if (!backend.isUserLogged) {
+        if (!backend.user.isLogged) {
             showLoginLobbyView()
         } else {
             showStartView()
@@ -32,6 +32,7 @@ ApplicationWindow {
     }
 
     function showStartView() {
+        mainStackView.replace(null, mainView, StackView.Immediate)
     }
 
     StackView {
@@ -54,6 +55,13 @@ ApplicationWindow {
         PageLoginLobby {
             stackView: mainStackView
             user: backend.user
+        }
+    }
+
+    Component {
+        id: mainView
+        PageMain {
+            stackView: mainStackView
         }
     }
 

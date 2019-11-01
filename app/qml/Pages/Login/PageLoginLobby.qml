@@ -13,7 +13,11 @@ Page {
     property var stackView
     property var user
 
-    function login() {}
+    function login() {
+        if (stackView) {
+            stackView.push(loginView)
+        }
+    }
 
     function registerNewUser() {
         if (stackView) {
@@ -42,6 +46,19 @@ Page {
             onDone: {
                 if (stackView) {
                     stackView.pop(StackView.ReplaceTransition)
+                }
+            }
+        }
+    }
+
+    Component {
+        id: loginView
+        PageLogin {
+            stackView: root.stackView
+            user: root.user
+            onLogin: {
+                if (user) {
+                    user.login(email, password)
                 }
             }
         }
