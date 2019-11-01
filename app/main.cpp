@@ -12,6 +12,7 @@
 #include <QQmlContext>
 
 #include "il/backend.h"
+#include "il/user.h"
 
 void showFontFamiliesAndStyles()
 {
@@ -47,6 +48,9 @@ void loadAppFonts()
 
 int main(int argc, char *argv[])
 {
+    // register C++ types
+    qmlRegisterUncreatableType<il::User>("InitialLights", 1, 0, "User", "Type cannot be created in QML");
+
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QCoreApplication::setApplicationName("InitialLights");

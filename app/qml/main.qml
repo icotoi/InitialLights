@@ -72,7 +72,10 @@ ApplicationWindow {
                 showOnboarding()
             }
         }
+    }
 
-        onIsUserLoggedChanged: showLoginLobbyOrStartView()
+    Connections {
+        target: backend.user
+        onIsLoggedChanged: showLoginLobbyOrStartView()
     }
 }
