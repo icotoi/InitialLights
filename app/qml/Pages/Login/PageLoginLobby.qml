@@ -2,26 +2,38 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
-import "Controls"
-import "Images"
+import "../../Controls"
 
-Item {
+Page {
     id: root
 
-    width: 360
-    height: 640
+    implicitWidth: 360
+    implicitHeight: 640
 
-    property int itemHorizontalMargin: 20
+    property var stackView
 
-    signal login()
-    signal registerNewUser()
-    signal resetPassword()
+    function login() {}
+
+    function registerNewUser() {
+        if (stackView) {
+            stackView.push(registerNewUserView)
+        }
+    }
+
+    function resetPassword() {}
+
+    Component {
+        id: registerNewUserView
+        PageRegisterNewUser {
+            stackView: root.stackView
+        }
+    }
 
     Image {
         id: image
         anchors.fill: parent
-        source: "Images/background-login-1.jpg"
-        fillMode: Image.PreserveAspectFit
+        source: "../../Images/background-login-1.jpg"
+        fillMode: Image.PreserveAspectCrop
     }
 
     ColumnLayout {
@@ -29,9 +41,9 @@ Item {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
 
-        anchors.rightMargin: itemHorizontalMargin
-        anchors.leftMargin: itemHorizontalMargin
-        anchors.bottomMargin: itemHorizontalMargin
+        anchors.rightMargin: 20
+        anchors.leftMargin: 20
+        anchors.bottomMargin: 34
 
         ILButton {
             highlighted: true
@@ -41,11 +53,10 @@ Item {
         }
 
         ILButton {
-//            flat: true
             text: qsTr("Login")
             backgroundColor: "transparent"
-            dropShadow: false
-            Layout.topMargin: 10
+            dropShadowVisible: false
+            Layout.topMargin: 11
             Layout.fillWidth: true
             onClicked: login()
         }
@@ -53,7 +64,7 @@ Item {
         ILButton {
             flat: true
             text: qsTr("Forgot your password?")
-            Layout.topMargin: 34
+            Layout.topMargin: 16
             Layout.fillWidth: true
             onClicked: resetPassword()
         }
@@ -62,6 +73,6 @@ Item {
 
 /*##^##
 Designer {
-    D{i:1;anchors_height:100;anchors_width:100;anchors_x:130;anchors_y:204}
+    D{i:0;autoSize:true;height:480;width:640}
 }
 ##^##*/

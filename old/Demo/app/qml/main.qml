@@ -3,8 +3,6 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
 import "Constants"
-import "Pages"
-import "Pages/Login"
 
 ApplicationWindow {
     id: window
@@ -16,26 +14,26 @@ ApplicationWindow {
 
     function showOnboarding() {
         console.log("Onboarding")
-        mainStackView.replace(null, onboardingView, StackView.Immediate)
+        stackView.replace(null, onboardingView, StackView.Immediate)
     }
 
-    function showLoginLobbyOrStartView() {
+    function showLoginOrStartView() {
         if (!backend.isUserLogged) {
-            showLoginLobbyView()
+            showLoginView()
         } else {
             showStartView()
         }
     }
 
-    function showLoginLobbyView() {
-        mainStackView.replace(null, loginLobbyView, StackView.Immediate)
+    function showLoginView() {
+        stackView.replace(null, loginView, StackView.Immediate)
     }
 
     function showStartView() {
     }
 
     StackView {
-        id: mainStackView
+        id: stackView
         anchors.fill: parent
     }
 
@@ -43,16 +41,19 @@ ApplicationWindow {
         id: onboardingView
         PageOnboarding {
             onDone: {
-                backend.showOnboarding = false
-                showLoginLobbyOrStartView()
+//                backend.showOnboarding = false
+                showLoginOrStartView()
             }
         }
     }
 
     Component {
-        id: loginLobbyView
-        PageLoginLobby {
-            stackView: mainStackView
+        id: loginView
+        PageLogin {
+            onLogin: console.log("TODO: login")
+            onRegisterNewUser: console.log("TODO: register new user")
+            onResetPassword: console.log("TODO: reset password")
+//            onDone: backend.login(user, password)
         }
     }
 
@@ -60,7 +61,7 @@ ApplicationWindow {
         if (backend.showOnboarding) {
             showOnboarding()
         } else {
-            showLoginLobbyOrStartView()
+            showLoginOrStartView()
         }
     }
 
@@ -73,6 +74,6 @@ ApplicationWindow {
             }
         }
 
-        onIsUserLoggedChanged: showLoginLobbyOrStartView()
+        onIsUserLoggedChanged: showLoginOrStartView()
     }
 }
