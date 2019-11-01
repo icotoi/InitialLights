@@ -9,8 +9,8 @@ import "Images"
 Item {
     id: root
 
-    width: 360
-    height: 640
+    implicitWidth: 360
+    implicitHeight: 640
 
     signal done()
 
@@ -43,15 +43,12 @@ Item {
     ILButton {
         id: skipButton
         flat: true
-        text: qsTr("SKIP")
+        text: qsTr("Skip")
         anchors.top: parent.top
-        anchors.topMargin: 48
+        anchors.topMargin: 20
         anchors.right: parent.right
-        anchors.rightMargin: 8
-        padding: 0
-        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+        anchors.rightMargin: 20
         onClicked: root.done()
-        font: ILStyle.flatButtonTextBoldFont
     }
 
     ColumnLayout {
@@ -66,7 +63,7 @@ Item {
 
         ILButton {
             id: nextButton
-            text: qsTr("Next")
+            text: qsTr("Continue")
             highlighted: true
             Layout.fillWidth: true
             onClicked: if (swipeView.currentIndex == swipeView.count - 1) {

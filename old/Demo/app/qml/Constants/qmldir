@@ -1,0 +1,2 @@
+module Constants
+singleton ILStyle 1.0 ILStyle.qml

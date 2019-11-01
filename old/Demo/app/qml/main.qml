@@ -3,8 +3,6 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
 import "Constants"
-import "Pages"
-import "Pages/Login"
 
 ApplicationWindow {
     id: window
@@ -16,27 +14,26 @@ ApplicationWindow {
 
     function showOnboarding() {
         console.log("Onboarding")
-        mainStackView.replace(null, onboardingView, StackView.Immediate)
+        stackView.replace(null, onboardingView, StackView.Immediate)
     }
 
-    function showLoginLobbyOrStartView() {
-        if (!backend.user.isLogged) {
-            showLoginLobbyView()
+    function showLoginOrStartView() {
+        if (!backend.isUserLogged) {
+            showLoginView()
         } else {
             showStartView()
         }
     }
 
-    function showLoginLobbyView() {
-        mainStackView.replace(null, loginLobbyView, StackView.Immediate)
+    function showLoginView() {
+        stackView.replace(null, loginView, StackView.Immediate)
     }
 
     function showStartView() {
-        mainStackView.replace(null, mainView, StackView.Immediate)
     }
 
     StackView {
-        id: mainStackView
+        id: stackView
         anchors.fill: parent
     }
 
@@ -44,24 +41,19 @@ ApplicationWindow {
         id: onboardingView
         PageOnboarding {
             onDone: {
-                backend.showOnboarding = false
-                showLoginLobbyOrStartView()
+//                backend.showOnboarding = false
+                showLoginOrStartView()
             }
         }
     }
 
     Component {
-        id: loginLobbyView
-        PageLoginLobby {
-            stackView: mainStackView
-            user: backend.user
-        }
-    }
-
-    Component {
-        id: mainView
-        PageMain {
-            stackView: mainStackView
+        id: loginView
+        PageLogin {
+            onLogin: console.log("TODO: login")
+            onRegisterNewUser: console.log("TODO: register new user")
+            onResetPassword: console.log("TODO: reset password")
+//            onDone: backend.login(user, password)
         }
     }
 
@@ -69,7 +61,7 @@ ApplicationWindow {
         if (backend.showOnboarding) {
             showOnboarding()
         } else {
-            showLoginLobbyOrStartView()
+            showLoginOrStartView()
         }
     }
 
@@ -81,10 +73,7 @@ ApplicationWindow {
                 showOnboarding()
             }
         }
-    }
 
-    Connections {
-        target: backend.user
-        onIsLoggedChanged: showLoginLobbyOrStartView()
+        onIsUserLoggedChanged: showLoginOrStartView()
     }
 }

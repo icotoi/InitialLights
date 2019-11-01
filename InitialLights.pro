@@ -8,6 +8,5 @@ SUBDIRS = \
 
 macos {
     SUBDIRS += \
-        demos \
         tests
 }

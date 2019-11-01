@@ -1,84 +1,30 @@
 <RCC>
     <qresource prefix="/">
-        <file>main-old.qml</file>
-        <file>Constants/ILStyle.qml</file>
         <file>Constants/qmldir</file>
-        <file>qtquickcontrols2.conf</file>
-        <file>Controls/ILToggleLedButton.qml</file>
-        <file>Controls/ILColorWheel.qml</file>
-        <file>DemoToggleLedButton.qml</file>
-        <file>DemoToggleLedButtonForm.ui.qml</file>
-        <file>DemoColorWheel.qml</file>
-        <file>DemoColorWheelForm.ui.qml</file>
-        <file>Controls/ColorWheel.qml</file>
-        <file>PageMain.qml</file>
-        <file>Controls/ILMainPowerButton.qml</file>
-        <file>Images/power_off.png</file>
-        <file>Images/power_off@2x.png</file>
-        <file>Images/power_off@3x.png</file>
-        <file>Images/power_on.png</file>
-        <file>Images/power_on@2x.png</file>
-        <file>Images/power_on@3x.png</file>
-        <file>PageRoom.qml</file>
-        <file>Images/pixabay_illumination-lights-bulbs-731494_1920.jpg</file>
-        <file>Controls/ILRoomView.qml</file>
-        <file>Controls/ILRoomLight.qml</file>
-        <file>Images/material.io-sharp-delete-24px.svg</file>
-        <file>Images/material.io-sharp-add-24px.svg</file>
-        <file>PageDrawer.qml</file>
-        <file>PageDrawerForm.ui.qml</file>
-        <file>LightColorChooserPopup.qml</file>
-        <file>LightColorChooserPopupForm.ui.qml</file>
-        <file>Images/material.io-baseline-photo_library-24px.svg</file>
-        <file>Images/material.io-baseline-arrow_back-24px.svg</file>
-        <file>Images/material.io-baseline-menu-24px.svg</file>
-        <file>Images/material.io-baseline-more_vert-24px.svg</file>
-        <file>Images/material.io-sharp-home-24px.svg</file>
-        <file>Images/material.io-sharp-settings-24px.svg</file>
-        <file>PageControllerList.qml</file>
-        <file>Images/material.io-sharp-bluetooth_searching-24px.svg</file>
-        <file>Images/material.io-baseline-arrow_forward_ios-24px.svg</file>
-        <file>PageController.qml</file>
-        <file>Images/material.io-baseline-wb_incandescent-24px.svg</file>
-        <file>Images/material.io-baseline-settings_input_svideo-24px.svg</file>
-        <file>PageSettings.qml</file>
-        <file>PageSettingsForm.ui.qml</file>
-        <file>Images/material.io-baseline-tune-24px.svg</file>
-        <file>Images/material.io-baseline-delete-24px.svg</file>
-        <file>Images/material.io-baseline-refresh-24px.svg</file>
-        <file>Controls/ILLight.qml</file>
-        <file>PageLightList.qml</file>
-        <file>DemoConfig.json</file>
-        <file>Controls/ILLightChannel.qml</file>
-        <file>Images/material.io-baseline-location_city-24px.svg</file>
-        <file>Images/material.io-baseline-weekend-48px.svg</file>
-        <file>Controls/ILControllerItemDelegate.qml</file>
-        <file>Images/material.io-baseline-photo_camera-24px.svg</file>
-        <file>PageRoomList.qml</file>
-        <file>PageLightSelection.qml</file>
-        <file>PageColorSelection.qml</file>
-        <file>Images/material.io-baseline-wb_incandescent-24px--blink.svg</file>
-        <file>Images/material.io-baseline-edit-24px.svg</file>
-        <file>PageOnboarding.qml</file>
-        <file>Controls/ILOnboardingItem.qml</file>
-        <file>PageLogin2.qml</file>
-        <file>Controls/ILTitleLabel.qml</file>
-        <file>Controls/ILInfoLabel.qml</file>
-        <file>Controls/ILSecondaryButton.qml</file>
-        <file>Controls/ILPane.qml</file>
-        <file>PageResetPassword.qml</file>
-        <file>PageRegisterNewUser.qml</file>
-        <file>Images/fontawesome-user-times.svg</file>
         <file>Controls/ILButton.qml</file>
-        <file>main.qml</file>
+        <file>Controls/ILBillboardItem.qml</file>
         <file>Controls/ILPageIndicator.qml</file>
+        <file>Fonts/Inter-Bold.otf</file>
         <file>Fonts/Inter-Medium.otf</file>
         <file>Fonts/Inter-Regular.otf</file>
-        <file>Fonts/Inter-Bold.otf</file>
-        <file>PageLogin.qml</file>
         <file>Images/background-login-1.jpg</file>
         <file>Images/background-onboarding-1.jpg</file>
         <file>Images/background-onboarding-2.jpg</file>
         <file>Images/background-onboarding-3.jpg</file>
+        <file>main.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>Constants/ILStyle.qml</file>
+        <file>Pages/Login/PageRegisterNewUser.qml</file>
+        <file>Pages/Login/PageLoginLobby.qml</file>
+        <file>Pages/PageOnboarding.qml</file>
+        <file>Controls/ILToolBar.qml</file>
+        <file>Images/Icon-16-Arrow-Right.svg</file>
+        <file>Controls/ILToolBarBackButton.qml</file>
+        <file>Controls/ILToolBarTitle.qml</file>
+        <file>Controls/ILTextField.qml</file>
+        <file>Images/Icon-16-Error.svg</file>
+        <file>Pages/Login/PageUserRegistered.qml</file>
+        <file>Pages/Login/PageLogin.qml</file>
+        <file>Pages/PageMain.qml</file>
     </qresource>
 </RCC>

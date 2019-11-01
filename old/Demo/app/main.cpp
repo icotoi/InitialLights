@@ -12,7 +12,11 @@
 #include <QQmlContext>
 
 #include "il/backend.h"
-#include "il/user.h"
+#include "il/controller.h"
+#include "il/controllerlist.h"
+#include "il/mainpage.h"
+#include "il/room.h"
+#include "il/light.h"
 
 void showFontFamiliesAndStyles()
 {
@@ -49,7 +53,11 @@ void loadAppFonts()
 int main(int argc, char *argv[])
 {
     // register C++ types
-    qmlRegisterUncreatableType<il::User>("InitialLights", 1, 0, "User", "Type cannot be created in QML");
+    qmlRegisterUncreatableType<il::Controller>("InitialLights", 1, 0, "Controller", "Type cannot be created in QML");
+    qmlRegisterUncreatableType<il::ControllerList>("InitialLights", 1, 0, "ControllerList", "Type cannot be created in QML");
+    qmlRegisterUncreatableType<il::MainPage>("InitialLights", 1, 0, "MainPage", "Type cannot be created in QML");
+    qmlRegisterUncreatableType<il::Room>("InitialLights", 1, 0, "Room", "Type cannot be created in QML");
+    qmlRegisterUncreatableType<il::Light>("InitialLights", 1, 0, "Light", "Type cannot be created in QML");
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 

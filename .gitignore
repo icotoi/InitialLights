@@ -3,3 +3,4 @@
 *.autosave
 */build-*/
 build-*/
+.vscode
