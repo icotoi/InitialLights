@@ -11,6 +11,7 @@ Page {
     implicitHeight: 640
 
     property var stackView
+    property var user
 
     function login() {}
 
@@ -26,6 +27,7 @@ Page {
         id: registerNewUserView
         PageRegisterNewUser {
             stackView: root.stackView
+            user: root.user
         }
     }
 

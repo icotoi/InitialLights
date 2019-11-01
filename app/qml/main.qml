@@ -53,6 +53,7 @@ ApplicationWindow {
         id: loginLobbyView
         PageLoginLobby {
             stackView: mainStackView
+            user: backend.user
         }
     }
 

@@ -60,6 +60,12 @@ QtObject {
     property color textFieldBackgroundFocus: "#0A0080FF"
     property color textFieldBorderColorFocus: defaultActionableItemColor
 
+    property color textFieldColorInvalid: "#F21F0B"
+    property color textFieldBackgroundFocusInvalid: "#FEF2F1"
+    property color textFieldBorderColorInvalid: "#FFA299"
+    property color textFieldBorderColorFocusInvalid: "#FFA299"
+    property font textFieldErrorTextFont: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 12 })
+
     // ILToolBar styling
     property int toolbarHeight: 48
     property color toolbarBackgroundColor: backgroundColor

@@ -42,6 +42,18 @@ void User::clearLocalData()
     set_isLogged(false);
 }
 
+QString User::validateEmail(QString email) const
+{
+    if (email.isEmpty())
+        return QString(); // empty is valid
+
+    // TODO: do some propper email validation
+    if (email == "foo@bar.com")
+        return tr("Invalid email address");
+    else
+        return QString(); // the email is valid
+}
+
 void User::login(const QString &user, const QString &password)
 {
     // TODO: implement login

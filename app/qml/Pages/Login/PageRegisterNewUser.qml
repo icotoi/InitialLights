@@ -14,10 +14,29 @@ Page {
     implicitHeight: 640
 
     property var stackView
+    property var user
 
     function back() {
         if (stackView)
             stackView.pop()
+    }
+
+    function registerUser() {
+
+    }
+
+    function validateEmailTextField(text) {
+        if (user) {
+            emailTextField.errorText = user.validateEmail(text)
+        }
+    }
+
+    function validatePasswordTextField() {
+
+    }
+
+    function validateConfirmPasswordTextField() {
+
     }
 
     background: Rectangle {
@@ -44,20 +63,24 @@ Page {
         spacing: 16
 
         ILTextField {
-            extraPlaceholderText: qsTr("Email address")
+            id: emailTextField
+            placeholderText: qsTr("Email address")
             Layout.fillWidth: true
+            textField.onTextEdited: validateEmailTextField(textField.text)
         }
 
         ILTextField {
+            id: passwordTextField
             Layout.fillWidth: true
-            extraPlaceholderText: qsTr("Password")
-            echoMode: TextInput.Password
+            placeholderText: qsTr("Password")
+            textField.echoMode: TextInput.Password
         }
 
         ILTextField {
+            id: confirmPasswordTextField
             Layout.fillWidth: true
-            extraPlaceholderText: qsTr("Confirm password")
-            echoMode: TextInput.Password
+            placeholderText: qsTr("Confirm password")
+            textField.echoMode: TextInput.Password
         }
 
         ILButton {
