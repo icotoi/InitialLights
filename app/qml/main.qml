@@ -20,7 +20,7 @@ ApplicationWindow {
     }
 
     function showLoginLobbyOrStartView() {
-        if (!backend.isUserLogged) {
+        if (!backend.user.isLogged) {
             showLoginLobbyView()
         } else {
             showStartView()
@@ -32,6 +32,7 @@ ApplicationWindow {
     }
 
     function showStartView() {
+        mainStackView.replace(null, mainView, StackView.Immediate)
     }
 
     StackView {
@@ -53,6 +54,14 @@ ApplicationWindow {
         id: loginLobbyView
         PageLoginLobby {
             stackView: mainStackView
+            user: backend.user
+        }
+    }
+
+    Component {
+        id: mainView
+        PageMain {
+            stackView: mainStackView
         }
     }
 
@@ -72,7 +81,10 @@ ApplicationWindow {
                 showOnboarding()
             }
         }
+    }
 
-        onIsUserLoggedChanged: showLoginLobbyOrStartView()
+    Connections {
+        target: backend.user
+        onIsLoggedChanged: showLoginLobbyOrStartView()
     }
 }

@@ -1,6 +1,7 @@
 #include "backend.h"
 
 #include "jsonhelper.h"
+#include "user.h"
 
 #include <QDebug>
 #include <QDir>
@@ -14,16 +15,7 @@ namespace il {
 
 namespace  {
 
-#define READ_BOOL_PROPERTY_IF_EXISTS(json, name, property) \
-    { \
-        bool value = m_ ## property; \
-        readIfExists(json, name, value); \
-        set_ ## property(value); \
-        qDebug() << " >>>" << #property << "(bool):" << m_ ## property; \
-    }
-
 const QString jsonShowOnboarding { "showOnboarding" };
-const QString jsonIsUserLogged { "isUserLogged" };
 
 QString localDataDirName()
 {
@@ -45,7 +37,7 @@ BackEnd::BackEnd(QObject *parent)
     : QObject(parent)
     , m_version { 1 }
     , m_showOnboarding { true }
-    , m_isUserLogged { false }
+    , m_user( new User(this) )
 {
 }
 
@@ -57,7 +49,8 @@ void BackEnd::clearLocalData()
 {
     qDebug() << "clearing local data...";
     set_showOnboarding(true);
-    set_isUserLogged(false);
+
+    m_user->clearLocalData();
 
     QFile::remove(localDataFileName());
 }
@@ -105,51 +98,16 @@ void BackEnd::saveLocalData()
     saveFile.write(saveDoc.toJson());
 }
 
-void BackEnd::login(const QString &user, const QString &password)
-{
-    // TODO: implement login
-    qDebug() << ">>> Login user";
-    if (user == "xxx" && password == "xxx") {
-        set_isUserLogged(true);
-    } else {
-        qDebug() << ">>> Invalid login request:"
-                 << "\n   user:" << user
-                 << "\n   password:" << password;
-    }
-}
-
-void BackEnd::resetPassword(const QString &user)
-{
-    // TODO: implement password reset
-    qDebug() << ">>> Requested password reset for user:" << user;
-}
-
-void BackEnd::registerNewUser(const QString &user, const QString &password, const QString &fullName)
-{
-    // TODO: implement new user registration
-    qDebug() << ">>> Requested new user registration for"
-             << "\n   user:" << user
-             << "\n   password:" << password
-             << "\n   name:" << fullName;
-}
-
-void BackEnd::logout()
-{
-    // TODO: do we need to notify the server about the logout?
-    set_isUserLogged(false);
-    qDebug() << ">>> Logout user";
-}
-
 void BackEnd::read(const QJsonObject &json)
 {
     READ_BOOL_PROPERTY_IF_EXISTS(json, jsonShowOnboarding, showOnboarding)
-    READ_BOOL_PROPERTY_IF_EXISTS(json, jsonIsUserLogged, isUserLogged)
+    m_user->read(json);
 }
 
 void BackEnd::write(QJsonObject &json) const
 {
     json[jsonShowOnboarding] = m_showOnboarding;
-    json[jsonIsUserLogged] = m_isUserLogged;
+    m_user->write(json);
 }
 
 } // namespace il

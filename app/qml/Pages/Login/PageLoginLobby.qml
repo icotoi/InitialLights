@@ -11,8 +11,13 @@ Page {
     implicitHeight: 640
 
     property var stackView
+    property var user
 
-    function login() {}
+    function login() {
+        if (stackView) {
+            stackView.push(loginView)
+        }
+    }
 
     function registerNewUser() {
         if (stackView) {
@@ -26,6 +31,36 @@ Page {
         id: registerNewUserView
         PageRegisterNewUser {
             stackView: root.stackView
+            user: root.user
+            onRegisterNewUser: {
+                if (stackView && user && user.registerNewUser(email, password)) {
+                    stackView.replace(userRegisteredView)
+                }
+            }
+        }
+    }
+
+    Component {
+        id: userRegisteredView
+        PageUserRegistered {
+            onDone: {
+                if (stackView) {
+                    stackView.pop(StackView.ReplaceTransition)
+                }
+            }
+        }
+    }
+
+    Component {
+        id: loginView
+        PageLogin {
+            stackView: root.stackView
+            user: root.user
+            onLogin: {
+                if (user) {
+                    user.login(email, password)
+                }
+            }
         }
     }
 

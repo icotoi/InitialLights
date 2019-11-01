@@ -14,11 +14,26 @@ Page {
     implicitHeight: 640
 
     property var stackView
+    property var user
 
-    function back() {
-        if (stackView)
-            stackView.pop()
+    signal registerNewUser(string email, string password)
+
+    function validateEmailTextField(email) {
+        if (user) {
+            emailTextField.errorText = user.validateEmail(email)
+        }
     }
+
+    function validatePasswordTextField(password) {
+        if (user) {
+            passwordTextField.errorText = user.validatePassword(password)
+        }
+    }
+
+    function validateConfirmPasswordTextField(password, confirmPassword) {
+        confirmPasswordTextField.errorText = (password !== confirmPassword) ? qsTr("Passwords do not match") : ""
+    }
+
 
     background: Rectangle {
         color: ILStyle.backgroundColor
@@ -26,7 +41,10 @@ Page {
 
     header: ILToolBar {
         ILToolBarBackButton {
-            onClicked: back()
+            onClicked: {
+                if (stackView)
+                    stackView.pop()
+            }
         }
 
         ILToolBarTitle {
@@ -44,20 +62,33 @@ Page {
         spacing: 16
 
         ILTextField {
-            extraPlaceholderText: qsTr("Email address")
+            id: emailTextField
+            placeholderText: qsTr("Email address")
             Layout.fillWidth: true
+            textField.onTextEdited: {
+                validateEmailTextField(textField.text)
+            }
         }
 
         ILTextField {
+            id: passwordTextField
             Layout.fillWidth: true
-            extraPlaceholderText: qsTr("Password")
-            echoMode: TextInput.Password
+            placeholderText: qsTr("Password")
+            textField.echoMode: TextInput.Password
+            textField.onTextEdited: {
+                root.validatePasswordTextField(textField.text)
+                root.validateConfirmPasswordTextField(passwordTextField.textField.text, confirmPasswordTextField.textField.text)
+            }
         }
 
         ILTextField {
+            id: confirmPasswordTextField
             Layout.fillWidth: true
-            extraPlaceholderText: qsTr("Confirm password")
-            echoMode: TextInput.Password
+            placeholderText: qsTr("Confirm password")
+            textField.echoMode: TextInput.Password
+            textField.onTextEdited: {
+                root.validateConfirmPasswordTextField(passwordTextField.textField.text, confirmPasswordTextField.textField.text)
+            }
         }
 
         ILButton {
@@ -65,7 +96,7 @@ Page {
             Layout.topMargin: 6
             Layout.fillWidth: true
             highlighted: true
-
+            onClicked: root.registerNewUser(emailTextField.textField.text, passwordTextField.textField.text)
         }
     }
 

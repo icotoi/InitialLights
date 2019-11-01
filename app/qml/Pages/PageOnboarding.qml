@@ -4,7 +4,6 @@ import QtQuick.Layouts 1.12
 
 import "../Constants"
 import "../Controls"
-import "../Images"
 
 Page {
     id: root
@@ -18,21 +17,21 @@ Page {
         id: swipeView
         anchors.fill: parent
 
-        ILOnboardingItem {
+        ILBillboardItem {
             image: "../Images/background-onboarding-1.jpg"
             title: "All your lights are now in one single place"
             message: "With Initial Lights you have all your rooms and their lights connected in one single app."
             textHorizontalMargin: 20
         }
 
-        ILOnboardingItem {
+        ILBillboardItem {
             image: "../Images/background-onboarding-2.jpg"
             title: "Eco-friendly with our scenes and schedules"
             message: "You can reduce the electricity consumption by using Scenes and Smart Schedules."
             textHorizontalMargin: 20
         }
 
-        ILOnboardingItem {
+        ILBillboardItem {
             image: "../Images/background-onboarding-3.jpg"
             title: "Easy monitor everything with remote control"
             message: "You can easy check now if your lights are On even when you are away from home."

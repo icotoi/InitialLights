@@ -2,7 +2,7 @@
     <qresource prefix="/">
         <file>Constants/qmldir</file>
         <file>Controls/ILButton.qml</file>
-        <file>Controls/ILOnboardingItem.qml</file>
+        <file>Controls/ILBillboardItem.qml</file>
         <file>Controls/ILPageIndicator.qml</file>
         <file>Fonts/Inter-Bold.otf</file>
         <file>Fonts/Inter-Medium.otf</file>
@@ -22,5 +22,9 @@
         <file>Controls/ILToolBarBackButton.qml</file>
         <file>Controls/ILToolBarTitle.qml</file>
         <file>Controls/ILTextField.qml</file>
+        <file>Images/Icon-16-Error.svg</file>
+        <file>Pages/Login/PageUserRegistered.qml</file>
+        <file>Pages/Login/PageLogin.qml</file>
+        <file>Pages/PageMain.qml</file>
     </qresource>
 </RCC>

@@ -6,6 +6,8 @@
 
 namespace il {
 
+class User;
+
 class INITIALLIGHTSSHARED_EXPORT BackEnd : public QObject
 {
     Q_OBJECT
@@ -13,7 +15,8 @@ class INITIALLIGHTSSHARED_EXPORT BackEnd : public QObject
     QML_READONLY_AUTO_PROPERTY(int, version)
 
     QML_WRITABLE_AUTO_PROPERTY(bool, showOnboarding)
-    QML_WRITABLE_AUTO_PROPERTY(bool, isUserLogged)
+
+    Q_PROPERTY(il::User* user READ user CONSTANT)
 
 public:
     explicit BackEnd(QObject *parent = nullptr);
@@ -24,14 +27,13 @@ public slots:
     void loadLocalData();
     void saveLocalData();
 
-    void login(const QString& user, const QString& password);
-    void resetPassword(const QString& user);
-    void registerNewUser(const QString& user, const QString& password, const QString& fullName);
-    void logout();
+    User* user() const { return m_user; }
 
 private:
     void read(const QJsonObject& json);
     void write(QJsonObject& json) const;
+
+    User* m_user;
 };
 
 } // namespace il
