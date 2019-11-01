@@ -28,6 +28,22 @@ Page {
         PageRegisterNewUser {
             stackView: root.stackView
             user: root.user
+            onRegisterNewUser: {
+                if (stackView && user && user.registerNewUser(email, password)) {
+                    stackView.replace(userRegisteredView)
+                }
+            }
+        }
+    }
+
+    Component {
+        id: userRegisteredView
+        PageUserRegistered {
+            onDone: {
+                if (stackView) {
+                    stackView.pop(StackView.ReplaceTransition)
+                }
+            }
         }
     }
 

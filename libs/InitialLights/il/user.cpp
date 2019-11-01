@@ -81,13 +81,14 @@ void User::resetPassword(const QString &user)
     qDebug() << ">>> Requested password reset for user:" << user;
 }
 
-void User::registerNewUser(const QString &user, const QString &password, const QString &fullName)
+bool User::registerNewUser(const QString &user, const QString &password)
 {
     // TODO: implement new user registration
     qDebug() << ">>> Requested new user registration for"
              << "\n   user:" << user
-             << "\n   password:" << password
-             << "\n   name:" << fullName;
+             << "\n   password:" << password;
+
+    return true; // return false is registration fails
 }
 
 void User::logout()

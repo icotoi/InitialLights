@@ -16,13 +16,11 @@ Page {
     property var stackView
     property var user
 
+    signal registerNewUser(string email, string password)
+
     function back() {
         if (stackView)
             stackView.pop()
-    }
-
-    function registerUser() {
-
     }
 
     function validateEmailTextField(email) {
@@ -40,6 +38,7 @@ Page {
     function validateConfirmPasswordTextField(password, confirmPassword) {
         confirmPasswordTextField.errorText = (password !== confirmPassword) ? qsTr("Passwords do not match") : ""
     }
+
 
     background: Rectangle {
         color: ILStyle.backgroundColor
@@ -68,7 +67,9 @@ Page {
             id: emailTextField
             placeholderText: qsTr("Email address")
             Layout.fillWidth: true
-            textField.onTextEdited: validateEmailTextField(textField.text)
+            textField.onTextEdited: {
+                validateEmailTextField(textField.text)
+            }
         }
 
         ILTextField {
@@ -77,8 +78,8 @@ Page {
             placeholderText: qsTr("Password")
             textField.echoMode: TextInput.Password
             textField.onTextEdited: {
-                validatePasswordTextField(textField.text)
-                validateConfirmPasswordTextField(passwordTextField.textField.text, confirmPasswordTextField.textField.text)
+                root.validatePasswordTextField(textField.text)
+                root.validateConfirmPasswordTextField(passwordTextField.textField.text, confirmPasswordTextField.textField.text)
             }
         }
 
@@ -87,7 +88,9 @@ Page {
             Layout.fillWidth: true
             placeholderText: qsTr("Confirm password")
             textField.echoMode: TextInput.Password
-            textField.onTextEdited: validateConfirmPasswordTextField(passwordTextField.textField.text, confirmPasswordTextField.textField.text)
+            textField.onTextEdited: {
+                root.validateConfirmPasswordTextField(passwordTextField.textField.text, confirmPasswordTextField.textField.text)
+            }
         }
 
         ILButton {
@@ -95,7 +98,7 @@ Page {
             Layout.topMargin: 6
             Layout.fillWidth: true
             highlighted: true
-
+            onClicked: root.registerNewUser(emailTextField.textField.text, passwordTextField.textField.text)
         }
     }
 
