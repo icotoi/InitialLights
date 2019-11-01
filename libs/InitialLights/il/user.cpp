@@ -4,6 +4,7 @@
 
 #include <QDebug>
 #include <QJsonObject>
+#include <QRegularExpression>
 
 namespace il {
 
@@ -45,13 +46,20 @@ void User::clearLocalData()
 QString User::validateEmail(QString email) const
 {
     if (email.isEmpty())
-        return QString(); // empty is valid
+        return QString();
 
-    // TODO: do some propper email validation
-    if (email == "foo@bar.com")
-        return tr("Invalid email address");
-    else
-        return QString(); // the email is valid
+    QRegularExpression regexp("^[0-9A-Z]+(([0-9A-Z][-._+])*[0-9A-Z])*@[0-9A-Z]+([-.][0-9A-Z]+)*([0-9A-Z]*[.])[A-Z]{2,6}$",
+                              QRegularExpression::CaseInsensitiveOption);
+    return !regexp.match(email).hasMatch() ? tr("This is an invalid email address") : QString();
+}
+
+QString User::validatePassword(QString password) const
+{
+    // TODO: verify if this is enough for password check
+    if (password.length() < 6)
+        return tr("Password is too short");
+
+    return QString();
 }
 
 void User::login(const QString &user, const QString &password)

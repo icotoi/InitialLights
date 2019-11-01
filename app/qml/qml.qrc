@@ -22,5 +22,6 @@
         <file>Controls/ILToolBarBackButton.qml</file>
         <file>Controls/ILToolBarTitle.qml</file>
         <file>Controls/ILTextField.qml</file>
+        <file>Images/Icon-16-Error.svg</file>
     </qresource>
 </RCC>

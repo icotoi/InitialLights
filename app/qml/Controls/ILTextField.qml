@@ -32,6 +32,15 @@ ColumnLayout {
             y: ILStyle.textFieldSmallPlaceholderTopPadding
         }
 
+        Image {
+            anchors.right: parent.right
+            anchors.rightMargin: 14
+            anchors.verticalCenter: parent.verticalCenter
+            source: "../Images/Icon-16-Error.svg"
+            sourceSize { width: 16; height: 16 }
+            visible: !isValid
+        }
+
         background: Rectangle {
             implicitWidth: 200
             implicitHeight: ILStyle.textFieldImplicitHeight
@@ -47,8 +56,8 @@ ColumnLayout {
 
     Text {
         text: errorText
-        visible: text != ""
         color: ILStyle.textFieldColorInvalid
         font: ILStyle.textFieldErrorTextFont
+        visible: !isValid
     }
 }

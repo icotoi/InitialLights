@@ -22,6 +22,7 @@ public:
 
 public slots:
     QString validateEmail(QString email) const;
+    QString validatePassword(QString password) const;
 
     void login(const QString& user, const QString& password);
     void resetPassword(const QString& user);

@@ -25,18 +25,20 @@ Page {
 
     }
 
-    function validateEmailTextField(text) {
+    function validateEmailTextField(email) {
         if (user) {
-            emailTextField.errorText = user.validateEmail(text)
+            emailTextField.errorText = user.validateEmail(email)
         }
     }
 
-    function validatePasswordTextField() {
-
+    function validatePasswordTextField(password) {
+        if (user) {
+            passwordTextField.errorText = user.validatePassword(password)
+        }
     }
 
-    function validateConfirmPasswordTextField() {
-
+    function validateConfirmPasswordTextField(password, confirmPassword) {
+        confirmPasswordTextField.errorText = (password !== confirmPassword) ? qsTr("Passwords do not match") : ""
     }
 
     background: Rectangle {
@@ -74,6 +76,10 @@ Page {
             Layout.fillWidth: true
             placeholderText: qsTr("Password")
             textField.echoMode: TextInput.Password
+            textField.onTextEdited: {
+                validatePasswordTextField(textField.text)
+                validateConfirmPasswordTextField(passwordTextField.textField.text, confirmPasswordTextField.textField.text)
+            }
         }
 
         ILTextField {
@@ -81,6 +87,7 @@ Page {
             Layout.fillWidth: true
             placeholderText: qsTr("Confirm password")
             textField.echoMode: TextInput.Password
+            textField.onTextEdited: validateConfirmPasswordTextField(passwordTextField.textField.text, confirmPasswordTextField.textField.text)
         }
 
         ILButton {
