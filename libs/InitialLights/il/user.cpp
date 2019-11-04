@@ -29,7 +29,7 @@ void User::read(const QJsonObject &json)
 {
     if (json.contains(jsonUser) && json[jsonUser].isObject()) {
         QJsonObject localJson = json[jsonUser].toObject();
-        READ_BOOL_PROPERTY_IF_EXISTS(localJson, jsonIsLogged, isLogged)
+        READ_PROPERTY_IF_EXISTS(bool, localJson, jsonIsLogged, isLogged)
     }
 }
 

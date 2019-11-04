@@ -8,7 +8,7 @@ namespace il {
 
 class Room;
 
-class RoomCollection : public QObject
+class INITIALLIGHTSSHARED_EXPORT RoomCollection : public QObject
 {
     Q_OBJECT
 
@@ -17,6 +17,10 @@ class RoomCollection : public QObject
 public:
     explicit RoomCollection(QObject *parent = nullptr);
     virtual ~RoomCollection();
+
+    void read(const QJsonObject& json);
+    void write(QJsonObject& json) const;
+    void clearLocalData();
 
 public slots:
     void appendNewRoom();
