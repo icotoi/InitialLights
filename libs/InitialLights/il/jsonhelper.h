@@ -11,7 +11,7 @@ namespace il {
         type value = m_ ## property; \
         readIfExists(json, tag, value); \
         set_ ## property(value); \
-        qDebug() << " >>>" << #property << "[" << #type "]:" << m_ ## property; \
+        qDebug() << " >>> " #property " (" #type "):" << m_ ## property; \
     }
 
 #define READ_COLLECTION_PROPERTY_IF_EXISTS(type, json, tag, property) \

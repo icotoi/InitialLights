@@ -66,11 +66,18 @@ Page {
                     onClicked: rooms.removeRoom(index)
                 }
 
-                ILTextField {
-                    id: roomNameTextField
-                    placeholderText: qsTr("Room Name")
-                    textField.text: name
-                    textField.onTextEdited: name = textField.text
+                // TODO: remove the ColumnLayout and the ID
+                ColumnLayout {
+                    ILTextField {
+                        id: roomNameTextField
+                        placeholderText: qsTr("Room Name")
+                        textField.text: name
+                        textField.onTextEdited: name = textField.text
+                    }
+                    Text {
+                        text: "ID:" + rid
+                        font.pixelSize: 8
+                    }
                 }
             }
         }

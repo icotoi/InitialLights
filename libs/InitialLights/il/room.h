@@ -10,7 +10,7 @@ class INITIALLIGHTSSHARED_EXPORT Room : public QObject
 {
     Q_OBJECT
 
-    QML_WRITABLE_AUTO_PROPERTY(int, index)
+    QML_WRITABLE_AUTO_PROPERTY(int, rid) // rid = room id (we can't use id or index)
     QML_WRITABLE_AUTO_PROPERTY(QString, name)
 
 public:

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <deque>
+
 #include "initiallights_global.h"
 #include "QQmlAutoPropertyHelpers.h"
 #include "QQmlObjectListModel.h"
@@ -24,7 +26,13 @@ public:
 
 public slots:
     void appendNewRoom();
-    void removeRoom(int index);
+    void removeRoom(int position);
+
+private:
+    int maxRoomIndex() const;
+    int getNewRoomIndex();
+    void freeRoomIndex(int index);
+    std::deque<int> m_unusedRoomIndexes;
 };
 
 } // namespace il

@@ -41,14 +41,45 @@ void RoomCollection::clearLocalData()
 void RoomCollection::appendNewRoom()
 {
     Room* room = new Room();
-    // TODO: give room an index
+    room->set_rid(getNewRoomIndex());
     m_items->append(room);
 }
 
-void RoomCollection::removeRoom(int index)
+void RoomCollection::removeRoom(int position)
 {
-    qDebug() << "removing:" << index;
-    m_items->remove(index);
+    auto room = m_items->at(position);
+    int rid = room->rid();
+    m_items->remove(position);
+//    qDebug() << "removing:" << position << "index:" << rid;
+    freeRoomIndex(rid);
+}
+
+int RoomCollection::maxRoomIndex() const
+{
+    auto mi = std::max_element(m_items->begin(), m_items->end(), [](auto lhs, auto rhs) { return lhs->rid() < rhs->rid(); });
+    return (*mi)->rid();
+}
+
+int RoomCollection::getNewRoomIndex()
+{
+    if (m_unusedRoomIndexes.empty()) {
+        return m_items->count();
+    } else {
+        int index = m_unusedRoomIndexes.front();
+        m_unusedRoomIndexes.pop_front();
+        return index;
+    }
+}
+
+void RoomCollection::freeRoomIndex(int index)
+{
+    m_unusedRoomIndexes.push_back(index);
+    m_unusedRoomIndexes.erase(
+        std::remove_if(m_unusedRoomIndexes.begin(), m_unusedRoomIndexes.end(), [this](int i) { return i >= std::max(m_items->count(), maxRoomIndex()); }),
+        m_unusedRoomIndexes.end()
+        );
+    std::sort(m_unusedRoomIndexes.begin(), m_unusedRoomIndexes.end());
+//    qDebug() << "unused room indexes:" << QList<int>::fromStdList(std::list<int>(m_unusedRoomIndexes.begin(), m_unusedRoomIndexes.end()));
 }
 
 } // namespace il
