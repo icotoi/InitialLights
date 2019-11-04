@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.12
 import "Constants"
 import "Pages"
 import "Pages/Login"
+import "Pages/InitialSetup"
 
 ApplicationWindow {
     id: window
@@ -32,7 +33,11 @@ ApplicationWindow {
     }
 
     function showStartView() {
-        mainStackView.replace(null, mainView, StackView.Immediate)
+        if (backend.showInitialSetup) {
+            mainStackView.replace(null, initialSetupManageRoomsView, StackView.Immediate)
+        } else {
+            mainStackView.replace(null, mainView, StackView.Immediate)
+        }
     }
 
     StackView {
@@ -55,6 +60,13 @@ ApplicationWindow {
         PageLoginLobby {
             stackView: mainStackView
             user: backend.user
+        }
+    }
+
+    Component {
+        id: initialSetupManageRoomsView
+        PageInitialSetupManageRooms {
+            stackView: mainStackView
         }
     }
 

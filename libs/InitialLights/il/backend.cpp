@@ -16,6 +16,7 @@ namespace il {
 namespace  {
 
 const QString jsonShowOnboarding { "showOnboarding" };
+const QString jsonShowInitialSetup { "showInitialSetup" };
 
 QString localDataDirName()
 {
@@ -37,7 +38,8 @@ BackEnd::BackEnd(QObject *parent)
     : QObject(parent)
     , m_version { 1 }
     , m_showOnboarding { true }
-    , m_user( new User(this) )
+    , m_showInitialSetup { true }
+    , m_user { new User(this) }
 {
 }
 
@@ -48,7 +50,9 @@ BackEnd::~BackEnd()
 void BackEnd::clearLocalData()
 {
     qDebug() << "clearing local data...";
+
     set_showOnboarding(true);
+    set_showInitialSetup(true);
 
     m_user->clearLocalData();
 
@@ -101,12 +105,14 @@ void BackEnd::saveLocalData()
 void BackEnd::read(const QJsonObject &json)
 {
     READ_BOOL_PROPERTY_IF_EXISTS(json, jsonShowOnboarding, showOnboarding)
+    READ_BOOL_PROPERTY_IF_EXISTS(json, jsonShowInitialSetup, showInitialSetup)
     m_user->read(json);
 }
 
 void BackEnd::write(QJsonObject &json) const
 {
     json[jsonShowOnboarding] = m_showOnboarding;
+    json[jsonShowInitialSetup] = m_showInitialSetup;
     m_user->write(json);
 }
 

@@ -15,6 +15,7 @@ class INITIALLIGHTSSHARED_EXPORT BackEnd : public QObject
     QML_READONLY_AUTO_PROPERTY(int, version)
 
     QML_WRITABLE_AUTO_PROPERTY(bool, showOnboarding)
+    QML_WRITABLE_AUTO_PROPERTY(bool, showInitialSetup)
 
     Q_PROPERTY(il::User* user READ user CONSTANT)
 
