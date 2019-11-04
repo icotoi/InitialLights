@@ -26,11 +26,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         il/backend.cpp \
         il/jsonhelper.cpp \
+        il/room.cpp \
+        il/roomcollection.cpp \
         il/user.cpp
 
 HEADERS += \
         il/backend.h \
         il/jsonhelper.h \
+        il/room.h \
+        il/roomcollection.h \
         il/user.h \
         initiallights_global.h
 

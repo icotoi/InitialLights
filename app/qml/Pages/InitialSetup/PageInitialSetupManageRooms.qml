@@ -12,6 +12,7 @@ Page {
     implicitHeight: 640
 
     property var stackView
+    property var rooms
 
     background: Rectangle {
         color: ILStyle.backgroundColor
@@ -52,7 +53,7 @@ Page {
         }
 
         Repeater {
-            model: [ "Living Room", "Kitchen", "", "" ]
+            model: rooms ? rooms.items : []
 
             RowLayout {
                 id: rowLayout
@@ -62,11 +63,14 @@ Page {
                     icon.source: "../../Images/material.io-remove-24px.svg"
                     icon.width: 32
                     icon.height: 32
+                    onClicked: rooms.removeRoom(index)
                 }
 
                 ILTextField {
+                    id: roomNameTextField
                     placeholderText: qsTr("Room Name")
-                    textField.text: modelData
+                    textField.text: name
+                    textField.onTextEdited: name = textField.text
                 }
             }
         }
@@ -76,6 +80,7 @@ Page {
             Layout.topMargin: 20
             Layout.fillWidth: true
             highlighted: true
+            onClicked: rooms.appendNewRoom()
         }
 
     }

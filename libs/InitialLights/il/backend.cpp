@@ -1,6 +1,7 @@
 #include "backend.h"
 
 #include "jsonhelper.h"
+#include "roomcollection.h"
 #include "user.h"
 
 #include <QDebug>
@@ -39,6 +40,7 @@ BackEnd::BackEnd(QObject *parent)
     , m_version { 1 }
     , m_showOnboarding { true }
     , m_showInitialSetup { true }
+    , m_rooms { new RoomCollection(this) }
     , m_user { new User(this) }
 {
 }

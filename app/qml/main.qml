@@ -67,6 +67,7 @@ ApplicationWindow {
         id: initialSetupManageRoomsView
         PageInitialSetupManageRooms {
             stackView: mainStackView
+            rooms: backend.rooms
         }
     }
 
