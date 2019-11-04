@@ -16,8 +16,8 @@ namespace il {
 
 namespace  {
 
-const QString jsonShowOnboarding { "showOnboarding" };
-const QString jsonShowInitialSetup { "showInitialSetup" };
+const QString jsonShowOnboardingTag { "showOnboarding" };
+const QString jsonShowInitialSetupTag { "showInitialSetup" };
 
 QString localDataDirName()
 {
@@ -56,6 +56,7 @@ void BackEnd::clearLocalData()
     set_showOnboarding(true);
     set_showInitialSetup(true);
 
+    m_rooms->clearLocalData();
     m_user->clearLocalData();
 
     QFile::remove(localDataFileName());
@@ -106,15 +107,17 @@ void BackEnd::saveLocalData()
 
 void BackEnd::read(const QJsonObject &json)
 {
-    READ_BOOL_PROPERTY_IF_EXISTS(json, jsonShowOnboarding, showOnboarding)
-    READ_BOOL_PROPERTY_IF_EXISTS(json, jsonShowInitialSetup, showInitialSetup)
+    READ_PROPERTY_IF_EXISTS(bool, json, jsonShowOnboardingTag, showOnboarding)
+    READ_PROPERTY_IF_EXISTS(bool, json, jsonShowInitialSetupTag, showInitialSetup)
+    m_rooms->read(json);
     m_user->read(json);
 }
 
 void BackEnd::write(QJsonObject &json) const
 {
-    json[jsonShowOnboarding] = m_showOnboarding;
-    json[jsonShowInitialSetup] = m_showInitialSetup;
+    json[jsonShowOnboardingTag] = m_showOnboarding;
+    json[jsonShowInitialSetupTag] = m_showInitialSetup;
+    m_rooms->write(json);
     m_user->write(json);
 }
 
