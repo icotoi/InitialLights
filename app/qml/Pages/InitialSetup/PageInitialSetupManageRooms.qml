@@ -32,62 +32,70 @@ Page {
         }
     }
 
-    ColumnLayout {
-        anchors.rightMargin: 20
-        anchors.leftMargin: 20
-        anchors.topMargin: 20
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.top: parent.top
-        ILTitleText {
-            text: qsTr("Your Rooms")
-            horizontalAlignment: Text.AlignHCenter
-            Layout.fillWidth: true
-        }
+    ScrollView {
+        id: scrollView
+        anchors.fill: parent
+        contentWidth: parent.width
+        ColumnLayout {
+            id: columnLayout
+            anchors.top: parent.top
+            anchors.rightMargin: 20
+            anchors.leftMargin: 20
+            anchors.right: parent.right
+            anchors.left: parent.left
+            ILTitleText {
+                text: qsTr("Your Rooms")
+                Layout.topMargin: 20
+                horizontalAlignment: Text.AlignHCenter
+                Layout.fillWidth: true
+            }
 
-        ILInfoText {
-            text: qsTr("Start by creating your rooms.<br>This can be done later.")
-            Layout.bottomMargin: 20
-            horizontalAlignment: Text.AlignHCenter
-            Layout.fillWidth: true
-        }
+            ILInfoText {
+                text: qsTr("Start by creating your rooms.<br>This can be done later.")
+                Layout.bottomMargin: 20
+                horizontalAlignment: Text.AlignHCenter
+                Layout.fillWidth: true
+            }
 
-        Repeater {
-            model: rooms ? rooms.items : []
+            Repeater {
+                model: rooms ? rooms.items : []
 
-            RowLayout {
-                id: rowLayout
+                RowLayout {
+                    id: rowLayout
 
-                ILToolButton {
-                    display: AbstractButton.IconOnly
-                    icon.source: "../../Images/material.io-remove-24px.svg"
-                    icon.width: 32
-                    icon.height: 32
-                    onClicked: rooms.removeRoom(index)
-                }
-
-                // TODO: remove the ColumnLayout and the ID
-                ColumnLayout {
-                    ILTextField {
-                        id: roomNameTextField
-                        placeholderText: qsTr("Room Name")
-                        textField.text: name
-                        textField.onTextEdited: name = textField.text
+                    ILToolButton {
+                        display: AbstractButton.IconOnly
+                        icon.source: "../../Images/material.io-remove-24px.svg"
+                        icon.width: 32
+                        icon.height: 32
+                        onClicked: rooms.removeRoom(index)
                     }
-                    Text {
-                        text: "ID:" + rid
-                        font.pixelSize: 8
+
+                    // TODO: remove the ColumnLayout and the ID
+                    ColumnLayout {
+                        ILTextField {
+                            id: roomNameTextField
+                            placeholderText: qsTr("Room Name")
+                            textField.text: name
+                            textField.onTextEdited: name = textField.text
+                        }
+                        Text {
+                            text: "ID:" + rid
+                            font.pixelSize: 8
+                        }
                     }
                 }
             }
-        }
 
-        ILButton {
-            text: qsTr("Add new room")
-            Layout.topMargin: 20
-            Layout.fillWidth: true
-            highlighted: true
-            onClicked: rooms.appendNewRoom()
+            ILButton {
+                text: qsTr("Add new room")
+                Layout.bottomMargin: 20
+                Layout.topMargin: 20
+                Layout.fillWidth: true
+                highlighted: true
+                onClicked: rooms.appendNewRoom()
+            }
+
         }
 
     }
