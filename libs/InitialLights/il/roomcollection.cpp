@@ -1,5 +1,6 @@
 #include "roomcollection.h"
 
+#include "iindexer.h"
 #include "jsonhelper.h"
 #include "room.h"
 
@@ -13,14 +14,26 @@ namespace {
 const QString jsonRoomsTag { "rooms" };
 }
 
-RoomCollection::RoomCollection(QObject *parent)
+RoomCollection::RoomCollection(std::function<IIndexer* (IIndexed *, QObject *)> indexerAllocator, QObject *parent)
     : QObject(parent)
     , m_items { new QQmlObjectListModel<Room>(this) }
+    , m_indexer { indexerAllocator(this, this) }
 {
 }
 
 RoomCollection::~RoomCollection()
 {
+}
+
+int RoomCollection::count() const
+{
+    return m_items->count();
+}
+
+int RoomCollection::maxIndex() const
+{
+    auto mi = std::max_element(m_items->begin(), m_items->end(), [](auto lhs, auto rhs) { return lhs->rid() < rhs->rid(); });
+    return (*mi)->rid();
 }
 
 void RoomCollection::read(const QJsonObject &json)
@@ -41,7 +54,7 @@ void RoomCollection::clearLocalData()
 void RoomCollection::appendNewRoom()
 {
     Room* room = new Room();
-    room->set_rid(getNewRoomIndex());
+    room->set_rid(m_indexer->allocateNextFreeIndex());
     m_items->append(room);
 }
 
@@ -50,36 +63,7 @@ void RoomCollection::removeRoom(int position)
     auto room = m_items->at(position);
     int rid = room->rid();
     m_items->remove(position);
-//    qDebug() << "removing:" << position << "index:" << rid;
-    freeRoomIndex(rid);
-}
-
-int RoomCollection::maxRoomIndex() const
-{
-    auto mi = std::max_element(m_items->begin(), m_items->end(), [](auto lhs, auto rhs) { return lhs->rid() < rhs->rid(); });
-    return (*mi)->rid();
-}
-
-int RoomCollection::getNewRoomIndex()
-{
-    if (m_unusedRoomIndexes.empty()) {
-        return m_items->count();
-    } else {
-        int index = m_unusedRoomIndexes.front();
-        m_unusedRoomIndexes.pop_front();
-        return index;
-    }
-}
-
-void RoomCollection::freeRoomIndex(int index)
-{
-    m_unusedRoomIndexes.push_back(index);
-    m_unusedRoomIndexes.erase(
-        std::remove_if(m_unusedRoomIndexes.begin(), m_unusedRoomIndexes.end(), [this](int i) { return i >= std::max(m_items->count(), maxRoomIndex()); }),
-        m_unusedRoomIndexes.end()
-        );
-    std::sort(m_unusedRoomIndexes.begin(), m_unusedRoomIndexes.end());
-//    qDebug() << "unused room indexes:" << QList<int>::fromStdList(std::list<int>(m_unusedRoomIndexes.begin(), m_unusedRoomIndexes.end()));
+    m_indexer->freeIndex(rid);
 }
 
 } // namespace il
