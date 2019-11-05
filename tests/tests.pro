@@ -1,2 +1,4 @@
 TEMPLATE = subdirs
-SUBDIRS =
+SUBDIRS = \
+    tst_roomcollection \
+    tst_simpleindexer

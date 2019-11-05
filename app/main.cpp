@@ -12,6 +12,7 @@
 #include <QQmlContext>
 
 #include "il/backend.h"
+#include "il/roomcollection.h"
 #include "il/user.h"
 
 void showFontFamiliesAndStyles()
@@ -50,6 +51,7 @@ int main(int argc, char *argv[])
 {
     // register C++ types
     qmlRegisterUncreatableType<il::User>("InitialLights", 1, 0, "User", "Type cannot be created in QML");
+    qmlRegisterUncreatableType<il::RoomCollection>("InitialLights", 1, 0, "RoomCollection", "Type cannot be created in QML");
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
@@ -76,7 +78,5 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
     engine.load(url);
 
-    int ret = app.exec();
-    backend.saveLocalData();
-    return ret;
+    return app.exec();
 }

@@ -1,3 +1,4 @@
+import QtQml 2.12
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
@@ -5,6 +6,7 @@ import QtQuick.Layouts 1.12
 import "Constants"
 import "Pages"
 import "Pages/Login"
+import "Pages/InitialSetup"
 
 ApplicationWindow {
     id: window
@@ -32,7 +34,11 @@ ApplicationWindow {
     }
 
     function showStartView() {
-        mainStackView.replace(null, mainView, StackView.Immediate)
+        if (backend.showInitialSetup) {
+            mainStackView.replace(null, initialSetupManageRoomsView, StackView.Immediate)
+        } else {
+            mainStackView.replace(null, mainView, StackView.Immediate)
+        }
     }
 
     StackView {
@@ -55,6 +61,14 @@ ApplicationWindow {
         PageLoginLobby {
             stackView: mainStackView
             user: backend.user
+        }
+    }
+
+    Component {
+        id: initialSetupManageRoomsView
+        PageInitialSetupManageRooms {
+            stackView: mainStackView
+            rooms: backend.rooms
         }
     }
 
@@ -86,5 +100,19 @@ ApplicationWindow {
     Connections {
         target: backend.user
         onIsLoggedChanged: showLoginLobbyOrStartView()
+    }
+
+    Connections {
+        target: Qt.application
+//        onStateChanged: {
+//            if (Qt.application.state === Qt.ApplicationSuspended) {
+//                console.log("application suspended")
+//                backend.saveLocalData()
+//            }
+//        }
+        onAboutToQuit: {
+            console.log("application about to quit")
+            backend.saveLocalData()
+        }
     }
 }

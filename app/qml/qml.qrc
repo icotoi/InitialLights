@@ -26,5 +26,10 @@
         <file>Pages/Login/PageUserRegistered.qml</file>
         <file>Pages/Login/PageLogin.qml</file>
         <file>Pages/PageMain.qml</file>
+        <file>Pages/InitialSetup/PageInitialSetupManageRooms.qml</file>
+        <file>Controls/ILTitleText.qml</file>
+        <file>Controls/ILInfoText.qml</file>
+        <file>Controls/ILToolButton.qml</file>
+        <file>Images/material.io-remove-24px.svg</file>
     </qresource>
 </RCC>

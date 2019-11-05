@@ -32,25 +32,14 @@ Item {
         anchors.left: parent.left
         anchors.leftMargin: textHorizontalMargin
 
-        Text {
+        ILTitleText {
             id: title
-            text: qsTr("All your lightes are now in one single place")
-            bottomPadding: 6
-            lineHeight: 1.15
             Layout.fillWidth: true
-            wrapMode: Text.WordWrap
-            font: ILStyle.titleTextFont
-            color: ILStyle.titleTextColor
         }
 
-        Text {
+        ILInfoText {
             id: message
-            text: qsTr("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sed dui in nulla auctor volutpat vitae non sem. In hac.")
-            lineHeight: 1.1
             Layout.fillWidth: true
-            wrapMode: Text.WordWrap
-            font: ILStyle.defaultTextFont
-            color: ILStyle.defaultTextColor
         }
     }
 }

@@ -1,6 +1,8 @@
 #include "backend.h"
 
 #include "jsonhelper.h"
+#include "roomcollection.h"
+#include "simpleindexer.h"
 #include "user.h"
 
 #include <QDebug>
@@ -15,7 +17,8 @@ namespace il {
 
 namespace  {
 
-const QString jsonShowOnboarding { "showOnboarding" };
+const QString jsonShowOnboardingTag { "showOnboarding" };
+const QString jsonShowInitialSetupTag { "showInitialSetup" };
 
 QString localDataDirName()
 {
@@ -37,7 +40,9 @@ BackEnd::BackEnd(QObject *parent)
     : QObject(parent)
     , m_version { 1 }
     , m_showOnboarding { true }
-    , m_user( new User(this) )
+    , m_showInitialSetup { true }
+    , m_rooms { new RoomCollection([](IIndexed* indexed, QObject* parent) { return new SimpleIndexer(indexed, parent); }, this) }
+    , m_user { new User(this) }
 {
 }
 
@@ -48,8 +53,11 @@ BackEnd::~BackEnd()
 void BackEnd::clearLocalData()
 {
     qDebug() << "clearing local data...";
-    set_showOnboarding(true);
 
+    set_showOnboarding(true);
+    set_showInitialSetup(true);
+
+    m_rooms->clearLocalData();
     m_user->clearLocalData();
 
     QFile::remove(localDataFileName());
@@ -100,13 +108,17 @@ void BackEnd::saveLocalData()
 
 void BackEnd::read(const QJsonObject &json)
 {
-    READ_BOOL_PROPERTY_IF_EXISTS(json, jsonShowOnboarding, showOnboarding)
+    READ_PROPERTY_IF_EXISTS(bool, json, jsonShowOnboardingTag, showOnboarding)
+    READ_PROPERTY_IF_EXISTS(bool, json, jsonShowInitialSetupTag, showInitialSetup)
+    m_rooms->read(json);
     m_user->read(json);
 }
 
 void BackEnd::write(QJsonObject &json) const
 {
-    json[jsonShowOnboarding] = m_showOnboarding;
+    json[jsonShowOnboardingTag] = m_showOnboarding;
+    json[jsonShowInitialSetupTag] = m_showInitialSetup;
+    m_rooms->write(json);
     m_user->write(json);
 }
 
