@@ -36,6 +36,14 @@ int RoomCollection::maxIndex() const
     return (*mi)->rid();
 }
 
+std::vector<int> RoomCollection::indexes() const
+{
+    std::vector<int> ret;
+    ret.resize(std::vector<int>::size_type(m_items->count()));
+    std::transform(m_items->begin(), m_items->end(), ret.begin(), [](Room* room) { return room->rid(); });
+    return ret;
+}
+
 void RoomCollection::read(const QJsonObject &json)
 {
     READ_COLLECTION_PROPERTY_IF_EXISTS(Room, json, jsonRoomsTag, items)

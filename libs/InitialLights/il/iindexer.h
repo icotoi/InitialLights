@@ -11,6 +11,7 @@ public:
 
     virtual int allocateNextFreeIndex() = 0;
     virtual void freeIndex(int index) = 0;
+    virtual void rebuild() = 0; // rebuilds the list of available indexes by interogating the indexed object
 
 protected:
     IIndexer();

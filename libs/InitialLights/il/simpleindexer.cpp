@@ -40,4 +40,22 @@ void SimpleIndexer::freeIndex(int index)
     //    qDebug() << "unused room indexes:" << QList<int>::fromStdList(std::list<int>(m_unusedRoomIndexes.begin(), m_unusedRoomIndexes.end()));
 }
 
+void SimpleIndexer::rebuild()
+{
+    m_unusedIndexes.clear();
+    std::vector<int> indexes = m_indexed->indexes();
+    std::sort(indexes.begin(), indexes.end());
+    int current = 0;
+    for (int i: indexes) {
+        if (current == i) {
+            ++current;
+            continue;
+        }
+        while (current < i) {
+            m_unusedIndexes.push_back(current);
+            ++current;
+        }
+    }
+}
+
 }

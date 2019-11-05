@@ -20,6 +20,7 @@ public:
 
     int allocateNextFreeIndex() override;
     void freeIndex(int index) override;
+    void rebuild() override;
 
 private:
     IIndexed* m_indexed { nullptr };
