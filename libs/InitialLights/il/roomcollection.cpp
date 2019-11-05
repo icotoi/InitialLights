@@ -33,7 +33,7 @@ int RoomCollection::count() const
 int RoomCollection::maxIndex() const
 {
     auto mi = std::max_element(m_items->begin(), m_items->end(), [](auto lhs, auto rhs) { return lhs->rid() < rhs->rid(); });
-    return (*mi)->rid();
+    return mi != m_items->end() ? (*mi)->rid() : 0;
 }
 
 std::vector<int> RoomCollection::indexes() const
