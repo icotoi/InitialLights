@@ -78,7 +78,5 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
     engine.load(url);
 
-    int ret = app.exec();
-    backend.saveLocalData();
-    return ret;
+    return app.exec();
 }
