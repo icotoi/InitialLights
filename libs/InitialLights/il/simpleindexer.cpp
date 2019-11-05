@@ -47,14 +47,11 @@ void SimpleIndexer::rebuild()
     std::sort(indexes.begin(), indexes.end());
     int current = 0;
     for (int i: indexes) {
-        if (current == i) {
-            ++current;
-            continue;
-        }
         while (current < i) {
             m_unusedIndexes.push_back(current);
             ++current;
         }
+        ++current;
     }
 }
 

@@ -40,6 +40,22 @@ private slots:
         QCOMPARE(dut.allocateNextFreeIndex(), nextFreeIndex);
     }
 
+    void test_rebuild3_allocate4() {
+        Mock<il::IIndexed> mock;
+        il::IIndexed& indexed = mock.get();
+
+        il::SimpleIndexer dut(&indexed);
+
+        When(Method(mock, indexes)).Return({ 2, 1, 5 });
+        dut.rebuild();
+
+        QCOMPARE(dut.allocateNextFreeIndex(), 0);
+        QCOMPARE(dut.allocateNextFreeIndex(), 3);
+        QCOMPARE(dut.allocateNextFreeIndex(), 4);
+
+        When(Method(mock, count)).Return(6);
+        QCOMPARE(dut.allocateNextFreeIndex(), 6);
+    }
 };
 
 QTEST_APPLESS_MAIN(SimpleIndexer)
