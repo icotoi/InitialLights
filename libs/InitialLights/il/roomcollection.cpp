@@ -47,6 +47,7 @@ std::vector<int> RoomCollection::indexes() const
 void RoomCollection::read(const QJsonObject &json)
 {
     READ_COLLECTION_PROPERTY_IF_EXISTS(Room, json, jsonRoomsTag, items)
+    m_indexer->rebuild();
 }
 
 void RoomCollection::write(QJsonObject &json) const
