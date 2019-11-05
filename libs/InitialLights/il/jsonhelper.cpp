@@ -1,5 +1,4 @@
 #include "jsonhelper.h"
-#include <QJsonObject>
 
 namespace il {
 
