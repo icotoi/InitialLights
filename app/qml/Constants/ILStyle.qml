@@ -30,12 +30,13 @@ QtObject {
     property color defaultShadowColor: "#80000000"
 
     property color titleTextColor: "#17191D"
-    property font titleTextFont: Qt.font({ family: "Inter", styleName: "Bold", pointSize: 24 })
+    property font normalTitleTextFont: Qt.font({ family: "Inter", styleName: "Bold", pointSize: 24 })
+    property font smallTitleTextFont: Qt.font({ family: "Inter", styleName: "Bold", pointSize: 16 })
     property real titleTextLineHeight: 1.15
 
-    property color defaultTextColor: "#5C6670"
-    property font defaultTextFont: Qt.font({ family: "Inter", styleName: "Regular", pointSize: 18 })
-    property real defaultTextLineHeight: 1.1
+    property color infoTextColor: "#5C6670"
+    property font normalInfoTextFont: Qt.font({ family: "Inter", styleName: "Regular", pointSize: 18 })
+    property font smallInfoTextFont: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 12 })
 
     property font smallTextFont: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 11 })
     property color smallTextColor: "#8F99A3"
@@ -72,7 +73,7 @@ QtObject {
     property color toolbarShadowColor: "#0D17191D"
 
     property font toolbarTitleFont: Qt.font({ family: "Inter", styleName: "Bold", pointSize: 14 })
-    property color toolbarTitleColor: defaultTextColor
+    property color toolbarTitleColor: infoTextColor
 
     // ILButton styling
     property int buttonImplicitHeight: 48

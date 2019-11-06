@@ -6,8 +6,21 @@ import "../Constants"
 
 Text {
     text: qsTr("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sed dui in nulla auctor volutpat vitae non sem. In hac.")
+
+    enum Size {
+        Normal,
+        Small
+    }
+    property int size: ILInfoText.Size.Normal
+
     lineHeight: 1.1
     wrapMode: Text.WordWrap
-    font: ILStyle.defaultTextFont
-    color: ILStyle.defaultTextColor
+    font: size === ILInfoText.Size.Normal ? ILStyle.normalInfoTextFont : ILStyle.smallInfoTextFont
+    color: ILStyle.infoTextColor
 }
+
+/*##^##
+Designer {
+    D{i:0;autoSize:true;height:0;width:320}
+}
+##^##*/
