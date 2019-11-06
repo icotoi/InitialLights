@@ -13,54 +13,32 @@ Page {
     property var stackView
     property var user
 
-    function login() {
-        if (stackView) {
-            stackView.push(loginView)
-        }
-    }
-
-    function registerNewUser() {
-        if (stackView) {
-            stackView.push(registerNewUserView)
-        }
-    }
-
-    function resetPassword() {}
-
     Component {
         id: registerNewUserView
         PageRegisterNewUser {
-            stackView: root.stackView
             user: root.user
             onRegisterNewUser: {
                 if (stackView && user && user.registerNewUser(email, password)) {
                     stackView.replace(userRegisteredView)
                 }
             }
+            onBack: stackView.pop()
         }
     }
 
     Component {
         id: userRegisteredView
         PageUserRegistered {
-            onDone: {
-                if (stackView) {
-                    stackView.pop(StackView.ReplaceTransition)
-                }
-            }
+            onDone: stackView.pop(StackView.ReplaceTransition)
         }
     }
 
     Component {
         id: loginView
         PageLogin {
-            stackView: root.stackView
             user: root.user
-            onLogin: {
-                if (user) {
-                    user.login(email, password)
-                }
-            }
+            onBack: stackView.pop()
+            onLogin: user.login(email, password)
         }
     }
 
@@ -84,7 +62,7 @@ Page {
             highlighted: true
             text: qsTr("Create a new account")
             Layout.fillWidth: true
-            onClicked: registerNewUser()
+            onClicked: stackView.push(registerNewUserView)
         }
 
         ILButton {
@@ -93,7 +71,7 @@ Page {
             dropShadowVisible: false
             Layout.topMargin: 11
             Layout.fillWidth: true
-            onClicked: login()
+            onClicked: stackView.push(loginView)
         }
 
         ILButton {
@@ -101,7 +79,7 @@ Page {
             text: qsTr("Forgot your password?")
             Layout.topMargin: 16
             Layout.fillWidth: true
-            onClicked: resetPassword()
+            onClicked: {} // TODO
         }
     }
 }

@@ -11,9 +11,9 @@ Page {
     implicitWidth: 360
     implicitHeight: 640
 
-    property var stackView
     property var user
 
+    signal back()
     signal login(string email, string password)
 
     background: Rectangle {
@@ -22,10 +22,7 @@ Page {
 
     header: ILToolBar {
         ILToolBarBackButton {
-            onClicked: {
-                if (stackView)
-                    stackView.pop()
-            }
+            onClicked: back()
         }
 
         ILToolBarTitle {

@@ -67,8 +67,16 @@ ApplicationWindow {
     Component {
         id: initialSetupManageRoomsView
         PageInitialSetupManageRooms {
-            stackView: mainStackView
             rooms: backend.rooms
+            onNext: mainStackView.push(initialSetupManageRoomLightsView)
+        }
+    }
+
+    Component {
+        id: initialSetupManageRoomLightsView
+        PageInitialSetupManageRoomLights {
+            rooms: backend.rooms
+            onBack: mainStackView.pop()
         }
     }
 
