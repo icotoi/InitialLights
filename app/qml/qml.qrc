@@ -38,5 +38,7 @@
         <file>Pages/InitialSetup/DialogInitialSetupScanning.qml</file>
         <file>Images/Illustration-Floor-Plan.svg</file>
         <file>Pages/InitialSetup/PageInitialSetupManageRoomLights.qml</file>
+        <file>Images/Illustration-Scanning-Item.svg</file>
+        <file>Controls/ILScanningBusyIndicator.qml</file>
     </qresource>
 </RCC>

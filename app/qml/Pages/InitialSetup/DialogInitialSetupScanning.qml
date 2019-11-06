@@ -19,16 +19,14 @@ Dialog {
         anchors.top: parent.top
         anchors.topMargin: 130
 
-        Image {
+        ILScanningBusyIndicator {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            source: "../../Images/Illustration-Floor-Plan.svg"
-            sourceSize.width: 180
-            sourceSize.height: 144
+
         }
 
         ILTitleText {
             text: qsTr("Scanning your space…")
-            Layout.topMargin: 50
+            Layout.topMargin: 30
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignHCenter
         }

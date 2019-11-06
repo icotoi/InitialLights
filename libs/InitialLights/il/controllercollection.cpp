@@ -31,7 +31,7 @@ void ControllerCollection::clearLocalData()
 void ControllerCollection::scan()
 {
     // TODO
-    QTimer::singleShot(3000, this, &ControllerCollection::scanFinished);
+    QTimer::singleShot(10000, this, &ControllerCollection::scanFinished);
 }
 
 } // namespace il
