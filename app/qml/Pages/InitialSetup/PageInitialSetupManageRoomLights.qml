@@ -13,6 +13,7 @@ Page {
 
     signal back()
     signal next()
+    signal scan()
 
     property var rooms
 
@@ -67,6 +68,6 @@ Page {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 20
         highlighted: true
+        onClicked: scan()
     }
-
 }

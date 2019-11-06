@@ -31,10 +31,12 @@
         <file>Controls/ILInfoText.qml</file>
         <file>Controls/ILToolButton.qml</file>
         <file>Images/material.io-remove-24px.svg</file>
-        <file>Pages/InitialSetup/PageInitialSetupManageRoomLights.qml</file>
         <file>Images/Illustration-No-Lights-Defined.png</file>
         <file>Images/Illustration-No-Lights-Defined@2x.png</file>
         <file>Images/Illustration-No-Lights-Defined@3x.png</file>
         <file>Pages/InitialSetup/PageInitialSetup.qml</file>
+        <file>Pages/InitialSetup/DialogInitialSetupScanning.qml</file>
+        <file>Images/Illustration-Floor-Plan.svg</file>
+        <file>Pages/InitialSetup/PageInitialSetupManageRoomLights.qml</file>
     </qresource>
 </RCC>
