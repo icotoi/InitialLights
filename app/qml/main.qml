@@ -35,7 +35,7 @@ ApplicationWindow {
 
     function showStartView() {
         if (backend.showInitialSetup) {
-            mainStackView.replace(null, initialSetupManageRoomsView, StackView.Immediate)
+            mainStackView.replace(null, initialSetupView, StackView.Immediate)
         } else {
             mainStackView.replace(null, mainView, StackView.Immediate)
         }
@@ -65,18 +65,8 @@ ApplicationWindow {
     }
 
     Component {
-        id: initialSetupManageRoomsView
-        PageInitialSetupManageRooms {
-            rooms: backend.rooms
-            onNext: mainStackView.push(initialSetupManageRoomLightsView)
-        }
-    }
-
-    Component {
-        id: initialSetupManageRoomLightsView
-        PageInitialSetupManageRoomLights {
-            rooms: backend.rooms
-            onBack: mainStackView.pop()
+        id: initialSetupView
+        PageInitialSetup {
         }
     }
 
