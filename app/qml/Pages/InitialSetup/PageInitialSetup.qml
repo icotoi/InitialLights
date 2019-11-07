@@ -20,7 +20,7 @@ Page {
     Component {
         id: roomsView
         PageInitialSetupManageRooms {
-            rooms: backend.rooms
+            rooms: backend ? backend.rooms : null
             onNext: stackView.push(lightsView)
         }
     }
@@ -28,6 +28,7 @@ Page {
     Component {
         id: lightsView
         PageInitialSetupManageRoomLights {
+            controllers: backend ? backend.controllers : null
             onBack: stackView.pop()
             onScan: {
                 backend.controllers.scan()
@@ -58,7 +59,7 @@ Page {
     }
 
     Connections {
-        target: backend.controllers
+        target: backend ? backend.controllers : null
 
         onScanFinished: {
             scanningDialog.close()
