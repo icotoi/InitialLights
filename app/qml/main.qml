@@ -96,7 +96,7 @@ ApplicationWindow {
     }
 
     Connections {
-        target: backend.user
+        target: backend ? backend.user : null
         onIsLoggedChanged: showLoginLobbyOrStartView()
     }
 
