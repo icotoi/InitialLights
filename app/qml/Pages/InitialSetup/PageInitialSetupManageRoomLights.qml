@@ -11,11 +11,32 @@ Page {
     implicitWidth: 360
     implicitHeight: 640
 
+    property var controllers: QtObject {
+        property var items: ListModel{
+            ListElement {
+                name: "foo"
+                address: "ACCF24634326FA12"
+            }
+
+            ListElement {
+                name: "Unnamed"
+                address: "ACCF24634326FA13"
+            }
+
+            ListElement {
+                name: "Unnamed"
+                address: "ACCF24634326FA14"
+            }
+        }
+    }
+
+    property var rooms
+
+    property bool showScanningItem: !controllers || controllers.items.count === 0
+
     signal back()
     signal next()
     signal scan()
-
-    property var rooms
 
     background: Rectangle {
         color: ILStyle.backgroundColor
@@ -41,33 +62,96 @@ Page {
         }
     }
 
-    ColumnLayout {
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.verticalCenter: parent.verticalCenter
-        Image {
-            id: image
-            Layout.bottomMargin: 25
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            source: "../../Images/Illustration-No-Lights-Defined.png"
-        }
-
-        ILInfoText {
-            text: qsTr("Currently there are\nno lights added")
-            horizontalAlignment: Text.AlignHCenter
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+    Component {
+        id: scanButton
+        ILButton {
+            text: qsTr("Scan for lights")
+            highlighted: true
+            onClicked: scan()
         }
     }
 
-    ILButton {
-        text: qsTr("Scan for lights")
-        anchors.right: parent.right
+    Item {
+        visible: showScanningItem
+        anchors.fill: parent
+
+        ColumnLayout {
+            anchors.right: parent.right
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            Image {
+                id: image
+                Layout.bottomMargin: 25
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                source: "../../Images/Illustration-No-Lights-Defined.png"
+            }
+
+            ILInfoText {
+                text: qsTr("Currently there are\nno lights added")
+                horizontalAlignment: Text.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
+        }
+
+        Loader {
+            sourceComponent: scanButton
+            anchors.right: parent.right
+            anchors.rightMargin: 20
+            anchors.left: parent.left
+            anchors.leftMargin: 20
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 20
+        }
+    }
+
+    ListView {
+        id: listView
+        visible: !showScanningItem
+
+        spacing: 12
+        anchors.fill: parent
         anchors.rightMargin: 20
-        anchors.left: parent.left
         anchors.leftMargin: 20
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 20
-        highlighted: true
-        onClicked: scan()
+
+        header: ColumnLayout {
+            anchors.right: parent.right
+            anchors.left: parent.left
+
+            ILTitleText {
+                text: qsTr("%1 new controllers found").arg(controllers ? controllers.items.count : 0)
+                horizontalAlignment: Text.AlignHCenter
+                Layout.fillWidth: true
+                Layout.topMargin: 20
+                size: ILStyle.TextSize.Medium
+            }
+
+            ILInfoText {
+                text: qsTr("In order to add the lights first make sure that all controllers are enabled")
+                Layout.bottomMargin: 20
+                horizontalAlignment: Text.AlignHCenter
+                Layout.fillWidth: true
+                size: ILStyle.TextSize.Medium
+            }
+        }
+
+        model: controllers ? controllers.items : null
+
+        delegate: ILControllerSetupDelegate {
+            anchors.right: parent.right
+            anchors.left: parent.left
+            name: model.name
+            address: model.address
+        }
+
+        footer: ColumnLayout {
+            anchors.right: parent.right
+            anchors.left: parent.left
+            Loader {
+                Layout.bottomMargin: 20
+                Layout.topMargin: 20
+                Layout.fillWidth: true
+                sourceComponent: scanButton
+            }
+        }
     }
 }

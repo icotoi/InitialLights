@@ -1,37 +1,93 @@
 #include "controllercollection.h"
 
+#include "controller.h"
+#include "jsonhelper.h"
+#include "iindexer.h"
+
+#include <QDebug>
+#include <QJsonArray>
+#include <QJsonObject>
 #include <QTimer>
 
 namespace il {
 
-ControllerCollection::ControllerCollection(QObject *parent)
+namespace {
+const QString jsonControllersTag { "controllers" };
+}
+
+ControllerCollection::ControllerCollection(std::function<IIndexer* (IIndexed *, QObject *)> indexerAllocator, QObject *parent)
     : QObject(parent)
-{    
+    , m_items { new QQmlObjectListModel<Controller>(this) }
+    , m_indexer { indexerAllocator(this, this) }
+{
 }
 
 ControllerCollection::~ControllerCollection()
 {
 }
 
-void ControllerCollection::read(const QJsonObject &/*json*/)
+int ControllerCollection::count() const
 {
-    // TODO
+    return m_items->count();
 }
 
-void ControllerCollection::write(QJsonObject &/*json*/) const
+int ControllerCollection::maxIndex() const
 {
-    // TODO
+    auto mi = std::max_element(m_items->begin(), m_items->end(), [](auto lhs, auto rhs) { return lhs->cid() < rhs->cid(); });
+    return mi != m_items->end() ? (*mi)->cid() : 0;
+}
+
+std::vector<int> ControllerCollection::indexes() const
+{
+    std::vector<int> ret;
+    ret.resize(std::vector<int>::size_type(m_items->count()));
+    std::transform(m_items->begin(), m_items->end(), ret.begin(), [](Controller* c) { return c->cid(); });
+    return ret;
+}
+
+void ControllerCollection::read(const QJsonObject &json)
+{
+    readCollectionPropertyIfExists<Controller>(json, jsonControllersTag, m_items);
+    m_indexer->rebuild();
+}
+
+void ControllerCollection::write(QJsonObject &json) const
+{
+    writeCollectionProperty(json, jsonControllersTag, m_items);
 }
 
 void ControllerCollection::clearLocalData()
 {
-    // TODO
+    m_items->clear();
 }
 
 void ControllerCollection::scan()
 {
     // TODO
-    QTimer::singleShot(10000, this, &ControllerCollection::scanFinished);
+    QTimer::singleShot(3000, [this](){
+        m_items->clear();
+        Controller* controller = appendNewController();
+        controller->set_name("Unnamed");
+        controller->set_address("ACCF24634326FA12");
+
+        controller = appendNewController();
+        controller->set_name("Unnamed");
+        controller->set_address("ACCF24634326FA14");
+
+        controller = appendNewController();
+        controller->set_name("Unnamed");
+        controller->set_address("ACCF24634326FA16");
+
+        emit scanFinished();
+    });
+}
+
+Controller *ControllerCollection::appendNewController()
+{
+    Controller* controller = new Controller();
+    controller->set_cid(m_indexer->allocateNextFreeIndex());
+    m_items->append(controller);
+    return controller;
 }
 
 } // namespace il

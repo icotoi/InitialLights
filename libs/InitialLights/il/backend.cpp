@@ -42,10 +42,11 @@ BackEnd::BackEnd(QObject *parent)
     , m_version { 1 }
     , m_showOnboarding { true }
     , m_showInitialSetup { true }
-    , m_controllers { new ControllerCollection(this) }
-    , m_rooms { new RoomCollection([](IIndexed* indexed, QObject* parent) { return new SimpleIndexer(indexed, parent); }, this) }
     , m_user { new User(this) }
 {
+    auto indexerAllocator = [](IIndexed* indexed, QObject* parent) { return new SimpleIndexer(indexed, parent); };
+    m_controllers = new ControllerCollection(indexerAllocator, this);
+    m_rooms = new RoomCollection(indexerAllocator, this);
 }
 
 BackEnd::~BackEnd()
