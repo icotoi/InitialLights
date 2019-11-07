@@ -32,9 +32,6 @@ public:
 
     void read(const QJsonObject& json);
     void write(QJsonObject& json) const;
-
-private:
-    void readStateIfExists(const QJsonObject& json);
 };
 
 } // namespace il
