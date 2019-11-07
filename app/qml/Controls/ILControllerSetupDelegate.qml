@@ -56,7 +56,7 @@ Rectangle {
             Layout.leftMargin: 16
             Layout.rightMargin: 16
 
-            implicitWidth: 65
+            implicitWidth: 100
             implicitHeight: 32
             color: controllerState === Controller.Offline
                    ? "#ffafaf"
@@ -72,7 +72,9 @@ Rectangle {
                 anchors.centerIn: parent
                 text: controllerState === Controller.Offline
                       ? qsTr("OFFLINE")
-                      : (controllerState === Controller.Enabled ? qsTr("ENABLED") : qsTr("DISABLED"))
+                      : (controllerState === Controller.Enabled
+                         ? qsTr("ENABLED")
+                         : (controllerState === Controller.Disabled ? qsTr("DISABLED") : qsTr("NOT CONFIGURED")))
                 font: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 10 })
                 color: controllerState === Controller.Offline
                        ? "#ff2f2f"
