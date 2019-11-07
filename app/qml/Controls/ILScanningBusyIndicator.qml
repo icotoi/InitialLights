@@ -47,7 +47,7 @@ BusyIndicator {
                 PropertyAction {
                     target: scanningItem
                     property: "rotation"
-                    value: 180
+                    value: 0
                 }
 
                 YAnimator {
@@ -60,7 +60,7 @@ BusyIndicator {
                 PropertyAction {
                     target: scanningItem
                     property: "rotation"
-                    value: 0
+                    value: 180
                 }
 
                 YAnimator {
