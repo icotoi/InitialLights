@@ -3,6 +3,7 @@ import QtQuick.Controls 2.13
 import QtQuick.Layouts 1.13
 
 import "../Constants"
+import InitialLights 1.0
 
 Rectangle {
     id: root
@@ -10,20 +11,17 @@ Rectangle {
     property string name: "Unnamed"
     property string address: "ACCF24634326FA12"
 
-    property font nameFont: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 14 })
-    property font addressFont: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 12 })
-    property color addressColor: "#5C6670"
-
-    property bool configured: false
-    property bool online: true
-    property bool controllerEnabled: false
-
-    enabled: online
+    property var controllerState
 
     implicitHeight: 60
     implicitWidth: 360
-    color: online ? (configured ? "#FFFFFF" : "#F3F4F5") : "#f7eded"
-    border.color: online ? "#E3E5E8" : "#ffd4d4"
+
+    color: controllerState === Controller.Offline
+           ? "#f7eded"
+           : (controllerState === Controller.Unconfigured ? "#F3F4F5" : "#FFFFFF")
+    border.color: controllerState === Controller.Offline
+                  ? "#ffd4d4"
+                  : "#E3E5E8"
     radius: 4
 
     RowLayout {
@@ -31,9 +29,11 @@ Rectangle {
         Image {
             Layout.rightMargin: 16
             Layout.leftMargin: 16
-            source: online
-                    ? ( configured ? "../Images/Controller-Enabled.svg" : "../Images/Controller-Disabled.svg")
-                    : "../Images/Controller-Offline.svg"
+            source: controllerState === Controller.Offline
+                    ? "../Images/Controller-Offline.svg"
+                    : (controllerState === Controller.Unconfigured
+                       ? "../Images/Controller-Disabled.svg"
+                       : "../Images/Controller-Enabled.svg" )
         }
 
         ColumnLayout {
@@ -41,53 +41,46 @@ Rectangle {
             Text {
                 text: name
                 Layout.fillWidth: true
-                font: nameFont
-                color: online ? "black" : "#ff2f2f"
+                font: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 14 })
+                color: controllerState === Controller.Offline ? "#ff2f2f" : "#000"
             }
             Text {
                 text: address
                 Layout.fillWidth: true
-                font: addressFont
-                color: online ? addressColor : "#ff9090"
+                font: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 12 })
+                color: controllerState === Controller.Offline ? "#ff9090" : "#5C6670"
             }
         }
 
-        Button {
-            enabled: configured
-            id: enableControllerButton
+        Rectangle {
             Layout.leftMargin: 16
             Layout.rightMargin: 16
-            checkable: true
-            checked: controllerEnabled
-            onToggled: controllerEnabled = checked
 
-            contentItem: Text {
-                text: online
-                      ? (configured && enableControllerButton.checked ? qsTr("ENABLED") : qsTr("DISABLED"))
-                      : qsTr("DELETE")
-                font: enableControllerButton.font
-                color: online
-                       ? (configured && enableControllerButton.checked ? "#21be2b" : "white")
-                       : "#ff2f2f"
+            implicitWidth: 65
+            implicitHeight: 32
+            color: controllerState === Controller.Offline
+                   ? "#ffafaf"
+                   : (controllerState === Controller.Enabled ? "#C2F2C2" : "#C7CCD2")
+
+            border.color: controllerState === Controller.Offline
+                          ? "#ff9090"
+                          : (controllerState === Controller.Enabled ? "#8AE68A" : "#ABB2BA")
+            border.width: 1
+            radius: 4
+
+            Text {
+                anchors.centerIn: parent
+                text: controllerState === Controller.Offline
+                      ? qsTr("OFFLINE")
+                      : (controllerState === Controller.Enabled ? qsTr("ENABLED") : qsTr("DISABLED"))
+                font: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 10 })
+                color: controllerState === Controller.Offline
+                       ? "#ff2f2f"
+                       : (controllerState === Controller.Enabled ? "#21be2b" : "#fff")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideRight
             }
-
-            background: Rectangle {
-                implicitWidth: 84
-                implicitHeight: 32
-                color: online
-                       ? (configured && enableControllerButton.checked ? "#C2F2C2" : "#C7CCD2")
-                       : "#ffafaf"
-                border.color: online
-                              ? (configured && enableControllerButton.checked ? "#8AE68A" : "#ABB2BA")
-                              : "#ff9090"
-                border.width: 1
-                radius: 4
-            }
         }
     }
 }
-
-

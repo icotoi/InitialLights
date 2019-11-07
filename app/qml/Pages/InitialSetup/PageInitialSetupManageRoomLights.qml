@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.13
 
 import "../../Constants"
 import "../../Controls"
+import InitialLights 1.0
 
 Page {
     id: root
@@ -16,33 +17,25 @@ Page {
             ListElement {
                 name: "Foo"
                 address: "ACCF24634326FA12"
-                configured: true
-                online: true
-                enabled: true
+                state: Controller.Enabled
             }
 
             ListElement {
                 name: "Bar"
                 address: "ACCF24634326FA13"
-                configured: true
-                online: true
-                enabled: false
+                state: Controller.Disabled
             }
 
             ListElement {
                 name: "Unnamed"
                 address: "ACCF24634326FA14"
-                configured: false
-                online: true
-                enabled: false
+                state: Controller.Unconfigured
             }
 
             ListElement {
                 name: "Unnamed"
                 address: "ACCF24634326FA14"
-                configured: true
-                online: false
-                enabled: true
+                state: Controller.Offline
             }
         }
     }
@@ -158,11 +151,7 @@ Page {
             anchors.left: parent.left
             name: model.name
             address: model.address
-            configured: model.configured
-            controllerEnabled: model.enabled
-            online: model.online
-
-            onControllerEnabledChanged: model.enabled = controllerEnabled
+            controllerState: model.state
         }
 
         footer: ColumnLayout {

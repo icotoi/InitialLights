@@ -69,30 +69,22 @@ void ControllerCollection::scan()
         Controller* controller = appendNewController();
         controller->set_name("Foo");
         controller->set_address("ACCF24634326FA12");
-        controller->set_configured(true);
-        controller->set_enabled(true);
-        controller->set_online(true);
+        controller->set_state(Controller::Enabled);
 
         controller = appendNewController();
         controller->set_name("Bar");
         controller->set_address("ACCF24634326FA14");
-        controller->set_configured(true);
-        controller->set_enabled(false);
-        controller->set_online(true);
+        controller->set_state(Controller::Disabled);
 
         controller = appendNewController();
         controller->set_name("Unnamed");
         controller->set_address("ACCF24634326FA16");
-        controller->set_configured(false);
-        controller->set_enabled(true);
-        controller->set_online(true);
+        controller->set_state(Controller::Unconfigured);
 
         controller = appendNewController();
         controller->set_name("Baz");
         controller->set_address("ACCF24634326FA18");
-        controller->set_configured(true);
-        controller->set_enabled(true);
-        controller->set_online(false);
+        controller->set_state(Controller::Offline);
 
         emit scanFinished();
     });
