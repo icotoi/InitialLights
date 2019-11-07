@@ -43,5 +43,6 @@
         <file>Images/Controller-Enabled.svg</file>
         <file>Images/Controller-Disabled.svg</file>
         <file>Controls/ILControllerSetupDelegate.qml</file>
+        <file>Images/Controller-Offline.svg</file>
     </qresource>
 </RCC>

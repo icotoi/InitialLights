@@ -14,18 +14,35 @@ Page {
     property var controllers: QtObject {
         property var items: ListModel{
             ListElement {
-                name: "foo"
+                name: "Foo"
                 address: "ACCF24634326FA12"
+                configured: true
+                online: true
+                enabled: true
             }
 
             ListElement {
-                name: "Unnamed"
+                name: "Bar"
                 address: "ACCF24634326FA13"
+                configured: true
+                online: true
+                enabled: false
             }
 
             ListElement {
                 name: "Unnamed"
                 address: "ACCF24634326FA14"
+                configured: false
+                online: true
+                enabled: false
+            }
+
+            ListElement {
+                name: "Unnamed"
+                address: "ACCF24634326FA14"
+                configured: true
+                online: false
+                enabled: true
             }
         }
     }
@@ -141,6 +158,11 @@ Page {
             anchors.left: parent.left
             name: model.name
             address: model.address
+            configured: model.configured
+            controllerEnabled: model.enabled
+            online: model.online
+
+            onControllerEnabledChanged: model.enabled = controllerEnabled
         }
 
         footer: ColumnLayout {

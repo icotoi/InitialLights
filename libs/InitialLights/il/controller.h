@@ -13,6 +13,9 @@ class INITIALLIGHTSSHARED_EXPORT Controller : public QObject
     QML_WRITABLE_AUTO_PROPERTY(int, cid) // rid = room id (we can't use id or index)
     QML_WRITABLE_AUTO_PROPERTY(QString, name)
     QML_WRITABLE_AUTO_PROPERTY(QString, address)
+    QML_WRITABLE_AUTO_PROPERTY(bool, configured)
+    QML_WRITABLE_AUTO_PROPERTY(bool, enabled)
+    QML_WRITABLE_AUTO_PROPERTY(bool, online)
 
 public:
     explicit Controller(QObject *parent = nullptr);
