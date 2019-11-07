@@ -9,10 +9,9 @@ namespace il {
 class INITIALLIGHTSSHARED_EXPORT Controller : public QObject
 {
 public:
-    enum State: int {
-        Unknown = 0,
+    enum State {
+        NotConfigured,
         Offline,
-        Unconfigured,
         Disabled,
         Enabled
     };

@@ -79,7 +79,7 @@ void ControllerCollection::scan()
         controller = appendNewController();
         controller->set_name("Unnamed");
         controller->set_address("ACCF24634326FA16");
-        controller->set_state(Controller::Unconfigured);
+        controller->set_state(Controller::NotConfigured);
 
         controller = appendNewController();
         controller->set_name("Baz");

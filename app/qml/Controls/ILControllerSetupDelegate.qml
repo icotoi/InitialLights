@@ -18,7 +18,7 @@ Rectangle {
 
     color: controllerState === Controller.Offline
            ? "#f7eded"
-           : (controllerState === Controller.Unconfigured ? "#F3F4F5" : "#FFFFFF")
+           : (controllerState === Controller.NotConfigured ? "#F3F4F5" : "#FFFFFF")
     border.color: controllerState === Controller.Offline
                   ? "#ffd4d4"
                   : "#E3E5E8"
@@ -31,7 +31,7 @@ Rectangle {
             Layout.leftMargin: 16
             source: controllerState === Controller.Offline
                     ? "../Images/Controller-Offline.svg"
-                    : (controllerState === Controller.Unconfigured
+                    : (controllerState === Controller.NotConfigured
                        ? "../Images/Controller-Disabled.svg"
                        : "../Images/Controller-Enabled.svg" )
         }

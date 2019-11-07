@@ -29,7 +29,7 @@ Page {
             ListElement {
                 name: "Unnamed"
                 address: "ACCF24634326FA14"
-                state: Controller.Unconfigured
+                state: Controller.NotConfigured
             }
 
             ListElement {

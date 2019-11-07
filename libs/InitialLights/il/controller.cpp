@@ -18,7 +18,7 @@ const QString jsonStateTag { "state" };
 Controller::Controller(QObject *parent)
     : QObject(parent)
     , m_cid(unconfiguredIndex)
-    , m_state(Unconfigured)
+    , m_state(NotConfigured)
 {    
 }
 
