@@ -7,15 +7,13 @@ import "../Constants"
 Text {
     text: qsTr("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sed dui in nulla auctor volutpat vitae non sem. In hac.")
 
-    enum Size {
-        Normal,
-        Small
-    }
-    property int size: ILInfoText.Size.Normal
+    property int size: ILStyle.TextSize.Large
 
     lineHeight: 1.1
     wrapMode: Text.WordWrap
-    font: size === ILInfoText.Size.Normal ? ILStyle.normalInfoTextFont : ILStyle.smallInfoTextFont
+    font: size === ILStyle.TextSize.Large
+          ? ILStyle.largeInfoTextFont
+          : (size === ILStyle.TextSize.Medium ? ILStyle.mediumInfoTextFont : ILStyle.smallInfoTextFont)
     color: ILStyle.infoTextColor
 }
 

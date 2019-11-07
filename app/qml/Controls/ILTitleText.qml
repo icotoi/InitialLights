@@ -7,16 +7,14 @@ import "../Constants"
 Text {
     text: "All your lightes are now in one single place"
 
-    enum Size {
-        Normal,
-        Small
-    }
-    property int size: ILTitleText.Size.Normal
+    property int size: ILStyle.TextSize.Large
 
     bottomPadding: 6
     lineHeight: 1.15
     wrapMode: Text.WordWrap
-    font: size === ILTitleText.Size.Normal ? ILStyle.normalTitleTextFont : ILStyle.smallTitleTextFont
+    font: size === ILStyle.TextSize.Large
+          ? ILStyle.largeTitleTextFont
+          : (size === ILStyle.TextSize.Medium ? ILStyle.mediumTitleTextFont : ILStyle.smallTitleTextFont)
     color: ILStyle.titleTextColor
 }
 

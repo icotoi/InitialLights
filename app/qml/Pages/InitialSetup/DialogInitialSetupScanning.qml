@@ -46,6 +46,6 @@ Dialog {
         anchors.leftMargin: 20
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 20
-        size: ILInfoText.Size.Small
+        size: ILStyle.TextSize.Small
     }
 }
