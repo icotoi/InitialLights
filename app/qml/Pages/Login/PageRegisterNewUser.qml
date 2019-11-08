@@ -13,9 +13,9 @@ Page {
     implicitWidth: 360
     implicitHeight: 640
 
-    property var stackView
     property var user
 
+    signal back()
     signal registerNewUser(string email, string password)
 
     function validateEmailTextField(email) {
@@ -41,10 +41,7 @@ Page {
 
     header: ILToolBar {
         ILToolBarBackButton {
-            onClicked: {
-                if (stackView)
-                    stackView.pop()
-            }
+            onClicked: back()
         }
 
         ILToolBarTitle {

@@ -84,6 +84,11 @@ private slots:
         QCOMPARE(dut.get_items()->at(3)->rid(), 2);
         QCOMPARE(dut.get_items()->at(4)->rid(), 4);
     }
+
+    void test_maxIndexForEmptyReturns0() {
+        il::RoomCollection dut([](il::IIndexed*, QObject*){ return nullptr; });
+        QCOMPARE(dut.maxIndex(), 0);
+    }
 };
 
 QTEST_APPLESS_MAIN(RoomCollection)

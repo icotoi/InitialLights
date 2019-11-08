@@ -31,5 +31,18 @@
         <file>Controls/ILInfoText.qml</file>
         <file>Controls/ILToolButton.qml</file>
         <file>Images/material.io-remove-24px.svg</file>
+        <file>Images/Illustration-No-Lights-Defined.png</file>
+        <file>Images/Illustration-No-Lights-Defined@2x.png</file>
+        <file>Images/Illustration-No-Lights-Defined@3x.png</file>
+        <file>Pages/InitialSetup/PageInitialSetup.qml</file>
+        <file>Pages/InitialSetup/DialogInitialSetupScanning.qml</file>
+        <file>Images/Illustration-Floor-Plan.svg</file>
+        <file>Pages/InitialSetup/PageInitialSetupManageRoomLights.qml</file>
+        <file>Images/Illustration-Scanning-Item.svg</file>
+        <file>Controls/ILScanningBusyIndicator.qml</file>
+        <file>Images/Controller-Enabled.svg</file>
+        <file>Images/Controller-Disabled.svg</file>
+        <file>Controls/ILControllerSetupDelegate.qml</file>
+        <file>Images/Controller-Offline.svg</file>
     </qresource>
 </RCC>

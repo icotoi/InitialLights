@@ -1,5 +1,6 @@
 #include "backend.h"
 
+#include "controllercollection.h"
 #include "jsonhelper.h"
 #include "roomcollection.h"
 #include "simpleindexer.h"
@@ -41,26 +42,15 @@ BackEnd::BackEnd(QObject *parent)
     , m_version { 1 }
     , m_showOnboarding { true }
     , m_showInitialSetup { true }
-    , m_rooms { new RoomCollection([](IIndexed* indexed, QObject* parent) { return new SimpleIndexer(indexed, parent); }, this) }
     , m_user { new User(this) }
 {
+    auto indexerAllocator = [](IIndexed* indexed, QObject* parent) { return new SimpleIndexer(indexed, parent); };
+    m_controllers = new ControllerCollection(indexerAllocator, this);
+    m_rooms = new RoomCollection(indexerAllocator, this);
 }
 
 BackEnd::~BackEnd()
 {
-}
-
-void BackEnd::clearLocalData()
-{
-    qDebug() << "clearing local data...";
-
-    set_showOnboarding(true);
-    set_showInitialSetup(true);
-
-    m_rooms->clearLocalData();
-    m_user->clearLocalData();
-
-    QFile::remove(localDataFileName());
 }
 
 void BackEnd::loadLocalData()
@@ -110,6 +100,8 @@ void BackEnd::read(const QJsonObject &json)
 {
     READ_PROPERTY_IF_EXISTS(bool, json, jsonShowOnboardingTag, showOnboarding)
     READ_PROPERTY_IF_EXISTS(bool, json, jsonShowInitialSetupTag, showInitialSetup)
+
+    m_controllers->read(json);
     m_rooms->read(json);
     m_user->read(json);
 }
@@ -118,8 +110,24 @@ void BackEnd::write(QJsonObject &json) const
 {
     json[jsonShowOnboardingTag] = m_showOnboarding;
     json[jsonShowInitialSetupTag] = m_showInitialSetup;
+
+    m_controllers->write(json);
     m_rooms->write(json);
     m_user->write(json);
+}
+
+void BackEnd::clearLocalData()
+{
+    qDebug() << "clearing local data...";
+
+    set_showOnboarding(true);
+    set_showInitialSetup(true);
+
+    m_controllers->clearLocalData();
+    m_rooms->clearLocalData();
+    m_user->clearLocalData();
+
+    QFile::remove(localDataFileName());
 }
 
 } // namespace il

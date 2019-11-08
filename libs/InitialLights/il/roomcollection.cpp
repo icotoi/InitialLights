@@ -33,7 +33,7 @@ int RoomCollection::count() const
 int RoomCollection::maxIndex() const
 {
     auto mi = std::max_element(m_items->begin(), m_items->end(), [](auto lhs, auto rhs) { return lhs->rid() < rhs->rid(); });
-    return (*mi)->rid();
+    return mi != m_items->end() ? (*mi)->rid() : 0;
 }
 
 std::vector<int> RoomCollection::indexes() const
@@ -46,13 +46,13 @@ std::vector<int> RoomCollection::indexes() const
 
 void RoomCollection::read(const QJsonObject &json)
 {
-    READ_COLLECTION_PROPERTY_IF_EXISTS(Room, json, jsonRoomsTag, items)
+    readCollectionPropertyIfExists<Room>(json, jsonRoomsTag, m_items);
     m_indexer->rebuild();
 }
 
 void RoomCollection::write(QJsonObject &json) const
 {
-    WRITE_COLLECTION_PROPERTY(json, jsonRoomsTag, items)
+    writeCollectionProperty(json, jsonRoomsTag, m_items);
 }
 
 void RoomCollection::clearLocalData()

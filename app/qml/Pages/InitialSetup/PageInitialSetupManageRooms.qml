@@ -11,7 +11,8 @@ Page {
     implicitWidth: 360
     implicitHeight: 640
 
-    property var stackView
+    signal next()
+
     property var rooms
 
     background: Rectangle {
@@ -29,6 +30,7 @@ Page {
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
             flat: true
+            onClicked: next()
         }
     }
 

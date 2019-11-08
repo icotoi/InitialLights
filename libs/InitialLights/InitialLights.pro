@@ -25,6 +25,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         il/backend.cpp \
+        il/controller.cpp \
+        il/controllercollection.cpp \
         il/iindexed.cpp \
         il/iindexer.cpp \
         il/jsonhelper.cpp \
@@ -35,6 +37,8 @@ SOURCES += \
 
 HEADERS += \
         il/backend.h \
+        il/controller.h \
+        il/controllercollection.h \
         il/iindexed.h \
         il/iindexer.h \
         il/jsonhelper.h \

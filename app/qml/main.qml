@@ -35,7 +35,7 @@ ApplicationWindow {
 
     function showStartView() {
         if (backend.showInitialSetup) {
-            mainStackView.replace(null, initialSetupManageRoomsView, StackView.Immediate)
+            mainStackView.replace(null, initialSetupView, StackView.Immediate)
         } else {
             mainStackView.replace(null, mainView, StackView.Immediate)
         }
@@ -65,10 +65,8 @@ ApplicationWindow {
     }
 
     Component {
-        id: initialSetupManageRoomsView
-        PageInitialSetupManageRooms {
-            stackView: mainStackView
-            rooms: backend.rooms
+        id: initialSetupView
+        PageInitialSetup {
         }
     }
 
@@ -98,7 +96,7 @@ ApplicationWindow {
     }
 
     Connections {
-        target: backend.user
+        target: backend ? backend.user : null
         onIsLoggedChanged: showLoginLobbyOrStartView()
     }
 
