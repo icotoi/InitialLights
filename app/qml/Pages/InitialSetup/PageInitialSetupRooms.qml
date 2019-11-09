@@ -34,10 +34,11 @@ Page {
         }
     }
 
-    ScrollView {
-        id: scrollView
+    Flickable {
         anchors.fill: parent
-        contentWidth: parent.width
+        contentHeight: columnLayout.height
+        ScrollIndicator.vertical: ScrollIndicator {}
+
         ColumnLayout {
             id: columnLayout
             anchors.top: parent.top
@@ -99,6 +100,5 @@ Page {
             }
 
         }
-
     }
 }
