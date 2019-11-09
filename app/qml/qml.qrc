@@ -48,5 +48,10 @@
         <file>Images/Icon-16-Cancel.svg</file>
         <file>Controls/ILConfigurationStepId.qml</file>
         <file>Controls/ILConfigurationStep.qml</file>
+        <file>Controls/ILControllerTypeButton.qml</file>
+        <file>Images/Controller-Icon-4xAnalog-Large.svg</file>
+        <file>Images/Controller-Icon-4xDigital-Large.svg</file>
+        <file>Images/Controller-Icon-RGBW-Large.svg</file>
+        <file>Images/Controller-Icon-TurnableWhite-Large.svg</file>
     </qresource>
 </RCC>

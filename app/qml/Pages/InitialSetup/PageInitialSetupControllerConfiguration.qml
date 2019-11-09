@@ -13,9 +13,16 @@ Page {
 
     signal canceled()
 
+    implicitWidth: 360
+    implicitHeight: 640
+
     Rectangle {
         anchors.fill: parent
         color: "#ffffff"
+    }
+
+    ButtonGroup {
+        buttons: buttonTypeGridLayout.children
     }
 
     Flickable {
@@ -78,6 +85,7 @@ help to distinct them in the future")
             }
 
             ILConfigurationStep {
+                id: iLConfigurationStep
                 Layout.fillWidth: true
                 Layout.rightMargin: 20
                 Layout.leftMargin: 20
@@ -87,6 +95,42 @@ help to distinct them in the future")
                 title: qsTr("Select controller type")
                 info: qsTr("To define properly your controller you have to
 select the specific type. <a href=\"\">More details</a>")
+
+                GridLayout {
+                    id: buttonTypeGridLayout
+                    Layout.alignment: Qt.AlignHCenter
+                    columns: 2
+                    columnSpacing: 16
+                    rowSpacing: 16
+                    ILControllerTypeButton {
+                        icon.source: "../../Images/Controller-Icon-RGBW-Large.svg"
+                        icon.width: 96
+                        icon.height: 63
+                        text: qsTr("RGB + W")
+                        checkable: true
+                    }
+                    ILControllerTypeButton {
+                        icon.source: "../../Images/Controller-Icon-TurnableWhite-Large.svg"
+                        icon.width: 96
+                        icon.height: 63
+                        text: qsTr("Turnable White")
+                        checkable: true
+                    }
+                    ILControllerTypeButton {
+                        icon.source: "../../Images/Controller-Icon-4xDigital-Large.svg"
+                        icon.width: 96
+                        icon.height: 63
+                        text: qsTr("1-4 Channels")
+                        checkable: true
+                    }
+                    ILControllerTypeButton {
+                        icon.source: "../../Images/Controller-Icon-4xAnalog-Large.svg"
+                        icon.width: 96
+                        icon.height: 63
+                        text: qsTr("1-4 Channels\n240V")
+                        checkable: true
+                    }
+                }
             }
 
             ILConfigurationStep {
@@ -134,6 +178,6 @@ this light. You can always change this later.")
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}
+    D{i:0;autoSize:true}
 }
 ##^##*/
