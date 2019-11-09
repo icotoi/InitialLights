@@ -19,26 +19,38 @@ Page {
 
     Component {
         id: roomsView
-        PageInitialSetupManageRooms {
+        PageInitialSetupRooms {
             rooms: backend ? backend.rooms : null
-            onNext: stackView.push(lightsView)
+            onNext: stackView.push(controllersView)
         }
     }
 
     Component {
-        id: lightsView
-        PageInitialSetupManageRoomLights {
+        id: controllersView
+        PageInitialSetupControllers {
             controllers: backend ? backend.controllers : null
             onBack: stackView.pop()
             onScan: {
                 backend.controllers.scan()
-                scanningDialog.open()
+                controllersScanDialog.open()
+            }
+            onClickedController: {
+                stackView.push(controllerConfigurationView,
+                               { "controller" : backend.controllers.items.get(index)},
+                               StackView.Immediate)
             }
         }
     }
 
-    DialogInitialSetupScanning {
-        id: scanningDialog
+    Component {
+        id: controllerConfigurationView
+        PageInitialSetupControllerConfiguration {
+            onCanceled: stackView.pop(StackView.Immediate)
+        }
+    }
+
+    PageInitialSetupControllersScanDialog {
+        id: controllersScanDialog
         modal: true
 
         property int border: 20
@@ -50,7 +62,7 @@ Page {
         y: root.height
 
         enter: Transition {
-            NumberAnimation { properties: "y"; to: scanningDialog.border; duration: 500 }
+            NumberAnimation { properties: "y"; to: controllersScanDialog.border; duration: 500 }
         }
 
         exit: Transition {
@@ -62,7 +74,7 @@ Page {
         target: backend ? backend.controllers : null
 
         onScanFinished: {
-            scanningDialog.close()
+            controllersScanDialog.close()
         }
     }
 }

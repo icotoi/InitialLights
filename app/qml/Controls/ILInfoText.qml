@@ -5,7 +5,7 @@ import QtQuick.Controls 2.12
 import "../Constants"
 
 Text {
-    text: qsTr("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sed dui in nulla auctor volutpat vitae non sem. In hac.")
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sed dui in nulla auctor volutpat vitae non sem. In hac."
 
     property int size: ILStyle.TextSize.Large
 

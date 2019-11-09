@@ -26,7 +26,7 @@
         <file>Pages/Login/PageUserRegistered.qml</file>
         <file>Pages/Login/PageLogin.qml</file>
         <file>Pages/PageMain.qml</file>
-        <file>Pages/InitialSetup/PageInitialSetupManageRooms.qml</file>
+        <file>Pages/InitialSetup/PageInitialSetupRooms.qml</file>
         <file>Controls/ILTitleText.qml</file>
         <file>Controls/ILInfoText.qml</file>
         <file>Controls/ILToolButton.qml</file>
@@ -35,14 +35,18 @@
         <file>Images/Illustration-No-Lights-Defined@2x.png</file>
         <file>Images/Illustration-No-Lights-Defined@3x.png</file>
         <file>Pages/InitialSetup/PageInitialSetup.qml</file>
-        <file>Pages/InitialSetup/DialogInitialSetupScanning.qml</file>
+        <file>Pages/InitialSetup/PageInitialSetupControllersScanDialog.qml</file>
         <file>Images/Illustration-Floor-Plan.svg</file>
-        <file>Pages/InitialSetup/PageInitialSetupManageRoomLights.qml</file>
+        <file>Pages/InitialSetup/PageInitialSetupControllers.qml</file>
         <file>Images/Illustration-Scanning-Item.svg</file>
         <file>Controls/ILScanningBusyIndicator.qml</file>
         <file>Images/Controller-Enabled.svg</file>
         <file>Images/Controller-Disabled.svg</file>
         <file>Controls/ILControllerSetupDelegate.qml</file>
         <file>Images/Controller-Offline.svg</file>
+        <file>Pages/InitialSetup/PageInitialSetupControllerConfiguration.qml</file>
+        <file>Images/Icon-16-Cancel.svg</file>
+        <file>Controls/ILConfigurationStepId.qml</file>
+        <file>Controls/ILConfigurationStep.qml</file>
     </qresource>
 </RCC>
