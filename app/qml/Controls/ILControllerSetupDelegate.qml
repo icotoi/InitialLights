@@ -13,6 +13,8 @@ Rectangle {
 
     property var controllerState
 
+    signal clicked()
+
     implicitHeight: 60
     implicitWidth: 360
 
@@ -84,5 +86,10 @@ Rectangle {
                 elide: Text.ElideRight
             }
         }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: root.clicked()
     }
 }

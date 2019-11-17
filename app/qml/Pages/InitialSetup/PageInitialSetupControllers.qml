@@ -47,6 +47,7 @@ Page {
     signal back()
     signal next()
     signal scan()
+    signal clickedController(int index)
 
     background: Rectangle {
         color: ILStyle.backgroundColor
@@ -152,6 +153,7 @@ Page {
             name: model.name
             address: model.address
             controllerState: model.state
+            onClicked: root.clickedController(index)
         }
 
         footer: ColumnLayout {
