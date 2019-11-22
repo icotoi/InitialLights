@@ -6,6 +6,7 @@
 
 namespace il {
 
+class BluetoothExplorer;
 class ControllerCollection;
 class RoomCollection;
 class User;
@@ -43,6 +44,7 @@ private:
     ControllerCollection* m_controllers;
     RoomCollection* m_rooms;
     User* m_user;
+    BluetoothExplorer* m_bluetoothExplorer;
 };
 
 } // namespace il
