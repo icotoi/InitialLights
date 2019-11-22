@@ -53,9 +53,6 @@ ApplicationWindow {
     Component {
         id: developerView
         PageDeveloper {
-            onShowOnboarding: backend.showOnboarding = true
-            onShowInitialSetup: backend.showInitialSetup = true
-            onLogout: backend.user.logout()
         }
     }
 

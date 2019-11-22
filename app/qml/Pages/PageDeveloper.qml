@@ -9,14 +9,12 @@ Page {
     id: root
     padding: 20
 
-    signal showOnboarding()
-    signal showInitialSetup()
-    signal logout()
-
     implicitWidth: 360
     implicitHeight: 640
 
     Flickable {
+        id: flickable
+        enabled: !busyIndicator.running
         anchors.fill: parent
         contentHeight: columnLayout.height
         ScrollIndicator.vertical: ScrollIndicator {}
@@ -27,23 +25,59 @@ Page {
             anchors.right: parent.right
             anchors.left: parent.left
 
+            Repeater {
+
+                Layout.fillWidth: true
+
+                model: backend ? backend.controllers.items : null
+
+                delegate: ILControllerSetupDelegate {
+                    Layout.fillWidth: true
+                    name: model.name
+                    address: model.address
+                    controllerState: model.state
+                    onClicked: root.clickedController(index)
+                }
+            }
+
+            ILButton {
+                text: "Search Controllers"
+                Layout.fillWidth: true
+                onClicked: {
+                    busyIndicator.running = true
+                    backend.controllers.scan()
+                }
+            }
+
             ILButton {
                 text: "Show Onboarding"
                 Layout.fillWidth: true
-                onClicked: showOnboarding()
+                onClicked: backend.showOnboarding = true
             }
 
             ILButton {
                 text: "Show Initial Setup"
                 Layout.fillWidth: true
-                onClicked: showInitialSetup()
+                onClicked: backend.showInitialSetup = true
             }
 
             ILButton {
                 text: "Logout"
                 Layout.fillWidth: true
-                onClicked: logout()
+                onClicked: backend.user.logout()
             }
         }
+    }
+
+    BusyIndicator {
+        id: busyIndicator
+        running: false
+        visible: running
+        anchors.centerIn: parent
+    }
+
+    Connections {
+        target: backend ? backend.controllers : null
+        onScanFinished: busyIndicator.running = false
     }
 }
