@@ -11,6 +11,8 @@ Page {
     implicitWidth: 360
     implicitHeight: 640
 
+    signal done()
+
     StackView {
         id: stackView
         anchors.fill: parent
@@ -39,6 +41,7 @@ Page {
                                { "controller" : backend.controllers.items.get(index)},
                                StackView.Immediate)
             }
+            onNext: done()
         }
     }
 

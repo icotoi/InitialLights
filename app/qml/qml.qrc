@@ -53,5 +53,6 @@
         <file>Images/Controller-Icon-4xDigital-Large.svg</file>
         <file>Images/Controller-Icon-RGBW-Large.svg</file>
         <file>Images/Controller-Icon-TurnableWhite-Large.svg</file>
+        <file>Pages/PageDeveloper.qml</file>
     </qresource>
 </RCC>

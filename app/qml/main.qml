@@ -17,7 +17,7 @@ ApplicationWindow {
     title: qsTr("Initial Lights")
 
     function showOnboarding() {
-        console.log("Onboarding")
+        console.log("Showing Onboarding")
         mainStackView.replace(null, onboardingView, StackView.Immediate)
     }
 
@@ -30,14 +30,18 @@ ApplicationWindow {
     }
 
     function showLoginLobbyView() {
+        console.log("Showing Login Lobby")
         mainStackView.replace(null, loginLobbyView, StackView.Immediate)
     }
 
     function showStartView() {
         if (backend.showInitialSetup) {
+            console.log("Showing Initial Setup")
             mainStackView.replace(null, initialSetupView, StackView.Immediate)
         } else {
-            mainStackView.replace(null, mainView, StackView.Immediate)
+            console.log("Showing Main/Developer")
+//            mainStackView.replace(null, mainView, StackView.Immediate)
+            mainStackView.replace(null, developerView, StackView.Immediate)
         }
     }
 
@@ -47,12 +51,18 @@ ApplicationWindow {
     }
 
     Component {
+        id: developerView
+        PageDeveloper {
+            onShowOnboarding: backend.showOnboarding = true
+            onShowInitialSetup: backend.showInitialSetup = true
+            onLogout: backend.user.logout()
+        }
+    }
+
+    Component {
         id: onboardingView
         PageOnboarding {
-            onDone: {
-                backend.showOnboarding = false
-                showLoginLobbyOrStartView()
-            }
+            onDone: backend.showOnboarding = false
         }
     }
 
@@ -67,15 +77,16 @@ ApplicationWindow {
     Component {
         id: initialSetupView
         PageInitialSetup {
+            onDone: backend.showInitialSetup = false
         }
     }
 
-    Component {
-        id: mainView
-        PageMain {
-            stackView: mainStackView
-        }
-    }
+//    Component {
+//        id: mainView
+//        PageMain {
+//            stackView: mainStackView
+//        }
+//    }
 
     Component.onCompleted: {
         if (backend.showOnboarding) {
@@ -91,8 +102,12 @@ ApplicationWindow {
         onShowOnboardingChanged: {
             if (backend.showOnboarding) {
                 showOnboarding()
+            } else {
+                showLoginLobbyOrStartView()
             }
         }
+
+        onShowInitialSetupChanged: showLoginLobbyOrStartView()
     }
 
     Connections {
