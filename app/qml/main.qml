@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.12
 
 import "Constants"
 import "Pages"
+import "Pages/Developer"
 import "Pages/Login"
 import "Pages/InitialSetup"
 
