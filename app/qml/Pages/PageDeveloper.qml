@@ -36,6 +36,7 @@ Page {
                     name: model.name
                     address: model.address
                     controllerState: model.state
+                    isOnline: model.isOnline
                     onClicked: root.clickedController(index)
                 }
             }

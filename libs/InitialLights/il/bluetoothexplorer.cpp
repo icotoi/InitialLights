@@ -35,14 +35,16 @@ void configureController(Controller *controller, const QBluetoothDeviceInfo &inf
 {
     controller->set_name(info.name());
     controller->set_address(safeAddress(info));
+    controller->set_isOnline(true);
 }
 
-bool deviceAlreadyDiscovered(ControllerCollection* controllers, const QBluetoothDeviceInfo &info) {
+Controller* findController(ControllerCollection* controllers, const QBluetoothDeviceInfo &info) {
     QString address = safeAddress(info);
     auto items = controllers->get_items();
-    return std::any_of(items->begin(), items->end(), [address](Controller* controller){
+    auto iterator = std::find_if(items->begin(), items->end(), [address](Controller* controller){
         return controller->address() == address;
     });
+    return iterator != items->end() ? *iterator : nullptr;
 }
 
 }
@@ -66,36 +68,8 @@ void BluetoothExplorer::search()
     update_isBusy(true);
     set_message("Searching for controllers...");
 
-    m_controllers->get_items()->clear();
-
     m_deviceDiscoveryAgent.setLowEnergyDiscoveryTimeout(m_searchTimeout);
     m_deviceDiscoveryAgent.start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
-
-//    // TODO
-//    QTimer::singleShot(3000, [this](){
-//        m_controllers->get_items()->clear();
-//        Controller* controller = m_controllers->appendNewController();
-//        controller->set_name("Foo");
-//        controller->set_address("ACCF24634326FA12");
-//        controller->set_state(Controller::Enabled);
-
-//        controller = m_controllers->appendNewController();
-//        controller->set_name("Bar");
-//        controller->set_address("ACCF24634326FA14");
-//        controller->set_state(Controller::Disabled);
-
-//        controller = m_controllers->appendNewController();
-//        controller->set_name("Unnamed");
-//        controller->set_address("ACCF24634326FA16");
-//        controller->set_state(Controller::NotConfigured);
-
-//        controller = m_controllers->appendNewController();
-//        controller->set_name("Baz");
-//        controller->set_address("ACCF24634326FA18");
-//        controller->set_state(Controller::Offline);
-
-//        emit searchFinished();
-//    });
 }
 
 void BluetoothExplorer::connectTo(Controller */*controller*/)
@@ -137,8 +111,12 @@ void BluetoothExplorer::cancelWriteDataTo(Controller */*controller*/)
 void BluetoothExplorer::deviceDiscovered(const QBluetoothDeviceInfo &info)
 {
     if (isValidDevice(info)) {
-        if (!deviceAlreadyDiscovered(m_controllers, info)) {
-            Controller* controller = m_controllers->appendNewController();
+        Controller* controller = findController(m_controllers, info);
+        if (controller) {
+            qDebug() << "setting controller to online:" << controller->name() << controller->address();
+            controller->set_isOnline(true);
+        } else {
+            controller = m_controllers->appendNewController();
             configureController(controller, info);
             qWarning() << "LE Device name:" << controller->name()
                        << "address:" << controller->address() << "scanned; adding it to the devices list...";
