@@ -38,16 +38,25 @@ void configureController(Controller *controller, const QBluetoothDeviceInfo &inf
     controller->set_isOnline(true);
 }
 
-Controller* findController(ControllerCollection* controllers, const QBluetoothDeviceInfo &info) {
+Controller* findController(ControllerCollection* controllers, const QBluetoothDeviceInfo &info)
+{
     QString address = safeAddress(info);
     auto items = controllers->get_items();
-    auto iterator = std::find_if(items->begin(), items->end(), [address](Controller* controller){
+    auto iterator = std::find_if(items->begin(), items->end(), [address](Controller* controller) {
         return controller->address() == address;
     });
     return iterator != items->end() ? *iterator : nullptr;
 }
 
+void setControllersOffline(ControllerCollection* controllers)
+{
+    auto items = controllers->get_items();
+    std::for_each(items->begin(), items->end(), [](Controller* controller) {
+        controller->set_isOnline(false);
+    });
 }
+
+} // namescape
 
 BluetoothExplorer::BluetoothExplorer(ControllerCollection* controllers, QObject *parent)
     : IBluetoothExplorer(parent)
@@ -67,6 +76,8 @@ void BluetoothExplorer::search()
 {
     update_isBusy(true);
     set_message("Searching for controllers...");
+
+    setControllersOffline(m_controllers);
 
     m_deviceDiscoveryAgent.setLowEnergyDiscoveryTimeout(m_searchTimeout);
     m_deviceDiscoveryAgent.start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
