@@ -13,6 +13,7 @@ const QString jsonIndexTag { "index" };
 const QString jsonNameTag { "name" };
 const QString jsonAddressTag { "address" };
 const QString jsonStateTag { "state" };
+const QString jsonIsOnlineTag { "isOnline" };
 
 void readIfExists(const QJsonObject &json, const QString &tag, Controller::State &out)
 {
@@ -28,8 +29,9 @@ void readIfExists(const QJsonObject &json, const QString &tag, Controller::State
 
 Controller::Controller(QObject *parent)
     : QObject(parent)
-    , m_cid(unconfiguredIndex)
-    , m_state(NotConfigured)
+    , m_cid { unconfiguredIndex }
+    , m_isOnline { false }
+    , m_state { NotConfigured }
 {    
 }
 
@@ -43,6 +45,7 @@ void Controller::read(const QJsonObject &json)
     READ_PROPERTY_IF_EXISTS(QString, json, jsonNameTag, name)
     READ_PROPERTY_IF_EXISTS(QString, json, jsonAddressTag, address)
     READ_PROPERTY_IF_EXISTS(Controller::State, json, jsonStateTag, state)
+    READ_PROPERTY_IF_EXISTS(bool, json, jsonIsOnlineTag, isOnline)
 }
 
 void Controller::write(QJsonObject &json) const
@@ -51,6 +54,7 @@ void Controller::write(QJsonObject &json) const
     json[jsonNameTag] = m_name;
     json[jsonAddressTag] = m_address;
     json[jsonStateTag] = QMetaEnum::fromType<State>().valueToKey(m_state);
+    json[jsonIsOnlineTag] = m_isOnline;
 }
 
 } // namespace il

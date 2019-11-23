@@ -10,7 +10,7 @@ Rectangle {
 
     property string name: "Unnamed"
     property string address: "ACCF24634326FA12"
-
+    property bool isOnline: false
     property var controllerState
 
     signal clicked()
@@ -18,12 +18,12 @@ Rectangle {
     implicitHeight: 60
     implicitWidth: 360
 
-    color: controllerState === Controller.Offline
-           ? "#f7eded"
-           : (controllerState === Controller.NotConfigured ? "#F3F4F5" : "#FFFFFF")
-    border.color: controllerState === Controller.Offline
-                  ? "#ffd4d4"
-                  : "#E3E5E8"
+    color: isOnline
+           ? (controllerState === Controller.NotConfigured ? "#F3F4F5" : "#FFFFFF")
+           : "#f7eded"
+    border.color: isOnline
+                  ? "#E3E5E8"
+                  : "#ffd4d4"
     radius: 4
 
     RowLayout {
@@ -31,11 +31,11 @@ Rectangle {
         Image {
             Layout.rightMargin: 16
             Layout.leftMargin: 16
-            source: controllerState === Controller.Offline
-                    ? "../Images/Controller-Offline.svg"
-                    : (controllerState === Controller.NotConfigured
+            source: isOnline
+                    ? (controllerState === Controller.NotConfigured
                        ? "../Images/Controller-Disabled.svg"
                        : "../Images/Controller-Enabled.svg" )
+                    : "../Images/Controller-Offline.svg"
         }
 
         ColumnLayout {
@@ -44,13 +44,17 @@ Rectangle {
                 text: name
                 Layout.fillWidth: true
                 font: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 14 })
-                color: controllerState === Controller.Offline ? "#ff2f2f" : "#000"
+                color: isOnline
+                       ? "#000"
+                       : "#ff2f2f"
             }
             Text {
                 text: address
                 Layout.fillWidth: true
                 font: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 12 })
-                color: controllerState === Controller.Offline ? "#ff9090" : "#5C6670"
+                color: isOnline
+                       ? "#5C6670"
+                       : "#ff9090"
             }
         }
 
@@ -60,27 +64,27 @@ Rectangle {
 
             implicitWidth: 100
             implicitHeight: 32
-            color: controllerState === Controller.Offline
-                   ? "#ffafaf"
-                   : (controllerState === Controller.Enabled ? "#C2F2C2" : "#C7CCD2")
+            color: isOnline
+                   ? (controllerState === Controller.Enabled ? "#C2F2C2" : "#C7CCD2")
+                   : "#ffafaf"
 
-            border.color: controllerState === Controller.Offline
-                          ? "#ff9090"
-                          : (controllerState === Controller.Enabled ? "#8AE68A" : "#ABB2BA")
+            border.color: isOnline
+                          ? (controllerState === Controller.Enabled ? "#8AE68A" : "#ABB2BA")
+                          : "#ff9090"
             border.width: 1
             radius: 4
 
             Text {
                 anchors.centerIn: parent
-                text: controllerState === Controller.Offline
-                      ? qsTr("OFFLINE")
-                      : (controllerState === Controller.Enabled
+                text: isOnline
+                      ? (controllerState === Controller.Enabled
                          ? qsTr("ENABLED")
                          : (controllerState === Controller.Disabled ? qsTr("DISABLED") : qsTr("NOT CONFIGURED")))
+                      : qsTr("OFFLINE")
                 font: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 10 })
-                color: controllerState === Controller.Offline
-                       ? "#ff2f2f"
-                       : (controllerState === Controller.Enabled ? "#21be2b" : "#fff")
+                color: isOnline
+                       ? (controllerState === Controller.Enabled ? "#21be2b" : "#fff")
+                       : "#ff2f2f"
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideRight

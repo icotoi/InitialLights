@@ -18,24 +18,28 @@ Page {
                 name: "Foo"
                 address: "ACCF24634326FA12"
                 state: Controller.Enabled
+                isOnline: true
             }
 
             ListElement {
                 name: "Bar"
                 address: "ACCF24634326FA13"
                 state: Controller.Disabled
+                isOnline: true
             }
 
             ListElement {
                 name: "Unnamed"
                 address: "ACCF24634326FA14"
                 state: Controller.NotConfigured
+                isOnline: true
             }
 
             ListElement {
                 name: "Unnamed"
                 address: "ACCF24634326FA14"
-                state: Controller.Offline
+                state: Controller.Enabled
+                isOnline: false
             }
         }
     }
@@ -153,6 +157,7 @@ Page {
             name: model.name
             address: model.address
             controllerState: model.state
+            isOnline: model.isOnline
             onClicked: root.clickedController(index)
         }
 

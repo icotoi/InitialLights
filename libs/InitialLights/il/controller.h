@@ -11,7 +11,6 @@ class INITIALLIGHTSSHARED_EXPORT Controller : public QObject
 public:
     enum State {
         NotConfigured,
-        Offline,
         Disabled,
         Enabled
     };
@@ -22,6 +21,7 @@ private:
     QML_WRITABLE_AUTO_PROPERTY(int, cid) // rid = room id (we can't use id or index)
     QML_WRITABLE_AUTO_PROPERTY(QString, name)
     QML_WRITABLE_AUTO_PROPERTY(QString, address)
+    QML_WRITABLE_AUTO_PROPERTY(bool, isOnline)
 
     Q_ENUM(State)
     QML_WRITABLE_AUTO_PROPERTY(il::Controller::State, state)
