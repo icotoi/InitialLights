@@ -44,11 +44,11 @@ BackEnd::BackEnd(QObject *parent)
     , m_showOnboarding { true }
     , m_showInitialSetup { true }
     , m_user { new User(this) }
-    , m_bluetoothExplorer { new BluetoothExplorer(this) }
 {
     auto indexerAllocator = [](IIndexed* indexed, QObject* parent) { return new SimpleIndexer(indexed, parent); };
     m_controllers = new ControllerCollection(indexerAllocator, this);
     m_rooms = new RoomCollection(indexerAllocator, this);
+    m_bluetoothExplorer = new BluetoothExplorer(m_controllers, this);
 }
 
 BackEnd::~BackEnd()

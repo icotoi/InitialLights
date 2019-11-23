@@ -45,7 +45,7 @@ Page {
                 Layout.fillWidth: true
                 onClicked: {
                     busyIndicator.running = true
-                    backend.controllers.scan()
+                    backend.bluetoothExplorer.search()
                 }
             }
 
@@ -77,7 +77,7 @@ Page {
     }
 
     Connections {
-        target: backend ? backend.controllers : null
-        onScanFinished: busyIndicator.running = false
+        target: backend ? backend.bluetoothExplorer : null
+        onSearchFinished: busyIndicator.running = false
     }
 }

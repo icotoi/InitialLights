@@ -29,15 +29,9 @@ public:
     void write(QJsonObject& json) const;
     void clearLocalData();
 
-signals:
-    void scanFinished();
-
-public slots:
-    void scan();
-
-private:
     Controller* appendNewController();
 
+private:
     IIndexer* m_indexer;
 };
 

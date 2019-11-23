@@ -7,7 +7,6 @@
 #include <QDebug>
 #include <QJsonArray>
 #include <QJsonObject>
-#include <QTimer>
 
 namespace il {
 
@@ -59,35 +58,6 @@ void ControllerCollection::write(QJsonObject &json) const
 void ControllerCollection::clearLocalData()
 {
     m_items->clear();
-}
-
-void ControllerCollection::scan()
-{
-    // TODO
-    QTimer::singleShot(3000, [this](){
-        m_items->clear();
-        Controller* controller = appendNewController();
-        controller->set_name("Foo");
-        controller->set_address("ACCF24634326FA12");
-        controller->set_state(Controller::Enabled);
-
-        controller = appendNewController();
-        controller->set_name("Bar");
-        controller->set_address("ACCF24634326FA14");
-        controller->set_state(Controller::Disabled);
-
-        controller = appendNewController();
-        controller->set_name("Unnamed");
-        controller->set_address("ACCF24634326FA16");
-        controller->set_state(Controller::NotConfigured);
-
-        controller = appendNewController();
-        controller->set_name("Baz");
-        controller->set_address("ACCF24634326FA18");
-        controller->set_state(Controller::Offline);
-
-        emit scanFinished();
-    });
 }
 
 Controller *ControllerCollection::appendNewController()

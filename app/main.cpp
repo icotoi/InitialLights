@@ -12,6 +12,7 @@
 #include <QQmlContext>
 
 #include "il/backend.h"
+#include "il/bluetoothexplorer.h"
 #include "il/controller.h"
 #include "il/controllercollection.h"
 #include "il/roomcollection.h"
@@ -52,10 +53,11 @@ void loadAppFonts()
 int main(int argc, char *argv[])
 {
     // register C++ types
-    qmlRegisterUncreatableType<il::User>("InitialLights", 1, 0, "User", "Type cannot be created in QML");
+    qmlRegisterUncreatableType<il::BluetoothExplorer>("InitialLights", 1, 0, "BluetoothExplorer", "Type cannot be created in QML");
     qmlRegisterUncreatableType<il::Controller>("InitialLights", 1, 0, "Controller", "Type cannot be created in QML");
     qmlRegisterUncreatableType<il::ControllerCollection>("InitialLights", 1, 0, "ControllerCollection", "Type cannot be created in QML");
     qmlRegisterUncreatableType<il::RoomCollection>("InitialLights", 1, 0, "RoomCollection", "Type cannot be created in QML");
+    qmlRegisterUncreatableType<il::User>("InitialLights", 1, 0, "User", "Type cannot be created in QML");
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 

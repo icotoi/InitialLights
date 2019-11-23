@@ -33,7 +33,7 @@ Page {
             controllers: backend ? backend.controllers : null
             onBack: stackView.pop()
             onScan: {
-                backend.controllers.scan()
+                backend.bluetoothExplorer.search()
                 controllersScanDialog.open()
             }
             onClickedController: {
@@ -74,9 +74,9 @@ Page {
     }
 
     Connections {
-        target: backend ? backend.controllers : null
+        target: backend ? backend.bluetoothExplorer : null
 
-        onScanFinished: {
+        onSearchFinished: {
             controllersScanDialog.close()
         }
     }

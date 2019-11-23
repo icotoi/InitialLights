@@ -20,6 +20,7 @@ class INITIALLIGHTSSHARED_EXPORT BackEnd : public QObject
     QML_WRITABLE_AUTO_PROPERTY(bool, showOnboarding)
     QML_WRITABLE_AUTO_PROPERTY(bool, showInitialSetup)
 
+    Q_PROPERTY(il::BluetoothExplorer* bluetoothExplorer READ bluetoothExplorer CONSTANT)
     Q_PROPERTY(il::ControllerCollection* controllers READ controllers CONSTANT)
     Q_PROPERTY(il::RoomCollection* rooms READ rooms CONSTANT)
     Q_PROPERTY(il::User* user READ user CONSTANT)
@@ -33,6 +34,7 @@ public slots:
     void loadLocalData();
     void saveLocalData();
 
+    BluetoothExplorer* bluetoothExplorer() const { return m_bluetoothExplorer; }
     ControllerCollection* controllers() const { return m_controllers; }
     RoomCollection* rooms() const { return m_rooms; }
     User* user() const { return m_user; }
@@ -41,10 +43,10 @@ private:
     void read(const QJsonObject& json);
     void write(QJsonObject& json) const;
 
+    BluetoothExplorer* m_bluetoothExplorer;
     ControllerCollection* m_controllers;
     RoomCollection* m_rooms;
     User* m_user;
-    BluetoothExplorer* m_bluetoothExplorer;
 };
 
 } // namespace il
