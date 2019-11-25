@@ -4,9 +4,8 @@
 
 #include <QTimer>
 
-#if defined (Q_OS_MAC)
 #include <QBluetoothUuid>
-#else
+#if !defined (Q_OS_MAC)
 #include <QBluetoothAddress>
 #endif
 
