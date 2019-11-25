@@ -59,8 +59,6 @@ void setControllersOffline(ControllerCollection* controllers)
 
 BluetoothExplorer::BluetoothExplorer(ControllerCollection* controllers, QObject *parent)
     : IBluetoothExplorer(parent)
-    , m_isBusy { false }
-    , m_searchTimeout { 3000 }
     , m_controllers { controllers }
 {
     connect(&m_deviceDiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
@@ -73,50 +71,15 @@ BluetoothExplorer::BluetoothExplorer(ControllerCollection* controllers, QObject 
 
 void BluetoothExplorer::search()
 {
-    update_isBusy(true);
+    update_isSearching(true);
     set_message("Searching for controllers...");
 
     setControllersOffline(m_controllers);
 
-    m_deviceDiscoveryAgent.setLowEnergyDiscoveryTimeout(m_searchTimeout);
+    m_deviceDiscoveryAgent.setLowEnergyDiscoveryTimeout(searchTimeout());
     m_deviceDiscoveryAgent.start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
 }
 
-void BluetoothExplorer::connectTo(Controller */*controller*/)
-{
-}
-
-void BluetoothExplorer::disconnectFrom(Controller */*controller*/)
-{
-}
-
-void BluetoothExplorer::readDataFrom(Controller */*controller*/)
-{
-}
-
-void BluetoothExplorer::writeDataTo(Controller */*controller*/)
-{
-}
-
-void BluetoothExplorer::cancelSearch()
-{
-
-}
-
-void BluetoothExplorer::cancelConnectTo(Controller */*controller*/)
-{
-
-}
-
-void BluetoothExplorer::cancelReadDataFrom(Controller */*controller*/)
-{
-
-}
-
-void BluetoothExplorer::cancelWriteDataTo(Controller */*controller*/)
-{
-
-}
 
 void BluetoothExplorer::deviceDiscovered(const QBluetoothDeviceInfo &info)
 {
@@ -152,8 +115,8 @@ void BluetoothExplorer::discoveryFailed(QBluetoothDeviceDiscoveryAgent::Error er
 
 void BluetoothExplorer::discoveryFinished()
 {
-    qDebug() << "scan finished";
-    update_isBusy(false);
+    qDebug() << "search finished";
+    update_isSearching(false);
     set_message(m_controllers->get_items()->size() == 0
                     ? "No Low Energy devices found"
                     : QString("Found %1 device(s)").arg(m_controllers->get_items()->size()));

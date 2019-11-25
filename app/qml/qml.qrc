@@ -55,5 +55,6 @@
         <file>Images/Controller-Icon-TurnableWhite-Large.svg</file>
         <file>Pages/Developer/PageDeveloper.qml</file>
         <file>Pages/Developer/PageDeveloperControllerConfiguration.qml</file>
+        <file>Controls/ILButtonWithBusyIndicator.qml</file>
     </qresource>
 </RCC>

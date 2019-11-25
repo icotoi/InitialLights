@@ -23,7 +23,6 @@ Page {
 
         Flickable {
             id: flickable
-            enabled: !busyIndicator.running
             anchors.fill: parent
             contentHeight: columnLayout.height
             ScrollIndicator.vertical: ScrollIndicator {}
@@ -52,11 +51,12 @@ Page {
                     }
                 }
 
-                ILButton {
+                ILButtonWithBusyIndicator {
                     text: "Search Controllers"
                     Layout.fillWidth: true
+                    enabled: !busy
+                    busy: backend ? backend.bluetoothExplorer.isSearching : false
                     onClicked: {
-                        busyIndicator.running = true
                         backend.bluetoothExplorer.search()
                     }
                 }
@@ -87,16 +87,5 @@ Page {
         PageDeveloperControllerConfiguration {
             onCanceled: stackView.pop(StackView.Immediate)
         }
-    }
-    BusyIndicator {
-        id: busyIndicator
-        running: false
-        visible: running
-        anchors.centerIn: parent
-    }
-
-    Connections {
-        target: backend ? backend.bluetoothExplorer : null
-        onSearchFinished: busyIndicator.running = false
     }
 }
