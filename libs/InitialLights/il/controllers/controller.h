@@ -11,6 +11,8 @@ class ILight;
 class LightCollection;
 }
 
+namespace controllers {
+
 class INITIALLIGHTSSHARED_EXPORT Controller : public QObject
 {
 public:
@@ -30,7 +32,7 @@ private:
     QML_WRITABLE_AUTO_PROPERTY(bool, isEnabled)
 
     Q_ENUM(Kind)
-    Q_PROPERTY(il::Controller::Kind kind READ kind WRITE set_kind NOTIFY kindChanged)
+    Q_PROPERTY(il::controllers::Controller::Kind kind READ kind WRITE set_kind NOTIFY kindChanged)
 
     Q_PROPERTY(il::lights::LightCollection* lights READ lights CONSTANT)
 
@@ -41,18 +43,19 @@ public:
     void read(const QJsonObject& json);
     void write(QJsonObject& json) const;
 
-    il::Controller::Kind kind() const { return m_kind; }
+    Kind kind() const { return m_kind; }
     lights::LightCollection* lights() const { return m_lights; }
 
 signals:
-    void kindChanged(il::Controller::Kind kind);
+    void kindChanged(Kind kind);
 
 public slots:
-    void set_kind(il::Controller::Kind kind);
+    void set_kind(Kind kind);
 
 private:
-    il::Controller::Kind m_kind;
+    Kind m_kind;
     lights::LightCollection* m_lights;
 };
 
+} // namespace controllers
 } // namespace il

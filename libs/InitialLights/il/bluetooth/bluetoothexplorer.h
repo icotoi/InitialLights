@@ -6,14 +6,18 @@
 
 namespace il {
 
+namespace controllers {
 class ControllerCollection;
+}
+
+namespace bluetooth {
 
 class INITIALLIGHTSSHARED_EXPORT BluetoothExplorer : public IBluetoothExplorer
 {
     Q_OBJECT
 
 public:
-    explicit BluetoothExplorer(ControllerCollection* controllers, QObject *parent = nullptr);
+    explicit BluetoothExplorer(controllers::ControllerCollection* controllers, QObject *parent = nullptr);
 
 public slots:
     void search() override;
@@ -23,8 +27,9 @@ private:
     void discoveryFailed(QBluetoothDeviceDiscoveryAgent::Error error);
     void discoveryFinished();
 
-    ControllerCollection* m_controllers;
+    controllers::ControllerCollection* m_controllers;
     QBluetoothDeviceDiscoveryAgent m_deviceDiscoveryAgent;
 };
 
+} // namespace bluetooth
 } // namespace il

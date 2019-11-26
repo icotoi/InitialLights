@@ -1,8 +1,8 @@
 #include "backend.h"
 
-#include "bluetoothexplorer.h"
-#include "controller.h"
-#include "controllercollection.h"
+#include "bluetooth/bluetoothexplorer.h"
+#include "controllers/controller.h"
+#include "controllers/controllercollection.h"
 #include "jsonhelper.h"
 #include "roomcollection.h"
 #include "simpleindexer.h"
@@ -47,9 +47,9 @@ BackEnd::BackEnd(QObject *parent)
     , m_user { new User(this) }
 {
     auto indexerAllocator = [](IIndexed* indexed, QObject* parent) { return new SimpleIndexer(indexed, parent); };
-    m_controllers = new ControllerCollection(this);
+    m_controllers = new controllers::ControllerCollection(this);
     m_rooms = new RoomCollection(indexerAllocator, this);
-    m_bluetoothExplorer = new BluetoothExplorer(m_controllers, this);
+    m_bluetoothExplorer = new bluetooth::BluetoothExplorer(m_controllers, this);
 }
 
 BackEnd::~BackEnd()

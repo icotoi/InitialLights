@@ -1,8 +1,8 @@
 #include "controller.h"
 
-#include "jsonhelper.h"
-#include "lights/ilight.h"
-#include "lights/lightcollection.h"
+#include "../jsonhelper.h"
+#include "../lights/ilight.h"
+#include "../lights/lightcollection.h"
 
 #include <QJsonObject>
 
@@ -14,17 +14,19 @@ const QString jsonAddressTag { "address" };
 const QString jsonIsEnabledTag { "isEnabled" };
 const QString jsonKindTag { "kind" };
 
-void readIfExists(const QJsonObject &json, const QString &tag, Controller::Kind &out)
+void readIfExists(const QJsonObject &json, const QString &tag, controllers::Controller::Kind &out)
 {
     if (json.contains(tag) && json[tag].isString()) {
-        int newValue = QMetaEnum::fromType<Controller::Kind>().keyToValue(json[tag].toString().toStdString().c_str());
+        int newValue = QMetaEnum::fromType<controllers::Controller::Kind>().keyToValue(json[tag].toString().toStdString().c_str());
         if (newValue >= 0) {
-            out = Controller::Kind(newValue);
+            out = controllers::Controller::Kind(newValue);
         }
     }
 }
 
 }
+
+namespace controllers {
 
 Controller::Controller(QObject *parent)
     : QObject(parent)
@@ -69,13 +71,13 @@ void Controller::set_kind(Controller::Kind kind)
 
     m_lights->clearLocalData();
     switch (m_kind) {
-    case il::Controller::RGBW: {
+    case RGBW: {
         lights::ILight* light;
         light = m_lights->appendNewLight(lights::LightKind::RGBW);
         light->set_name("RGBW");
         break;
     }
-    case il::Controller::Analogic: {
+    case Analogic: {
         lights::ILight* light;
         light = m_lights->appendNewLight(lights::LightKind::Analogic);
         light->set_name("Analogic #1");
@@ -83,9 +85,10 @@ void Controller::set_kind(Controller::Kind kind)
         light->set_name("Analogic #2");
         break;
     }
-    case il::Controller::Unknown:
+    case Unknown:
         break;
     }
 }
 
+} // namespace controllers
 } // namespace il

@@ -5,7 +5,9 @@
 
 namespace il {
 
+namespace controllers {
 class Controller;
+}
 
 namespace lights {
 
@@ -16,7 +18,7 @@ private:
 
     QML_WRITABLE_AUTO_PROPERTY(il::lights::LightKind::Kind, kind)
     QML_WRITABLE_AUTO_PROPERTY(QString, name)
-    QML_READONLY_AUTO_PROPERTY(il::Controller*, controller)
+    QML_READONLY_AUTO_PROPERTY(il::controllers::Controller*, controller)
 
 public:
     ~ILight() override;

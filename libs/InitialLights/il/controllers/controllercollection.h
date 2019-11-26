@@ -7,13 +7,15 @@
 
 namespace il {
 
+namespace controllers {
+
 class Controller;
 
 class INITIALLIGHTSSHARED_EXPORT ControllerCollection : public QObject
 {
     Q_OBJECT
 
-    QML_OBJMODEL_PROPERTY(il::Controller, items)
+    QML_OBJMODEL_PROPERTY(il::controllers::Controller, items)
 
 public:
     explicit ControllerCollection(QObject *parent = nullptr);
@@ -32,4 +34,5 @@ private:
     void onControllerKindChanged();
 };
 
+} // controllers
 } // namespace il

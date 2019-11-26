@@ -8,7 +8,9 @@
 
 namespace il {
 
+namespace controllers {
 class Controller;
+}
 
 namespace lights {
 
@@ -21,7 +23,7 @@ class LightCollection : public QObject
     QML_OBJMODEL_PROPERTY(il::lights::ILight, items)
 
 public:
-    explicit LightCollection(Controller* controller, QObject *parent = nullptr);
+    explicit LightCollection(controllers::Controller* controller, QObject *parent = nullptr);
     ~LightCollection() override;
 
     void read(const QJsonObject& json);
@@ -31,7 +33,7 @@ public:
     ILight *appendNewLight(LightKind::Kind kind);
 
 private:
-    Controller* m_controller;
+    controllers::Controller* m_controller;
 };
 
 } // namespace lights

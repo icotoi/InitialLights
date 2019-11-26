@@ -3,9 +3,9 @@
 
 #include "analogiclight.h"
 #include "rgbwlight.h"
-#include "il/controller.h"
-#include "il/iindexer.h"
-#include "il/jsonhelper.h"
+#include "../controllers/controller.h"
+#include "../iindexer.h"
+#include "../jsonhelper.h"
 
 namespace il {
 
@@ -43,7 +43,7 @@ void readCollectionPropertyIfExists<lights::ILight>(const QJsonObject& json, con
 
 namespace lights {
 
-LightCollection::LightCollection(Controller* controller, QObject *parent)
+LightCollection::LightCollection(controllers::Controller* controller, QObject *parent)
     : QObject(parent)
     , m_items { new QQmlObjectListModel<ILight>(this) }
     , m_controller { controller }

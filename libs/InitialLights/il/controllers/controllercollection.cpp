@@ -1,7 +1,7 @@
 #include "controllercollection.h"
 
 #include "controller.h"
-#include "jsonhelper.h"
+#include "../jsonhelper.h"
 
 #include <QDebug>
 #include <QJsonArray>
@@ -12,6 +12,8 @@ namespace il {
 namespace {
 const QString jsonControllersTag { "controllers" };
 }
+
+namespace controllers {
 
 ControllerCollection::ControllerCollection(QObject *parent)
     : QObject(parent)
@@ -57,4 +59,5 @@ void ControllerCollection::onControllerKindChanged()
     controllerKindChanged(controller);
 }
 
+} // namespace controllers
 } // namespace il

@@ -1,7 +1,7 @@
 #include "lightbase.h"
 
-#include "il/controller.h"
-#include "il/jsonhelper.h"
+#include "../controllers/controller.h"
+#include "../jsonhelper.h"
 
 #include <QJsonObject>
 

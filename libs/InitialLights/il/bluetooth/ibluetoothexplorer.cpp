@@ -1,6 +1,7 @@
 #include "ibluetoothexplorer.h"
 
 namespace il {
+namespace bluetooth {
 
 IBluetoothExplorer::IBluetoothExplorer(QObject *parent)
     : QObject(parent)
@@ -13,4 +14,5 @@ IBluetoothExplorer::~IBluetoothExplorer()
 {
 }
 
+} // namespace bluetooth
 } // namespace il

@@ -1,6 +1,6 @@
 #include "lightkind.h"
 
-#include "il/jsonhelper.h"
+#include "../jsonhelper.h"
 
 #include <QJsonObject>
 

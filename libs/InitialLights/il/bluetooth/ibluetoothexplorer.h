@@ -7,6 +7,7 @@
 #include <QObject>
 
 namespace il {
+namespace bluetooth {
 
 class INITIALLIGHTSSHARED_EXPORT IBluetoothExplorer : public QObject
 {
@@ -29,4 +30,5 @@ protected:
     explicit IBluetoothExplorer(QObject *parent = nullptr);
 };
 
+} // namespace bluetooth
 } // namespace il

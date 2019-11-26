@@ -1,6 +1,6 @@
 #include "bluetoothexplorer.h"
-#include "controller.h"
-#include "controllercollection.h"
+#include "../controllers/controller.h"
+#include "../controllers/controllercollection.h"
 
 #include <QTimer>
 
@@ -30,34 +30,36 @@ bool isValidDevice(const QBluetoothDeviceInfo &info)
     return info.serviceUuids().contains(uuidService);
 }
 
-void configureController(Controller *controller, const QBluetoothDeviceInfo &info)
+void configureController(controllers::Controller *controller, const QBluetoothDeviceInfo &info)
 {
     controller->set_name(info.name());
     controller->set_address(safeAddress(info));
     controller->set_isOnline(true);
 }
 
-Controller* findController(ControllerCollection* controllers, const QBluetoothDeviceInfo &info)
+controllers::Controller* findController(controllers::ControllerCollection* controllers, const QBluetoothDeviceInfo &info)
 {
     QString address = safeAddress(info);
     auto items = controllers->get_items();
-    auto iterator = std::find_if(items->begin(), items->end(), [address](Controller* controller) {
+    auto iterator = std::find_if(items->begin(), items->end(), [address](controllers::Controller* controller) {
         return controller->address() == address;
     });
     return iterator != items->end() ? *iterator : nullptr;
 }
 
-void setControllersOffline(ControllerCollection* controllers)
+void setControllersOffline(controllers::ControllerCollection* controllers)
 {
     auto items = controllers->get_items();
-    std::for_each(items->begin(), items->end(), [](Controller* controller) {
+    std::for_each(items->begin(), items->end(), [](controllers::Controller* controller) {
         controller->set_isOnline(false);
     });
 }
 
 } // namescape
 
-BluetoothExplorer::BluetoothExplorer(ControllerCollection* controllers, QObject *parent)
+namespace bluetooth {
+
+BluetoothExplorer::BluetoothExplorer(controllers::ControllerCollection* controllers, QObject *parent)
     : IBluetoothExplorer(parent)
     , m_controllers { controllers }
 {
@@ -84,7 +86,7 @@ void BluetoothExplorer::search()
 void BluetoothExplorer::deviceDiscovered(const QBluetoothDeviceInfo &info)
 {
     if (isValidDevice(info)) {
-        Controller* controller = findController(m_controllers, info);
+        controllers::Controller* controller = findController(m_controllers, info);
         if (controller) {
             qDebug() << "setting controller to online:" << controller->name() << controller->address();
             controller->set_isOnline(true);
@@ -123,4 +125,5 @@ void BluetoothExplorer::discoveryFinished()
     emit searchFinished();
 }
 
+} // namespace bluetooth
 } // namespace il
