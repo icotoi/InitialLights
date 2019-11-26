@@ -33,6 +33,35 @@ Page {
                 anchors.right: parent.right
                 anchors.left: parent.left
 
+                ILButtonWithBusyIndicator {
+                    text: "Search Controllers"
+                    Layout.fillWidth: true
+                    enabled: !busy && !continuosSearchSwitch.checked
+                    busy: backend ? backend.bluetoothExplorer.isSearching : false
+                    onClicked: {
+                        backend.bluetoothExplorer.search()
+                    }
+                }
+
+                RowLayout {
+                    Text {
+                        text: "Continuous Search"
+                    }
+
+                    Switch {
+                        id: continuosSearchSwitch
+                    }
+
+                    Timer {
+                        id: continuosSearchTimer
+                        repeat: true
+                        triggeredOnStart: true
+                        running: continuosSearchSwitch.checked
+                        interval: 1000 // in msec
+                        onTriggered: if (backend) backend.bluetoothExplorer.search()
+                    }
+                }
+
                 Repeater {
 
                     Layout.fillWidth: true
@@ -49,16 +78,6 @@ Page {
                         onClicked: stackView.push(controllerConfigurationView,
                                                   { "controller" : backend.controllers.items.get(index)},
                                                   StackView.Immediate)
-                    }
-                }
-
-                ILButtonWithBusyIndicator {
-                    text: "Search Controllers"
-                    Layout.fillWidth: true
-                    enabled: !busy
-                    busy: backend ? backend.bluetoothExplorer.isSearching : false
-                    onClicked: {
-                        backend.bluetoothExplorer.search()
                     }
                 }
 
