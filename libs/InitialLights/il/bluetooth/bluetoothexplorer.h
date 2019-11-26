@@ -3,10 +3,12 @@
 #include "ibluetoothexplorer.h"
 
 #include <QBluetoothDeviceDiscoveryAgent>
+#include <QSet>
 
 namespace il {
 
 namespace controllers {
+class Controller;
 class ControllerCollection;
 }
 
@@ -23,10 +25,12 @@ public slots:
     void search() override;
 
 private:
+    void updateOfflineControllers();
     void deviceDiscovered(const QBluetoothDeviceInfo &info);
     void discoveryFailed(QBluetoothDeviceDiscoveryAgent::Error error);
     void discoveryFinished();
 
+    QSet<controllers::Controller*> m_onlineControllers;
     controllers::ControllerCollection* m_controllers;
     QBluetoothDeviceDiscoveryAgent m_deviceDiscoveryAgent;
 };

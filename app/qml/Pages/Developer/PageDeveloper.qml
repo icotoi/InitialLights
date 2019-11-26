@@ -50,6 +50,7 @@ Page {
 
                     Switch {
                         id: continuosSearchSwitch
+                        checked: true
                     }
 
                     Timer {
