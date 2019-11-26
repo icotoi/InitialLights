@@ -15,6 +15,7 @@
 #include "il/bluetoothexplorer.h"
 #include "il/controller.h"
 #include "il/controllercollection.h"
+#include "il/lights/lightcollection.h"
 #include "il/roomcollection.h"
 #include "il/user.h"
 
@@ -56,6 +57,7 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<il::BluetoothExplorer>("InitialLights", 1, 0, "BluetoothExplorer", "Type cannot be created in QML");
     qmlRegisterUncreatableType<il::Controller>("InitialLights", 1, 0, "Controller", "Type cannot be created in QML");
     qmlRegisterUncreatableType<il::ControllerCollection>("InitialLights", 1, 0, "ControllerCollection", "Type cannot be created in QML");
+    qmlRegisterUncreatableType<il::lights::LightCollection>("InitialLights", 1, 0, "LightCollection", "Type cannot be created in QML");
     qmlRegisterUncreatableType<il::RoomCollection>("InitialLights", 1, 0, "RoomCollection", "Type cannot be created in QML");
     qmlRegisterUncreatableType<il::User>("InitialLights", 1, 0, "User", "Type cannot be created in QML");
 

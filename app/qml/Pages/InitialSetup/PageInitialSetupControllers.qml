@@ -15,31 +15,43 @@ Page {
     property var controllers: QtObject {
         property var items: ListModel{
             ListElement {
-                name: "Foo"
+                name: "#1"
                 address: "ACCF24634326FA12"
-                state: Controller.Enabled
+                isEnabled: true
                 isOnline: true
+                kind: Controller.RGBW
             }
 
             ListElement {
-                name: "Bar"
+                name: "#2"
                 address: "ACCF24634326FA13"
-                state: Controller.Disabled
+                isEnabled: false
                 isOnline: true
+                kind: Controller.RGBW
             }
 
             ListElement {
-                name: "Unnamed"
-                address: "ACCF24634326FA14"
-                state: Controller.NotConfigured
-                isOnline: true
-            }
-
-            ListElement {
-                name: "Unnamed"
-                address: "ACCF24634326FA14"
-                state: Controller.Enabled
+                name: "#3"
+                address: "ACCF24634326FA13"
+                isEnabled: true
                 isOnline: false
+                kind: Controller.RGBW
+            }
+
+            ListElement {
+                name: "#4"
+                address: "ACCF24634326FA13"
+                isEnabled: false
+                isOnline: false
+                kind: Controller.RGBW
+            }
+
+            ListElement {
+                name: "#5"
+                address: "ACCF24634326FA14"
+                isEnabled: true
+                isOnline: true
+                kind: Controller.Unknown
             }
         }
     }
@@ -156,8 +168,9 @@ Page {
             anchors.left: parent.left
             name: model.name
             address: model.address
-            controllerState: model.state
+            kind: model.kind
             isOnline: model.isOnline
+            isEnabled: model.isEnabled
             onClicked: root.clickedController(index)
         }
 

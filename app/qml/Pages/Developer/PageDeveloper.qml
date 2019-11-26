@@ -43,8 +43,9 @@ Page {
                         Layout.fillWidth: true
                         name: model.name
                         address: model.address
-                        controllerState: model.state
+                        kind: model.kind
                         isOnline: model.isOnline
+                        isEnabled: model.isEnabled
                         onClicked: stackView.push(controllerConfigurationView,
                                                   { "controller" : backend.controllers.items.get(index)},
                                                   StackView.Immediate)

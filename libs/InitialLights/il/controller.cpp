@@ -1,25 +1,25 @@
 #include "controller.h"
 
 #include "jsonhelper.h"
+#include "lights/ilight.h"
+#include "lights/lightcollection.h"
 
 #include <QJsonObject>
 
 namespace il {
 
 namespace {
-const int unconfiguredIndex { -1 };
-
-const QString jsonIndexTag { "index" };
 const QString jsonNameTag { "name" };
 const QString jsonAddressTag { "address" };
-const QString jsonStateTag { "state" };
+const QString jsonIsEnabledTag { "isEnabled" };
+const QString jsonKindTag { "kind" };
 
-void readIfExists(const QJsonObject &json, const QString &tag, Controller::State &out)
+void readIfExists(const QJsonObject &json, const QString &tag, Controller::Kind &out)
 {
     if (json.contains(tag) && json[tag].isString()) {
-        int newValue = QMetaEnum::fromType<Controller::State>().keyToValue(json[tag].toString().toStdString().c_str());
+        int newValue = QMetaEnum::fromType<Controller::Kind>().keyToValue(json[tag].toString().toStdString().c_str());
         if (newValue >= 0) {
-            out = Controller::State(newValue);
+            out = Controller::Kind(newValue);
         }
     }
 }
@@ -28,9 +28,10 @@ void readIfExists(const QJsonObject &json, const QString &tag, Controller::State
 
 Controller::Controller(QObject *parent)
     : QObject(parent)
-    , m_cid { unconfiguredIndex }
-    , m_isOnline { false }
-    , m_state { NotConfigured }
+    , m_isOnline { true } // TODO: make it false
+    , m_isEnabled { false }
+    , m_kind { Unknown }
+    , m_lights { new lights::LightCollection(this, this) }
 {    
 }
 
@@ -40,18 +41,51 @@ Controller::~Controller()
 
 void Controller::read(const QJsonObject &json)
 {
-    READ_PROPERTY_IF_EXISTS(int, json, jsonIndexTag, cid)
     READ_PROPERTY_IF_EXISTS(QString, json, jsonNameTag, name)
     READ_PROPERTY_IF_EXISTS(QString, json, jsonAddressTag, address)
-    READ_PROPERTY_IF_EXISTS(Controller::State, json, jsonStateTag, state)
+    READ_PROPERTY_IF_EXISTS(bool, json, jsonIsEnabledTag, isEnabled)
+    READ_PROPERTY_IF_EXISTS(Controller::Kind, json, jsonKindTag, kind)
+
+    m_lights->read(json);
 }
 
 void Controller::write(QJsonObject &json) const
 {
-    json[jsonIndexTag] = m_cid;
     json[jsonNameTag] = m_name;
     json[jsonAddressTag] = m_address;
-    json[jsonStateTag] = QMetaEnum::fromType<State>().valueToKey(m_state);
+    json[jsonIsEnabledTag] = m_isEnabled;
+    json[jsonKindTag] = QMetaEnum::fromType<Kind>().valueToKey(m_kind);
+
+    m_lights->write(json);
+}
+
+void Controller::set_kind(Controller::Kind kind)
+{
+    if (m_kind == kind)
+        return;
+
+    m_kind = kind;
+    emit kindChanged(m_kind);
+
+    m_lights->clearLocalData();
+    switch (m_kind) {
+    case il::Controller::RGBW: {
+        lights::ILight* light;
+        light = m_lights->appendNewLight(lights::LightKind::RGBW);
+        light->set_name("RGBW");
+        break;
+    }
+    case il::Controller::Analogic: {
+        lights::ILight* light;
+        light = m_lights->appendNewLight(lights::LightKind::Analogic);
+        light->set_name("Analogic #1");
+        light = m_lights->appendNewLight(lights::LightKind::Analogic);
+        light->set_name("Analogic #2");
+        break;
+    }
+    case il::Controller::Unknown:
+        break;
+    }
 }
 
 } // namespace il

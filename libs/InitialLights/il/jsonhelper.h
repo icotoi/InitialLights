@@ -10,10 +10,10 @@ namespace il {
 
 #define READ_PROPERTY_IF_EXISTS(type, json, tag, property) \
     { \
-        type value = m_ ## property; \
+        type value = property (); \
         readIfExists(json, tag, value); \
         set_ ## property(value); \
-        qDebug() << " >>> " #property " (" #type "):" << m_ ## property; \
+        qDebug() << " >>> " #property " (" #type "):" << property (); \
     }
 
 template<class T>

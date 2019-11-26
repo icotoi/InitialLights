@@ -10,8 +10,9 @@ Rectangle {
 
     property string name: "Unnamed"
     property string address: "ACCF24634326FA12"
-    property bool isOnline: false
-    property var controllerState
+    property bool isOnline: true
+    property bool isEnabled: true
+    property var kind: Controller.Unknown
 
     signal clicked()
 
@@ -19,7 +20,10 @@ Rectangle {
     implicitWidth: 360
 
     color: isOnline
-           ? (controllerState === Controller.NotConfigured ? "#F3F4F5" : "#FFFFFF")
+           ? (isEnabled && kind != Controller.Unknown
+              ? "#FFFFFF"
+              : "#F3F4F5"
+              )
            : "#f7eded"
     border.color: isOnline
                   ? "#E3E5E8"
@@ -32,9 +36,9 @@ Rectangle {
             Layout.rightMargin: 16
             Layout.leftMargin: 16
             source: isOnline
-                    ? (controllerState === Controller.NotConfigured
-                       ? "../Images/Controller-Disabled.svg"
-                       : "../Images/Controller-Enabled.svg" )
+                    ? (isEnabled && kind != Controller.Unknown
+                       ? "../Images/Controller-Enabled.svg"
+                       : "../Images/Controller-Disabled.svg" )
                     : "../Images/Controller-Offline.svg"
         }
 
@@ -65,11 +69,11 @@ Rectangle {
             implicitWidth: 100
             implicitHeight: 32
             color: isOnline
-                   ? (controllerState === Controller.Enabled ? "#C2F2C2" : "#C7CCD2")
+                   ? (isEnabled && kind != Controller.Unknown ? "#C2F2C2" : "#C7CCD2")
                    : "#ffafaf"
 
             border.color: isOnline
-                          ? (controllerState === Controller.Enabled ? "#8AE68A" : "#ABB2BA")
+                          ? (isEnabled && kind != Controller.Unknown ? "#8AE68A" : "#ABB2BA")
                           : "#ff9090"
             border.width: 1
             radius: 4
@@ -77,13 +81,16 @@ Rectangle {
             Text {
                 anchors.centerIn: parent
                 text: isOnline
-                      ? (controllerState === Controller.Enabled
-                         ? qsTr("ENABLED")
-                         : (controllerState === Controller.Disabled ? qsTr("DISABLED") : qsTr("NOT CONFIGURED")))
+                      ? (kind === Controller.Unknown
+                         ? qsTr("NOT CONFIGURED")
+                         : (isEnabled
+                            ? qsTr("ENABLED")
+                            : qsTr("DISABLED") )
+                         )
                       : qsTr("OFFLINE")
                 font: Qt.font({ family: "Inter", styleName: "Medium", pointSize: 10 })
                 color: isOnline
-                       ? (controllerState === Controller.Enabled ? "#21be2b" : "#fff")
+                       ? (isEnabled && kind != Controller.Unknown ? "#21be2b" : "#fff")
                        : "#ff2f2f"
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter

@@ -32,6 +32,12 @@ SOURCES += \
         il/iindexed.cpp \
         il/iindexer.cpp \
         il/jsonhelper.cpp \
+        il/lights/analogiclight.cpp \
+        il/lights/ilight.cpp \
+        il/lights/lightbase.cpp \
+        il/lights/lightcollection.cpp \
+        il/lights/lightkind.cpp \
+        il/lights/rgbwlight.cpp \
         il/room.cpp \
         il/roomcollection.cpp \
         il/simpleindexer.cpp \
@@ -46,6 +52,12 @@ HEADERS += \
         il/iindexed.h \
         il/iindexer.h \
         il/jsonhelper.h \
+        il/lights/analogiclight.h \
+        il/lights/ilight.h \
+        il/lights/lightbase.h \
+        il/lights/lightcollection.h \
+        il/lights/lightkind.h \
+        il/lights/rgbwlight.h \
         il/room.h \
         il/roomcollection.h \
         il/simpleindexer.h \

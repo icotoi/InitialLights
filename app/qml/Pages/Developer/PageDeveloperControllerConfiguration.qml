@@ -26,8 +26,9 @@ Page {
             Layout.fillWidth: true
             name: controller ? controller.name : ""
             address: controller ? controller.address : ""
-            controllerState: controller ? controller.state : Controller.NotConfigured
+            kind: controller ? controller.kind : Controller.Unknown
             isOnline: controller ? controller.isOnline : false
+            isEnabled: controller ? controller.isEnabled : false
         }
 
         ILTextField {
@@ -37,70 +38,75 @@ Page {
             textField.onEditingFinished: if (controller) controller.name = textField.text
         }
 
-        Text {
-            text: "LEDs (0-255):"
+        GroupBox {
+            id: groupBox
+            title: "Kind:"
+            Layout.fillWidth: true
+
+            ColumnLayout {
+                anchors.right: parent.right
+                anchors.left: parent.left
+                RadioButton {
+                    text: "Unknown"
+                    checked: controller ? controller.kind === Controller.Unknown : false
+                    onCheckedChanged: if (checked) controller.kind = Controller.Unknown
+                    Layout.fillWidth: true
+                }
+
+                RadioButton {
+                    text: "RGBW"
+                    checked: controller ? controller.kind === Controller.RGBW : false
+                    Layout.fillWidth: true
+                    onCheckedChanged: if (checked) controller.kind = Controller.RGBW
+                }
+
+                RadioButton {
+                    text: "Analogic"
+                    checked: controller ? controller.kind === Controller.Analogic : false
+                    Layout.fillWidth: true
+                    onCheckedChanged: if (checked) controller.kind = Controller.Analogic
+                }
+            }
         }
 
-        GridLayout {
-            id: gridLayout
-            width: 100
-            height: 100
-            columns: 2
+        GroupBox {
+            id: groupBox1
+            Layout.fillWidth: true
+            title: "Lights"
 
+            ColumnLayout {
+                anchors.right: parent.right
+                anchors.left: parent.left
+
+                Repeater {
+                    model: controller ? controller.lights.items : null
+                    delegate: RowLayout {
+                        Rectangle {
+                            width: 30
+                            height: width
+                            radius: width / 2
+                            color: "#f9e79f"
+                            border.color: "#979a9a"
+                        }
+
+                        ColumnLayout {
+                            Text {
+                                text: model.name
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        RowLayout {
             Text {
-                text: channel1Slider.value
-                horizontalAlignment: Text.AlignRight
-                Layout.minimumWidth: 40
+                text: "Enabled"
             }
 
-            Slider {
-                id: channel1Slider
-                snapMode: Slider.SnapAlways
-                stepSize: 1
-                to: 255
-                Layout.fillWidth: true
-            }
-
-            Text {
-                text: channel2Slider.value
-                Layout.minimumWidth: 40
-                horizontalAlignment: Text.AlignRight
-            }
-
-            Slider {
-                id: channel2Slider
-                snapMode: Slider.SnapAlways
-                stepSize: 1
-                to: 255
-                Layout.fillWidth: true
-            }
-
-            Text {
-                text: channel3Slider.value
-                horizontalAlignment: Text.AlignRight
-                Layout.minimumWidth: 40
-            }
-
-            Slider {
-                id: channel3Slider
-                snapMode: Slider.SnapAlways
-                stepSize: 1
-                to: 255
-                Layout.fillWidth: true
-            }
-
-            Text {
-                text: channel4Slider.value
-                horizontalAlignment: Text.AlignRight
-                Layout.minimumWidth: 40
-            }
-
-            Slider {
-                id: channel4Slider
-                snapMode: Slider.SnapAlways
-                stepSize: 1
-                to: 255
-                Layout.fillWidth: true
+            Switch {
+                checked: controller ? controller.isEnabled : false
+                onCheckedChanged: if (controller) controller.isEnabled = checked
             }
         }
     }

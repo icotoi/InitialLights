@@ -8,8 +8,6 @@
 
 namespace il {
 
-class Controller;
-
 class INITIALLIGHTSSHARED_EXPORT IBluetoothExplorer : public QObject
 {
     Q_OBJECT
