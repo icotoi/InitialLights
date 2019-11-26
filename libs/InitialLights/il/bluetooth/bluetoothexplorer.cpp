@@ -73,6 +73,11 @@ BluetoothExplorer::BluetoothExplorer(controllers::ControllerCollection* controll
 
 void BluetoothExplorer::search()
 {
+    if (isSearching()) {
+        qDebug() << "already searching; ignore new search request...";
+        return;
+    }
+
     update_isSearching(true);
     set_message("Searching for controllers...");
 
