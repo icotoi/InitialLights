@@ -117,7 +117,7 @@ void RGBWLight::setValue(Light light, int value) const
         return;
     }
 
-    if (controller()->bluetoothController()) {
+    if (!controller()->bluetoothController()) {
         qDebug() << "--- bluetooth controller not set";
         return;
     }

@@ -83,7 +83,7 @@ void AnalogicLight::setValue(AnalogicLight::Channel channel, int value) const
         return;
     }
 
-    if (controller()->bluetoothController()) {
+    if (!controller()->bluetoothController()) {
         qDebug() << "--- bluetooth controller not set";
         return;
     }
