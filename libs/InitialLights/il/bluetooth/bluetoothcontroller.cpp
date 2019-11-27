@@ -74,7 +74,7 @@ void BluetoothController::lightWriteWithoutResponse(IBluetoothController::Light 
         return;
     }
 
-    qDebug() << "+++ writing to light" << characteristic.uuid() << ":" << data;
+    qDebug() << "+++ writing to light" << characteristic.uuid() << ":" << data.toHex().toUpper();
     m_lightsService->writeCharacteristic(characteristic, data,  QLowEnergyService::WriteMode::WriteWithoutResponse);
 }
 
