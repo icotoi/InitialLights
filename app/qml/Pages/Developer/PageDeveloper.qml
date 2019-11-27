@@ -58,7 +58,7 @@ Page {
                         repeat: true
                         triggeredOnStart: true
                         running: continuosSearchSwitch.checked
-                        interval: 1000 // in msec
+                        interval: 20000 // in msec
                         onTriggered: if (backend) backend.bluetoothExplorer.search()
                     }
                 }
