@@ -1,7 +1,8 @@
 #include "controller.h"
 
+#include "../bluetooth/bluetoothcontroller.h"
 #include "../jsonhelper.h"
-#include "../lights/ilight.h"
+#include "../lights/analogiclight.h"
 #include "../lights/lightcollection.h"
 
 #include <QJsonObject>
@@ -28,13 +29,15 @@ void readIfExists(const QJsonObject &json, const QString &tag, controllers::Cont
 
 namespace controllers {
 
-Controller::Controller(QObject *parent)
+Controller::Controller(bluetooth::IBluetoothController *bluetoothController, QObject *parent)
     : QObject(parent)
-    , m_isOnline { true } // TODO: make it false
+    , m_isOnline { false }
     , m_isEnabled { false }
     , m_kind { Unknown }
     , m_lights { new lights::LightCollection(this, this) }
-{    
+    , m_bluetoothController { bluetoothController }
+{
+    bluetoothController->setParent(this);
 }
 
 Controller::~Controller()
@@ -78,11 +81,13 @@ void Controller::set_kind(Controller::Kind kind)
         break;
     }
     case Analogic: {
-        lights::ILight* light;
-        light = m_lights->appendNewLight(lights::LightKind::Analogic);
+        lights::AnalogicLight* light;
+        light = qobject_cast<lights::AnalogicLight*>(m_lights->appendNewLight(lights::LightKind::Analogic));
         light->set_name("Analogic #1");
-        light = m_lights->appendNewLight(lights::LightKind::Analogic);
+        light->set_channel(lights::AnalogicLight::Channel1);
+        light = qobject_cast<lights::AnalogicLight*>(m_lights->appendNewLight(lights::LightKind::Analogic));
         light->set_name("Analogic #2");
+        light->set_channel(lights::AnalogicLight::Channel2);
         break;
     }
     case Unknown:

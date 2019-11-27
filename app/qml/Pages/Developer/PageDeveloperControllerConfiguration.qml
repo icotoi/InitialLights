@@ -79,20 +79,78 @@ Page {
                 anchors.left: parent.left
 
                 Repeater {
+                    id: repeater
                     model: controller ? controller.lights.items : null
-                    delegate: RowLayout {
-                        Rectangle {
-                            width: 30
-                            height: width
-                            radius: width / 2
-                            color: "#f9e79f"
-                            border.color: "#979a9a"
+
+                    delegate: ColumnLayout {
+                        property var light: controller ? controller.lights.items.get(index) : null
+
+                        Layout.fillWidth: true
+
+                        Text {
+                            text: model.name
+                            font.bold: true
                         }
 
-                        ColumnLayout {
-                            Text {
-                                text: model.name
+                        GridLayout {
+                            Layout.fillWidth: true
+                            columns: 2
+                            visible: model.kind === LightKind.RGBW
+
+                            Text { text: "red" }
+
+                            Slider {
+                                Layout.fillWidth: true
+                                from: 0
+                                to: 255
+                                stepSize: 1
+                                snapMode: Slider.SnapAlways
+                                onValueChanged: light.red = value
                             }
+
+                            Text { text: "green" }
+
+                            Slider {
+                                Layout.fillWidth: true
+                                from: 0
+                                to: 255
+                                stepSize: 1
+                                snapMode: Slider.SnapAlways
+                                onValueChanged: light.green = value
+                            }
+
+                            Text { text: "blue" }
+
+                            Slider {
+                                Layout.fillWidth: true
+                                from: 0
+                                to: 255
+                                stepSize: 1
+                                snapMode: Slider.SnapAlways
+                                onValueChanged: light.blue = value
+                            }
+
+                            Text { text: "white" }
+
+                            Slider {
+                                Layout.fillWidth: true
+                                from: 0
+                                to: 255
+                                stepSize: 1
+                                snapMode: Slider.SnapAlways
+                                onValueChanged: light.white = value
+                            }
+                        }
+
+                        Slider {
+                            Layout.fillWidth: true
+                            visible: model.kind === LightKind.Analogic
+                            from: 0
+                            to: 255
+                            stepSize: 1
+                            snapMode: Slider.SnapAlways
+                            onValueChanged: if (light) light.value = value
+                            value: light && light.value ? light.value : 0
                         }
                     }
                 }

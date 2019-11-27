@@ -1,4 +1,5 @@
 #include "bluetoothexplorer.h"
+#include "../bluetooth/bluetoothcontroller.h"
 #include "../controllers/controller.h"
 #include "../controllers/controllercollection.h"
 
@@ -13,7 +14,7 @@ namespace il {
 
 namespace {
 
-const QBluetoothUuid uuidService(QStringLiteral("F0001110-0451-4000-B000-000000000000"));
+const QBluetoothUuid uuidService(QStringLiteral("F0001110-0451-4000-B000-000000000000")); // controller service UUID
 
 QString safeAddress(const QBluetoothDeviceInfo &info)
 {
@@ -99,10 +100,12 @@ void BluetoothExplorer::deviceDiscovered(const QBluetoothDeviceInfo &info)
             if (!controller->isOnline()) {
                 qDebug() << "setting controller to online:" << controller->name() << controller->address();
                 controller->set_isOnline(true);
+                controller->bluetoothController()->connectToController(info);
             }
             m_onlineControllers << controller;
         } else {
-            controller = m_controllers->appendNewController();
+            auto bluetoothController = new BluetoothController;
+            controller = m_controllers->appendNewController(bluetoothController);
             configureController(controller, info);
             qWarning() << "LE Device name:" << controller->name()
                        << "address:" << controller->address() << "scanned; adding it to the devices list...";

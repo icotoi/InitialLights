@@ -10,9 +10,9 @@ namespace il {
 
 #define READ_PROPERTY_IF_EXISTS(type, json, tag, property) \
     { \
-        type value = property (); \
-        readIfExists(json, tag, value); \
-        set_ ## property(value); \
+        type x = property (); \
+        readIfExists(json, tag, x); \
+        set_ ## property(x); \
         qDebug() << " >>> " #property " (" #type "):" << property (); \
     }
 

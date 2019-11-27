@@ -7,6 +7,10 @@
 
 namespace il {
 
+namespace bluetooth {
+class IBluetoothController;
+}
+
 namespace controllers {
 
 class Controller;
@@ -25,7 +29,7 @@ public:
     void write(QJsonObject& json) const;
     void clearLocalData();
 
-    Controller* appendNewController();
+    Controller* appendNewController(bluetooth::IBluetoothController* bluetoothController);
 
 signals:
     void controllerKindChanged(Controller* controller);

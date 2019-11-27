@@ -1,10 +1,7 @@
 #pragma once
 
 #include "initiallights_global.h"
-
 #include "QQmlVarPropertyHelpers.h"
-
-#include <QObject>
 
 namespace il {
 namespace bluetooth {

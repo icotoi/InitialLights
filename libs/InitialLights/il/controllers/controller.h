@@ -11,6 +11,10 @@ class ILight;
 class LightCollection;
 }
 
+namespace bluetooth {
+class IBluetoothController;
+}
+
 namespace controllers {
 
 class INITIALLIGHTSSHARED_EXPORT Controller : public QObject
@@ -37,7 +41,7 @@ private:
     Q_PROPERTY(il::lights::LightCollection* lights READ lights CONSTANT)
 
 public:
-    explicit Controller(QObject *parent = nullptr);
+    explicit Controller(bluetooth::IBluetoothController* bluetoothController, QObject *parent = nullptr);
     virtual ~Controller();
 
     void read(const QJsonObject& json);
@@ -45,6 +49,7 @@ public:
 
     Kind kind() const { return m_kind; }
     lights::LightCollection* lights() const { return m_lights; }
+    bluetooth::IBluetoothController* bluetoothController() const { return m_bluetoothController; }
 
 signals:
     void kindChanged(Kind kind);
@@ -55,6 +60,7 @@ public slots:
 private:
     Kind m_kind;
     lights::LightCollection* m_lights;
+    bluetooth::IBluetoothController* m_bluetoothController;
 };
 
 } // namespace controllers

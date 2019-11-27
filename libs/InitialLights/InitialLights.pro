@@ -25,7 +25,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         il/backend.cpp \
+        il/bluetooth/bluetoothcontroller.cpp \
         il/bluetooth/bluetoothexplorer.cpp \
+        il/bluetooth/ibluetoothcontroller.cpp \
         il/bluetooth/ibluetoothexplorer.cpp \
         il/controllers/controller.cpp \
         il/controllers/controllercollection.cpp \
@@ -45,7 +47,9 @@ SOURCES += \
 
 HEADERS += \
         il/backend.h \
+        il/bluetooth/bluetoothcontroller.h \
         il/bluetooth/bluetoothexplorer.h \
+        il/bluetooth/ibluetoothcontroller.h \
         il/bluetooth/ibluetoothexplorer.h \
         il/controllers/controller.h \
         il/controllers/controllercollection.h \

@@ -1,6 +1,7 @@
 #include "controllercollection.h"
 
 #include "controller.h"
+#include "../bluetooth/bluetoothcontroller.h"
 #include "../jsonhelper.h"
 
 #include <QDebug>
@@ -8,6 +9,23 @@
 #include <QJsonObject>
 
 namespace il {
+
+template<>
+void readCollectionPropertyIfExists<controllers::Controller>(const QJsonObject& json, const QString& tag, QQmlObjectListModel<controllers::Controller>* property)
+{
+    if (json.contains(tag) && json[tag].isArray()) {
+        QJsonArray jsonArray = json[tag].toArray();
+        property->clear();
+        if (jsonArray.empty()) return;
+        for (int i = 0; i < jsonArray.size(); ++i) {
+            QJsonObject jsonObject = jsonArray[i].toObject();
+            auto bluetoothController = new bluetooth::BluetoothController;
+            controllers::Controller* object = new controllers::Controller(bluetoothController);
+            object->read(jsonObject);
+            property->append(object);
+        }
+    }
+}
 
 namespace {
 const QString jsonControllersTag { "controllers" };
@@ -43,9 +61,9 @@ void ControllerCollection::clearLocalData()
     m_items->clear();
 }
 
-Controller *ControllerCollection::appendNewController()
+Controller *ControllerCollection::appendNewController(bluetooth::IBluetoothController *bluetoothController)
 {
-    Controller* controller = new Controller();
+    Controller* controller = new Controller(bluetoothController);
     m_items->append(controller);
     connect(controller, &Controller::kindChanged, this, &ControllerCollection::onControllerKindChanged);
     return controller;
