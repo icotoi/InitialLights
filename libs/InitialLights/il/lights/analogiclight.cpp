@@ -1,7 +1,7 @@
 #include "analogiclight.h"
-#include "../jsonhelper.h"
-#include "../controllers/controller.h"
 #include "../bluetooth/bluetoothcontroller.h"
+#include "../controllers/controller.h"
+#include "../jsonhelper.h"
 
 #include <QJsonObject>
 
