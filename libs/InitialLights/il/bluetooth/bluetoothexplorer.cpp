@@ -81,7 +81,8 @@ void BluetoothExplorer::search()
 
 void BluetoothExplorer::updateOfflineControllers()
 {
-    QSet<controllers::Controller*> controllers = QSet(m_controllers->get_items()->begin(), m_controllers->get_items()->end());
+//    QSet<controllers::Controller*> controllers = QSet(m_controllers->get_items()->begin(), m_controllers->get_items()->end());
+    QSet<controllers::Controller*> controllers = m_controllers->get_items()->toList().toSet();
     controllers.subtract(m_onlineControllers);
     std::for_each(controllers.begin(), controllers.end(),
                   [](controllers::Controller* controller) {
@@ -94,6 +95,7 @@ void BluetoothExplorer::updateOfflineControllers()
 
 void BluetoothExplorer::deviceDiscovered(const QBluetoothDeviceInfo &info)
 {
+//    qDebug() << "??? device discovered:" << safeAddress(info);
     if (isValidDevice(info)) {
         controllers::Controller* controller = findController(m_controllers, info);
         if (controller) {
