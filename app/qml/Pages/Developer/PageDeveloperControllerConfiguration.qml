@@ -105,7 +105,8 @@ Page {
                                 to: 255
                                 stepSize: 1
                                 snapMode: Slider.SnapAlways
-                                onValueChanged: light.red = value
+                                onValueChanged: if (light) light.red = value
+                                value: light && light.red ? light.red : 0
                             }
 
                             Text { text: "green" }
@@ -116,7 +117,8 @@ Page {
                                 to: 255
                                 stepSize: 1
                                 snapMode: Slider.SnapAlways
-                                onValueChanged: light.green = value
+                                onValueChanged: if (light) light.green = value
+                                value: light && light.green ? light.green : 0
                             }
 
                             Text { text: "blue" }
@@ -127,7 +129,8 @@ Page {
                                 to: 255
                                 stepSize: 1
                                 snapMode: Slider.SnapAlways
-                                onValueChanged: light.blue = value
+                                onValueChanged: if (light) light.blue = value
+                                value: light && light.blue ? light.blue : 0
                             }
 
                             Text { text: "white" }
@@ -138,7 +141,8 @@ Page {
                                 to: 255
                                 stepSize: 1
                                 snapMode: Slider.SnapAlways
-                                onValueChanged: light.white = value
+                                onValueChanged: if (light) light.white = value
+                                value: light && light.white ? light.white : 0
                             }
                         }
 

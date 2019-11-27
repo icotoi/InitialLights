@@ -1,20 +1,28 @@
 #include "rgbwlight.h"
-#include "../controllers/controller.h"
 #include "../bluetooth/bluetoothcontroller.h"
+#include "../controllers/controller.h"
+#include "../jsonhelper.h"
+
+#include <QJsonObject>
 
 namespace il::lights {
 
 
 namespace {
 
+const QString jsonRedTag { "red" };
+const QString jsonGreenTag { "green" };
+const QString jsonBlueTag { "blue" };
+const QString jsonWhiteTag { "white" };
+
 bluetooth::BluetoothController::Light lightToControllerLight(RGBWLight::Light light)
 {
     switch (light) {
     case il::lights::RGBWLight::Red:
-        return bluetooth::BluetoothController::Light2;
+        return bluetooth::BluetoothController::Light1;
         break;
     case il::lights::RGBWLight::Green:
-        return bluetooth::BluetoothController::Light1;
+        return bluetooth::BluetoothController::Light2;
         break;
     case il::lights::RGBWLight::Blue:
         return bluetooth::BluetoothController::Light3;
@@ -30,6 +38,10 @@ bluetooth::BluetoothController::Light lightToControllerLight(RGBWLight::Light li
 
 RGBWLight::RGBWLight(QObject *parent)
     : LightBase(parent)
+    , m_red { 0 }
+    , m_green { 0 }
+    , m_blue { 0 }
+    , m_white { 0 }
 {
     set_kind(LightKind::RGBW);
 }
@@ -38,7 +50,27 @@ RGBWLight::~RGBWLight()
 {
 }
 
-void RGBWLight::setRed(int red)
+void RGBWLight::read(const QJsonObject &json)
+{
+    LightBase::read(json);
+
+    READ_PROPERTY_IF_EXISTS(int, json, jsonRedTag, red)
+    READ_PROPERTY_IF_EXISTS(int, json, jsonGreenTag, green)
+    READ_PROPERTY_IF_EXISTS(int, json, jsonBlueTag, blue)
+    READ_PROPERTY_IF_EXISTS(int, json, jsonWhiteTag, white)
+}
+
+void RGBWLight::write(QJsonObject &json) const
+{
+    LightBase::write(json);
+
+    json[jsonRedTag] = m_red;
+    json[jsonGreenTag] = m_green;
+    json[jsonBlueTag] = m_blue;
+    json[jsonWhiteTag] = m_white;
+}
+
+void RGBWLight::set_red(int red)
 {
     if (m_red == red)
         return;
@@ -48,7 +80,7 @@ void RGBWLight::setRed(int red)
     emit redChanged(m_red);
 }
 
-void RGBWLight::setGreen(int green)
+void RGBWLight::set_green(int green)
 {
     if (m_green == green)
         return;
@@ -58,7 +90,7 @@ void RGBWLight::setGreen(int green)
     emit greenChanged(m_green);
 }
 
-void RGBWLight::setBlue(int blue)
+void RGBWLight::set_blue(int blue)
 {
     if (m_blue == blue)
         return;
@@ -68,7 +100,7 @@ void RGBWLight::setBlue(int blue)
     emit blueChanged(m_blue);
 }
 
-void RGBWLight::setWhite(int white)
+void RGBWLight::set_white(int white)
 {
     if (m_white == white)
         return;
