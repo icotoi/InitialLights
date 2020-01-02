@@ -1,6 +1,7 @@
 #pragma once
 
 #include "initiallights_global.h"
+#include <vector>
 
 namespace il {
 

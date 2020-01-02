@@ -1,5 +1,6 @@
 QT += qml bluetooth
 CONFIG += c++17
+CONFIG += static
 
 DEFINES += QTQMLTRICKS_NO_PREFIX_ON_GETTERS
 
@@ -16,10 +17,12 @@ DEPENDPATH += \
 # libs/InitialLights
 win32:CONFIG(release, debug|release): LIBS += -L$$top_builddir/libs/InitialLights/release/ -lInitialLights
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$$$top_builddir/libs/InitialLights/debug/ -lInitialLights
+else:win32-msvc:CONFIG(debug, debug|release): LIBS += -L$$$$top_builddir/libs/InitialLights/debug/ -lInitialLights
 else:unix: LIBS += -L$$top_builddir/libs/InitialLights/ -lInitialLights
 
 win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$top_builddir/libs/InitialLights/release/libInitialLights.a
 else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$top_builddir/libs/InitialLights/debug/libInitialLights.a
+else:win32-msvc:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$top_builddir/libs/InitialLights/debug/InitialLights.lib
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$top_builddir/libs/InitialLights/release/InitialLights.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$top_builddir/libs/InitialLights/debug/InitialLights.lib
 else:unix: PRE_TARGETDEPS += $$top_builddir/libs/InitialLights/libInitialLights.a

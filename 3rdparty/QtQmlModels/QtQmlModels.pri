@@ -3,7 +3,11 @@
 
 QT += core qml
 
+CONFIG += c++17
+
 INCLUDEPATH += $$PWD
+INCLUDEPATH += $$PWD/../QtSuperMacros
+INCLUDEPATH += $$PWD/../../libs/InitialLights
 
 HEADERS += \
     $$PWD/QQmlObjectListModel.h \
