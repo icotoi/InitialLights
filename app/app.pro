@@ -4,6 +4,10 @@ QT += quick svg
 CONFIG += c++17
 CONFIG += sdk_no_version_check
 
+win32 {
+    RC_ICONS = lights47_41626.ico
+}
+
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Refer to the documentation for the
