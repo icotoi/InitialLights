@@ -16,10 +16,6 @@
 #include <QVariant>
 #include <QVector>
 
-#include "il/controllers/controller.h"
-#include "il/room.h"
-#include "il/lights/ilight.h"
-
 template<typename T> QList<T> qListFromVariant (const QVariantList & list) {
     QList<T> ret;
     ret.reserve (list.size ());

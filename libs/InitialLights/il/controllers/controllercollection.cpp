@@ -1,6 +1,5 @@
 #include "controllercollection.h"
 
-#include "controller.h"
 #include "../bluetooth/bluetoothcontroller.h"
 #include "../jsonhelper.h"
 

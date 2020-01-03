@@ -1,6 +1,7 @@
 #pragma once
 
 #include "initiallights_global.h"
+#include "ilight.h"
 #include "lightkind.h"
 
 #include "QQmlAutoPropertyHelpers.h"
@@ -14,9 +15,7 @@ class Controller;
 
 namespace lights {
 
-class ILight;
-
-class LightCollection : public QObject
+class INITIALLIGHTSSHARED_EXPORT LightCollection : public QObject
 {
     Q_OBJECT
 

@@ -1,23 +1,19 @@
-#ifndef INITIALLIGHTS_GLOBAL_H
-#define INITIALLIGHTS_GLOBAL_H
+#pragma once
 
 #include <QtCore/qglobal.h>
-#ifdef _MSC_VER
-    #if defined(INITIALLIGHTS_LIBRARY)
-    #  define INITIALLIGHTSSHARED_EXPORT
-    #else
-    #  define INITIALLIGHTSSHARED_EXPORT
-    #endif
+
+#if defined(INITIALLIGHTS_LIBRARY)
+#  if defined(_MSC_VER)
+#    define INITIALLIGHTSSHARED_EXPORT
+#  else
+#    define INITIALLIGHTSSHARED_EXPORT Q_DECL_EXPORT
+#  endif
 #else
-    #if defined(INITIALLIGHTS_LIBRARY)
-    #  define INITIALLIGHTSSHARED_EXPORT Q_DECL_EXPORT
-    #  define INITIALLIGHTSSHARED_EXPORT
-    #else
-    #  define INITIALLIGHTSSHARED_EXPORT Q_DECL_IMPORT
-    #  define INITIALLIGHTSSHARED_EXPORT
-    #endif
+#  if defined(_MSC_VER)
+#    define INITIALLIGHTSSHARED_EXPORT
+#  else
+#    define INITIALLIGHTSSHARED_EXPORT Q_DECL_IMPORT
+#  endif
 #endif
 
 #define SCENE_COUNT 6
-
-#endif // INITIALLIGHTS_GLOBAL_H
