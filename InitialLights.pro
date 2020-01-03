@@ -6,7 +6,7 @@ SUBDIRS = \
     libs \
     app
 
-macos|linux:!android {
+macos|linux:!android|win32 {
     SUBDIRS += \
         tests
 }
