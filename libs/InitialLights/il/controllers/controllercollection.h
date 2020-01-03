@@ -4,6 +4,7 @@
 
 #include "QQmlAutoPropertyHelpers.h"
 #include "QQmlObjectListModel.h"
+#include "controller.h"
 
 namespace il {
 
@@ -12,8 +13,6 @@ class IBluetoothController;
 }
 
 namespace controllers {
-
-class Controller;
 
 class INITIALLIGHTSSHARED_EXPORT ControllerCollection : public QObject
 {

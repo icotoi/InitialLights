@@ -2,6 +2,7 @@
 
 #include "initiallights_global.h"
 #include "iindexed.h"
+#include "room.h"
 
 #include "QQmlAutoPropertyHelpers.h"
 #include "QQmlObjectListModel.h"
@@ -9,7 +10,6 @@
 namespace il {
 
 class IIndexer;
-class Room;
 
 class INITIALLIGHTSSHARED_EXPORT RoomCollection : public QObject, public IIndexed
 {

@@ -2,7 +2,6 @@
 
 #include "iindexer.h"
 #include "jsonhelper.h"
-#include "room.h"
 
 #include <QDebug>
 #include <QJsonArray>
